@@ -1,0 +1,33 @@
+.customer-details-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .customer-details-title {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .customer-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .detail {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .detail-label {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .detail-value {
+    color: #333;
+  }
+  

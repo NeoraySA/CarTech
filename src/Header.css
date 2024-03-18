@@ -1,32 +1,97 @@
 .header {
-    display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #282c34;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.logo-link {
+  height: 40px;
+}
+
+.logo {
+  height: 100%;
+}
+
+
+
+.header-search {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* תפיק את רוחב התיבת חיפוש כך שתמלא את השורה */
+}
+
+.header-search input {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 30px;
+  width: 30%; /* תיבת החיפוש תתמלא את כל הרוחב שלה */
+}
+
+.header-search input::placeholder {
+  color: #aaa;
+}
+
+.header-search i {
+  margin-right: 5px; /* רווח מימין לאייקון */
+}
+
+.nav-links {
+  display: none; /* הסתרת תפריט הניווט */
+}
+
+.header-icons {
+  display: flex;
+  align-items: center; /* להציג את האייקונים במרכז אופקי */
+  gap: 5px; /* רווח בין האייקונים */
+
+}
+
+.icon {
+  font-size: 20px; /* גודל האייקונים */
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #333;
-    color: white;
+    padding: 10px 1rem; /* ערך מופחת של padding להתאמה לשוליים */
   }
-  
-  .logo {
-    height: 50px; /* תכוונן לגודל הרצוי */
+
+  .logo-link {
+    order: 1; 
+    flex-grow: 0;
+    height: 30px;
   }
-  
-  .nav-links {
-    list-style: none;
-    display: flex;
+
+  .header-search {
+    order: 2;
+    flex-grow: 1;
+    margin-left: 30px;
+    margin-right: 10px;
   }
-  
-  .nav-links li {
-    padding: 0 1rem;
+
+  .header-icons {
+    order: 3;
+    flex-grow: 0;
   }
-  
-  .nav-links a {
-    text-decoration: none;
-    color: white;
-    transition: color 0.3s ease-in-out;
+
+  .header-search input {
+    width: 100%; /* מתאים את רוחב תיבת החיפוש לרוחב הזמין */
+    margin-right: 10px; /* הסרת המרווח שהיה בצד ימין של תיבת החיפוש */
   }
-  
-  .nav-links a:hover {
-    color: #04c;
-  }
-  
+}
+

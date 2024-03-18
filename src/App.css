@@ -1,7 +1,27 @@
 .App {
   text-align: center;
   font-family: Assistant;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 70px;
 }
+
+/* Initial content style, assuming sidebar is open by default */
+.content {
+  transition: margin-right 0.5s ease;
+}
+
+/* Adjust the margin based on sidebar's state */
+.content.sidebar-open {
+  margin-right: 290px; /* When sidebar is open */
+}
+
+.content.sidebar-closed {
+  margin-right: 60px; /* When sidebar is closed */
+}
+
+
 
 .App-logo {
   height: 40vmin;
