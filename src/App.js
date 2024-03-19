@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Header from './Header';
 import Footer from './Footer';
 import Sidebar from './Sidebar';
 import Dashboard from './Dashboard';
+import AddCustomerForm from './AddCustomerForm';
+import VehicleInfo from './VehicleInfo';
 import CustomersList from './CustomersList';
 import CustomerDetails from './CustomerDetails';
-
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // אתחול המצב בהתאם למה שנשמר ב-localStorage או false כברירת מחדל
+  const [isSidebarOpen, setIsSidebarOpen] = useState(
+    JSON.parse(localStorage.getItem('isSidebarOpen')) || false
+  );
+
+  // עדכון ה-localStorage בכל פעם שהמצב של התפריט הצידי משתנה
+  useEffect(() => {
+    localStorage.setItem('isSidebarOpen', JSON.stringify(isSidebarOpen));
+  }, [isSidebarOpen]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -20,10 +29,13 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        <Sidebar className="sidebar" isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <div className={`content ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/addCustomer" element={<AddCustomerForm />} />
+            <Route path="/vehicleInfo" element={<VehicleInfo />} />
             <Route path="/customersList" element={<CustomersList />} />
             <Route path="/customerDetails/:id" element={<CustomerDetails />} />
             {/* Add more routes as needed */}

@@ -24,6 +24,54 @@
   height: 100%;
 }
 
+.header-search {
+  position: relative;
+}
+
+.search-suggestions {
+  position: absolute;
+  display: flex;
+  flex-direction: column; /* מסדר את ההצעות אחת מתחת לשנייה */
+  width: 300px;
+  top: 100%;
+  background-color: white;
+  border: 1px solid #ddd;
+  z-index: 1000; /* לוודא שהרשימה תוצג מעל לאלמנטים אחרים */
+  text-align: right;
+}
+
+/* השארת ההגדרות הקיימות כמות שהן */
+
+.suggestion {
+  display: flex;
+  flex-direction: row; /* הופך את כיוון הפריטים כך שהאייקון יהיה בצד ימין */
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  padding: 10px;
+  justify-content: space-between; /* מפריד בין האייקון לבין טקסט ההצעה והתיאור */
+}
+
+.suggestion:hover {
+  background-color: #f0f0f0;
+}
+
+.suggestion .icon {
+  flex-shrink: 0; /* מונע מהאייקון להתכווץ או להשתנות בגודלו */
+}
+
+.suggestion .text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* מיישר את טקסט ההצעה והתיאור לצד ימין */
+  text-align: right; /* מיישר את הטקסט לימין */
+}
+
+.suggestion .description {
+  font-size: 0.8em;
+  color: #888;
+}
+
 
 
 .header-search {
