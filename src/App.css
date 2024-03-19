@@ -57,3 +57,16 @@
     transform: rotate(360deg);
   }
 }
+@media (max-width: 768px) {
+  .App {
+    padding: 70px 20px; /* מתאים ריווחים לנייד */
+  }
+
+  .content, .sidebar-open, .sidebar-closed {
+    margin-right: 0; /* הסרת הריווח הצידדי */
+  }
+
+  .sidebar {
+    display: none; /* הסרת התצוגה של התפריט הצידי במכשירים ניידים */
+  }
+}

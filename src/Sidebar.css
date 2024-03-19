@@ -1,108 +1,82 @@
 /* עיצוב כללי ומשתנים */
 :root {
-    --sidebar-width: 250px;
-    --sidebar-icon-size: 30px;
-    --sidebar-color: #2C3E50;
-    --sidebar-text-color: #ECF0F1;
-    --sidebar-hover-color: #34495E;
-  }
-  
-  /* עיצוב בסיסי לתפריט הצידי */
-  .sidebar {
-    width: var(--sidebar-width); /* שימוש במשתנה לקביעת רוחב */
-    position: fixed;
-    top: 60px; /* יתחיל מתחת לכותרת העליונה */
-    right: 0;
-    bottom: 0;
-    background-color: var(--sidebar-color);
-    color: var(--sidebar-text-color);
-    padding: 20px;
-    transition: width 0.3s ease-in-out;
-    overflow-y: auto;
-  }
-  
-  /* עיצוב כאשר התפריט סגור */
-  .sidebar.close {
-    width: 20px; /* רוחב למצב סגור */
-    align-items: center;
-  }
-  
-  .sidebar .sidebar-content {
-    display: flex;
-    flex-direction: column;
-    
-  }
-  
-  .sidebar-section {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px; /* רווח בין הסקציות */
-    cursor: pointer;
-  }
-  
-  .sidebar-section i {
-    font-size: var(--sidebar-icon-size); /* שימוש במשתנה לגודל האייקון */
-    width: 20px; /* קובע רוחב קבוע לאייקונים */
-  }
-  
-  .sidebar-section span {
-    margin-right: 10px; /* מרווח בין האייקון לטקסט */
-  }
-  
-  .sidebar-section.open {
-    background-color: var(--sidebar-hover-color); /* רקע לסקציה כאשר היא פתוחה */
-  }
-  
- /* עיצוב כפתור הפתיחה/סגירה */
+  --sidebar-width: 250px;
+  --sidebar-icon-size: 30px;
+  --sidebar-color: #2C3E50;
+  --sidebar-text-color: #ECF0F1;
+  --sidebar-hover-color: #34495E;
+}
+
+/* עיצוב בסיסי לתפריט הצידי */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 60px;
+  right: 0;
+  bottom: 0;
+  background-color: var(--sidebar-color);
+  color: var(--sidebar-text-color);
+  padding: 20px;
+  transition: width 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+/* עיצוב כאשר התפריט סגור */
+.sidebar.close {
+  width: 20px;
+  align-items: center;
+}
+
+.sidebar .sidebar-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--sidebar-text-color);
+}
+
+.sidebar-link span {
+  margin-right: 10px;
+}
+
+.sidebar-link:hover {
+  background-color: var(--sidebar-hover-color);
+}
+
+/* עיצוב כפתור הפתיחה/סגירה */
 .sidebar-toggle {
-    position: absolute;
-    bottom: 40px; /* מיקום בתחתית התפריט */
-    right: 0px; /* מיקום מימין בתפריט */
-    width: calc(100% - 20px); /* התאמת הרוחב כולל הריווחים */
-    border: none; /* הסרת גבולות */
-    background: transparent; /* רקע שקוף */
-    color: var(--sidebar-text-color); /* השתמש במשתנה שהוגדר בקוד הקודם */
-    padding: 10px; /* ריווח פנימי */
-    cursor: pointer;
-  }
-  
-  .sidebar-toggle:focus {
-    outline: none; /* הסרת הדגשת המתאר כאשר מתמקדים בכפתור */
+  position: absolute;
+  bottom: 40px;
+  right: 0px;
+  width: calc(100% - 20px);
+  border: none;
+  background: transparent;
+  color: var(--sidebar-text-color);
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sidebar-toggle:focus {
+  outline: none;
+}
+
+.sidebar-toggle:hover {
+  color: var(--sidebar-hover-color);
+}
+
+/* עיצוב עבור מצב נייד */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
   }
 
-  .sidebar-toggle:hover {
-    color: var(--sidebar-hover-color);
+  .sidebar.close {
+    width: 0;
   }
-  
-  .sidebar-dropdown-content {
-    display: none; /* ברירת מחדל - תוכן נפתח יוסתר */
-    flex-direction: column;
-    padding-left: 20px; /* ריווח לתוכן הנפתח */
-  }
-  
-  .sidebar-section.open .sidebar-dropdown-content {
-    display: flex;
-  }
-  
-  
-/* עיצוב תוכן התפריט הצידי */
-.sidebar-content {
-    flex: 1;
-    overflow-y: auto; /* אפשר גלילה עבור תוכן ארוך */
-  }
-
-
-  .sidebar i {
-    margin-right: 0px; /* מרווח מימין לאייקון */
-  }
-  
-  /* עיצוב עבור מצב נייד */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 100%; /* תפריט מתפשט לרוחב מלא במצב נייד */
-    }
-  
-    .sidebar.close {
-      width: 0; /* סגירת התפריט במצב נייד */
-    }
-  }
+}
