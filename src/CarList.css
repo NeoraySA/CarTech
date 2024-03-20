@@ -1,0 +1,118 @@
+.car-list-container {
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  .section-bar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #5cc5f9;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .section-bar-header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .section-bar-header-right-info {
+    margin-left: 5px;
+    font-size: 14px;
+  }
+  
+  .section-bar-header-left {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* הוספת פרמטר זה ימרכז את התכנים אופקית */
+
+  }
+  
+
+  .search-box {
+
+
+  }
+  
+  .search-box label {
+    
+    margin-left: 10px;
+  }
+  
+  .search-box input[type="text"] {
+    padding: 8px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .div-table {
+    overflow-x: auto;
+  }
+  
+  .car-list {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .car-list th, .car-list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: start;
+  }
+  
+  .car-list th {
+    background-color: #f2f2f2;
+  }
+  
+  .car-list tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .car-list tr:hover {
+    background-color: #ddd;
+  }
+  
+  .section-bar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .section-bar-footer-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .section-bar-footer-left-title {
+    margin-right: 10px;
+  }
+  
+  .section-bar-footer-left-info {
+    font-weight: bold;
+  }
+  
+  .div-but {
+    margin-top: 20px;
+  }
+  
+  .but-add-cus {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .but-add-cus:hover {
+    background-color: #45a049;
+  }
+  

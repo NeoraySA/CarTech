@@ -8,6 +8,8 @@ import AddCustomerForm from './AddCustomerForm';
 import VehicleInfo from './VehicleInfo';
 import CustomersList from './CustomersList';
 import CustomerDetails from './CustomerDetails';
+import AddCar from './AddCar';
+import CarList from './CarList';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -38,6 +40,9 @@ function App() {
             <Route path="/vehicleInfo" element={<VehicleInfo />} />
             <Route path="/customersList" element={<CustomersList />} />
             <Route path="/customerDetails/:id" element={<CustomerDetails />} />
+            <Route path="/addCar" element={<AddCar />} />
+            <Route path="/carList" element={<CarList />} />
+
             {/* Add more routes as needed */}
           </Routes>
         </div>
