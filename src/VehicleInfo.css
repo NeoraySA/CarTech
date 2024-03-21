@@ -46,7 +46,7 @@ body, .form-container {
 
   .search-box, .buttons-box {
     width: 100%; /* מוסיף רוחב כדי למלא את המרחב */
-    margin-bottom: 10px; /* מוסיף מרווח בין האלמנטים */
+    margin-bottom: 0px; /* מוסיף מרווח בין האלמנטים */
      
   }
   
