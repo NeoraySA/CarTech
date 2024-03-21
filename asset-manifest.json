@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/CarTech/static/css/main.6b05b84f.css",
+    "main.js": "/CarTech/static/js/main.6673122d.js",
+    "static/js/453.1252f952.chunk.js": "/CarTech/static/js/453.1252f952.chunk.js",
+    "index.html": "/CarTech/index.html",
+    "main.6b05b84f.css.map": "/CarTech/static/css/main.6b05b84f.css.map",
+    "main.6673122d.js.map": "/CarTech/static/js/main.6673122d.js.map",
+    "453.1252f952.chunk.js.map": "/CarTech/static/js/453.1252f952.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6b05b84f.css",
+    "static/js/main.6673122d.js"
+  ]
+}
