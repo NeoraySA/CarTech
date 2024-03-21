@@ -39,6 +39,24 @@ app.post('/api/cars', (req, res) => {
   });
 });
 
+
+
+
+
+// נקודת קצה לקבלת כל הלקוחות
+app.get('/api/customers', (req, res) => {
+  pool.query('SELECT * FROM customers', (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+    res.json(results);
+  });
+});
+
+
+
 // הגדרת PORT משתנה
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

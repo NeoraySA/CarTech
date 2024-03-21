@@ -10,6 +10,10 @@ import CustomersList from './CustomersList';
 import CustomerDetails from './CustomerDetails';
 import AddCar from './AddCar';
 import CarList from './CarList';
+import CarsList from './CarsList';
+
+
+
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -42,6 +46,8 @@ function App() {
             <Route path="/customerDetails/:id" element={<CustomerDetails />} />
             <Route path="/addCar" element={<AddCar />} />
             <Route path="/carList" element={<CarList />} />
+            <Route path="/carsList" element={<CarsList />} />
+
 
             {/* Add more routes as needed */}
           </Routes>
