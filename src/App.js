@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+// App.js
+
+import React, { useState } from 'react';
 import './App.css';
 import Header from './Header';
 import Footer from './Footer';
@@ -11,32 +13,26 @@ import CustomerDetails from './CustomerDetails';
 import AddCar from './AddCar';
 import CarList from './CarList';
 import CarsList from './CarsList';
-
-
-
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
-  // אתחול המצב בהתאם למה שנשמר ב-localStorage או false כברירת מחדל
-  const [isSidebarOpen, setIsSidebarOpen] = useState(
-    JSON.parse(localStorage.getItem('isSidebarOpen')) || false
-  );
-
-  // עדכון ה-localStorage בכל פעם שהמצב של התפריט הצידי משתנה
-  useEffect(() => {
-    localStorage.setItem('isSidebarOpen', JSON.stringify(isSidebarOpen));
-  }, [isSidebarOpen]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // הוספת מצב לשליטה על התפריט הצידי
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // הוספת מצב לשליטה על תפריט נייד
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    setIsSidebarOpen(!isSidebarOpen); // שינוי מצב התפריט הצידי
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen); // שינוי מצב התפריט הנייד
   };
 
   return (
     <Router>
       <div className="App">
-        <Header />
-        <Sidebar className="sidebar" isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <div className={`content ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
+        <Header toggleSidebar={toggleSidebar} toggleMobileMenu={toggleMobileMenu} /> {/* הוספת toggleMobileMenu כ-props */}
+        <Sidebar isSidebarOpen={isSidebarOpen} /> {/* העברת isSidebarOpen כ-props */}
+        <div className={`content ${isMobileMenuOpen ? "mobile-menu-open" : ""}`}> {/* הוספת תנאי עבור פתיחת התפריט הנייד */}
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
@@ -47,8 +43,6 @@ function App() {
             <Route path="/addCar" element={<AddCar />} />
             <Route path="/carList" element={<CarList />} />
             <Route path="/carsList" element={<CarsList />} />
-
-
             {/* Add more routes as needed */}
           </Routes>
         </div>

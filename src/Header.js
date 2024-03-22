@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faBars } from '@fortawesome/free-solid-svg-icons';
 
 import { pages } from './pagesConfig';
 
-function Header() {
+function Header({ toggleSidebar }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
@@ -13,6 +15,7 @@ function Header() {
     setSearchTerm(value);
 
     if (value.length > 0) {
+      // דוגמה למידע הדמיוני, וודא שיש לך מערך דומה או צור פתרון אחר להצגת הצעות
       const filteredSuggestions = pages.filter(page =>
         page.name.toLowerCase().includes(value.toLowerCase())
       );
@@ -22,18 +25,14 @@ function Header() {
     }
   };
 
-  // פונקציה זו תקרא כאשר ישנה לחיצה על הצעה
-  const handleSuggestionClick = () => {
-    setSearchTerm(''); // איפוס תיבת החיפוש
-    setSuggestions([]); // איפוס רשימת ההצעות
-  };
-
   return (
     <header className="header">
+      <button onClick={toggleSidebar} className="menu-toggle">
+        <FontAwesomeIcon icon={faBars} />
+      </button>
       <Link to="/" className="logo-link">
         <img src="logo.png" alt="Logo" className="logo" />
       </Link>
-
       <div className="header-search">
         <input
           type="text"
@@ -41,13 +40,13 @@ function Header() {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <span><i className="fas fa-search"></i></span>
+        <span><FontAwesomeIcon icon={faSearch} /></span>
         {suggestions.length > 0 && (
           <div className="search-suggestions">
             {suggestions.map((suggestion, index) => (
-              <Link key={index} to={suggestion.path} className="suggestion" onClick={handleSuggestionClick}>
+              <Link key={index} to={suggestion.path} className="suggestion" onClick={() => setSearchTerm('')}>
                 <div className="suggestion-content">
-                  <span className="icon">{suggestion.icon}</span>
+                  <span className="icon">{/* תצוגת אייקון */}</span>
                   <div className="text-content">
                     <div>{suggestion.name}</div>
                     <div className="description">{suggestion.description}</div>
@@ -58,7 +57,6 @@ function Header() {
           </div>
         )}
       </div>
-
       <div className="header-icons">
         <i className="fas fa-user icon"></i>
         <i className="fas fa-cog icon"></i>
