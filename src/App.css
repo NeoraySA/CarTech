@@ -1,74 +1,32 @@
+/* App.css */
+
 .App {
   text-align: center;
-  font-family: Assistant;
+  font-family: Assistant, sans-serif;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  padding: 70px;
+  flex-direction: row; /* שינוי כיוון החלוקה לשורה */
+  align-items: flex-start;
 }
 
-/* Initial content style, assuming sidebar is open by default */
 .content {
-  transition: margin-right 0.5s ease;
-  width: 100;
+  flex-grow: 1; /* התוכן יתפשט לכל המקום הזמין */
+  padding: 20px;
+  margin-top: 20px; /* מניח שגובה ה-header הוא 60px */
+  margin-right: 290px;
 }
 
-/* Adjust the margin based on sidebar's state */
-.content.sidebar-open {
-  margin-right: 290px; /* When sidebar is open */
+.mobile-menu-open .content {
+  margin-right: 0; /* כאשר התפריט הנייד נפתח, נסגור את המרווח מימין */
 }
 
-.content.sidebar-closed {
-  margin-right: 60px; /* When sidebar is closed */
-
-}
-
-
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 @media (max-width: 768px) {
   .App {
-    padding: 70px 20px; /* מתאים ריווחים לנייד */
+    flex-direction: column; /* בנייד, התפריט והתוכן יסודרו בטור */
   }
 
-  .content, .sidebar-open, .sidebar-closed {
-    margin-right: 0; /* הסרת הריווח הצידדי */
-  }
-
-  .sidebar {
-    display: none; /* הסרת התצוגה של התפריט הצידי במכשירים ניידים */
+  .content {
+    margin-top: 80px; /* ביטול המרווח בראש העמוד בנייד */
+    margin-right: 0px;
   }
 }

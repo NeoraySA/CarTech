@@ -17,17 +17,12 @@
   background-color: var(--sidebar-color);
   color: var(--sidebar-text-color);
   padding: 20px;
-  transition: width 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   overflow-y: auto;
+  z-index: 999; /* לוודא שהתפריט ישאר מעל לאלמנטים אחרים */
 }
 
-/* עיצוב כאשר התפריט סגור */
-.sidebar.close {
-  width: 20px;
-  align-items: center;
-}
-
-.sidebar .sidebar-content {
+.sidebar-content {
   display: flex;
   flex-direction: column;
 }
@@ -35,48 +30,58 @@
 .sidebar-link {
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
-  cursor: pointer;
+  margin-bottom: 20px;
   text-decoration: none;
   color: var(--sidebar-text-color);
+  font-size: 1em;
 }
 
 .sidebar-link span {
-  margin-right: 10px;
+  margin-right: 15px;
+  display: inline-block;
+  width: calc(100% - 30px); /* מניח שגודל האייקון הוא 30px */
 }
 
 .sidebar-link:hover {
   background-color: var(--sidebar-hover-color);
+  border-radius: 4px;
 }
 
 /* עיצוב כפתור הפתיחה/סגירה */
 .sidebar-toggle {
-  position: absolute;
-  bottom: 40px;
-  right: 0px;
-  width: calc(100% - 20px);
-  border: none;
-  background: transparent;
-  color: var(--sidebar-text-color);
-  padding: 10px;
-  cursor: pointer;
-}
-
-.sidebar-toggle:focus {
-  outline: none;
-}
-
-.sidebar-toggle:hover {
-  color: var(--sidebar-hover-color);
+  display: none; /* הסתרה כברירת מחדל */
 }
 
 /* עיצוב עבור מצב נייד */
 @media (max-width: 768px) {
+
   .sidebar {
-    width: 100%;
+    width: 0;
+    padding: 20px 10px;
+    display: none;
   }
 
-  .sidebar.close {
-    width: 0;
+  .sidebar.open {
+    width: var(--sidebar-width); /* פתיחת התפריט על כל המסך במצב נייד */
+  }
+
+  .sidebar-link span {
+    display: none; /* הסתרת הטקסט בתפריט הצידי במצב סגור */
+  }
+
+  .sidebar.open .sidebar-link span {
+    display: inline; /* הצגת הטקסט כאשר התפריט פתוח */
+  }
+
+  .sidebar-toggle {
+    display: block; /* הצגת הכפתור בתצוגה בנייד */
+    position: absolute; /* מיקום קבוע במסך */
+    top: 20px; /* מרווח מהשוליים העליונים */
+    right: 20px; /* מרווח מהשוליים הימניים */
+    background-color: transparent; /* רקע שקוף */
+    border: none; /* אין מסגרת */
+    color: var(--sidebar-text-color); /* צבע טקסט */
+    cursor: pointer; /* סמן של יד */
+    z-index: 1001; /* מוצג מעל תפריט הצד */
   }
 }

@@ -1,23 +1,6 @@
-import React, { useMemo, useEffect, forwardRef } from 'react';
-import { useTable, useSortBy, useRowSelect, useGlobalFilter } from 'react-table';
-
+import React, { useMemo, useState } from 'react';
+import { useTable, useSortBy, useExpanded } from 'react-table';
 import './CarTable.css';
-
-// קומפוננטת Checkbox מותאמת שתומכת בסטטוס indeterminate
-const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
-  const defaultRef = React.useRef();
-  const resolvedRef = ref || defaultRef;
-
-  useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
-
-  return (
-    <>
-      <input type="checkbox" ref={resolvedRef} {...rest} />
-    </>
-  );
-});
 
 export default function CarTable({ data, filter }) {
   const columns = useMemo(() => [
@@ -37,6 +20,10 @@ export default function CarTable({ data, filter }) {
       Header: 'צבע',
       accessor: 'color',
     },
+    {
+      Header: 'שנת ייצור',
+      accessor: 'year',
+    },
   ], []);
 
   const {
@@ -45,42 +32,42 @@ export default function CarTable({ data, filter }) {
     headerGroups,
     rows,
     prepareRow,
-    setGlobalFilter,
-    state: { selectedRowIds },
+    toggleRowExpanded,
   } = useTable(
     { columns, data },
-    useGlobalFilter, 
     useSortBy,
-    useRowSelect,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        // הוספת עמודה לתיבות סימון בתחילת כל שורה
-        {
-          id: 'selection',
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-        ...columns,
-      ]);
-    }
+    useExpanded,
   );
 
-  useEffect(() => {
-    setGlobalFilter(filter || undefined);
-  }, [filter, setGlobalFilter]);
+  // פונקציה לרנדור תוכן מתחת לשורה שהורחבה
+  const renderRowSubComponent = (row) => (
+    <>
+      <div className="expanded-content">
+        <div className="vehicle-details">
+          <p>מס' רישוי: <strong>{row.values.license_number}</strong></p>
+          <p>יצרן: <strong>{row.values.make}</strong></p>
+          <p>דגם: <strong>{row.values.model}</strong></p>
+          <p>צבע: <strong>{row.values.color}</strong></p>
+          <p>שנת ייצור: <strong>{row.values.year}</strong></p>
+          {/* אפשר להוסיף פרטים נוספים כאן */}
+        </div>
+      </div>
+      <div className="vehicle-actions">
+      <button type="button" className="button"><i className="icon-update">🛠</i>עדכון טיפול</button>
+      <button type="button" className="button"><i className="icon-block">🚫</i>חסימת רכב</button>
+      <button type="button" className="button"><i className="icon-order">📅</i>הזמנת רכב</button>
+      {/* ניתן להוסיף כפתורים נוספים כאן */}
+      </div>
+    </>
+  );
+  
+  
+  
 
   return (
     <div className="div-table">
       <table {...getTableProps()} className="car-list">
-        <thead>
+      <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
@@ -98,11 +85,24 @@ export default function CarTable({ data, filter }) {
           {rows.map(row => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
-              </tr>
+              // React.Fragment עבור רנדור של רכיבים מרובים
+              <React.Fragment key={row.id}>
+                <tr {...row.getRowProps({
+                  onClick: () => toggleRowExpanded(row.id),
+                  className: row.isExpanded ? 'expanded-row' : ''
+                })}>
+                  {row.cells.map(cell => (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  ))}
+                </tr>
+                {row.isExpanded && (
+                  <tr>
+                    <td colSpan={columns.length}>
+                      {renderRowSubComponent(row)}
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
             );
           })}
         </tbody>

@@ -1,63 +1,115 @@
-:root {
-  --color1: #E55812;
-  --color2: #0F252E;
-  --color3: #B6DAE7;
-  --color4: #1F1A1F;
-  --color5: #F9F6F1;
-}
-
 .div-table {
-  overflow-x: auto;
+  font-family: inherit;
+ 
   width: 100%;
+  overflow-x: auto;
 }
 
 .car-list {
   width: 100%;
   border-collapse: collapse;
-  margin: 10px 0;
+ 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
 }
 
-.car-list th, .car-list td {
-  border: 1px solid var(--color1);
-  padding: 10px;
-  text-align: start;
+.car-list thead tr {
+  background-color: transparent;
+  text-align: left;
+}
+
+.car-list th,
+.car-list td {
+
 }
 
 .car-list th {
-  background-color: var(--color1);
-  color: white;
-  font-weight: 400;
-  padding: 5px;
-  text-align: center;
+  font-weight: normal; /* הכותרות רגילות */
+  text-align: right;
 }
 
 .car-list td {
-  padding: 10px;
+
+  border-bottom: 1px solid #e5e5e5;
   text-align: right;
-  font-weight: bold;
 }
 
-.car-list a {
-  color: var(--color1);
-  text-decoration: none;
+.car-list tbody tr {
+  background-color: white;
+  transition: box-shadow 0.15s ease-in-out;
 }
 
-.car-list a:hover {
-  color: var(--color2);
+.car-list tbody tr.expanded-row,
+.car-list tbody tr.expanded-row + tr { /* הוספת קו כחול לשורת הפרטים הנוספים */
+  box-shadow: inset -3px 0 0 #007bff;
 }
 
-.car-list tr:nth-child(even) {
-  background-color: var(--color5);
+.expanded-content {
+  padding: 10px 15px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #e5e5e5;
 }
 
-.car-list tr:hover {
-  background-color: var(--color3);
-  color: var(--color2);
+.vehicle-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  text-align: right;
+  font-size: large;
 }
 
-/* עיצוב נוסף לתיבות הסימון */
-input[type="checkbox"] {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+.vehicle-details p {
+  margin: 0; /* להסיר מרווחים מיותרים */
+  flex: 1 1 auto; /* יתאים את עצמו לזמין במרחב של השורה */
+}
+
+.vehicle-details p strong {
+  font-weight: bold; /* הפונט של התוכן מודגש */
+}
+.vehicle-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0px;
+  padding-top: 0px;
+  border-top: 1px solid #e5e5e5; /* קו דק מעל לכפתורים */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* צל מסביב לאלמנט */
+}
+
+.button {
+
+  margin: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  display: flex; /* להוסיף תצוגת פלקס */
+  align-items: center; /* למרכז את האייקון והטקסט בכפתור */
+  gap: 5px; /* מרווח בין אייקון לטקסט */
+  font-family: inherit;
+  font-size: medium;
+
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button i { /* סגנון לאייקונים של הכפתורים */
+  font-size: 1rem; /* או כל גודל אחר בהתאם לספריית האייקונים שלך */
+}
+
+/* התאמה לכל אייקון באמצעות מחלקות של ספריית האייקונים שבשימוש */
+.button .icon-update { /* דוגמה למחלקה */
+  /* כאן יכול להיות סגנון ספציפי לאייקון */
+}
+
+.button .icon-block { /* דוגמה למחלקה */
+  /* סגנון נוסף לאייקון אחר */
+}
+
+.button .icon-order { /* דוגמה למחלקה */
+  /* וכן הלאה... */
 }

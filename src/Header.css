@@ -112,6 +112,13 @@
   cursor: pointer;
 }
 
+/* עיצוב רגיל */
+.menu-toggle {
+  display: none; /* הסתרת הכפתור בתצוגה רגילה */
+}
+
+
+
 @media (max-width: 768px) {
   .header {
     flex-direction: row;
@@ -140,6 +147,16 @@
   .header-search input {
     width: 100%; /* מתאים את רוחב תיבת החיפוש לרוחב הזמין */
     margin-right: 10px; /* הסרת המרווח שהיה בצד ימין של תיבת החיפוש */
+  }
+
+  .menu-toggle {
+    display: block; /* הצגת הכפתור בתצוגה בנייד */
+    background-color: transparent; /* רקע שקוף לכפתור */
+    border: none; /* הסרת מסגרת לכפתור */
+    font-size: 1.5rem; /* גודל טקסט גדול יותר */
+    color: white; /* צבע טקסט לבן */
+    cursor: pointer; /* סמן של יד מראה שמדובר בקישור */
+    padding: 0; /* הסרת רווחים פנימיים לכפתור */
   }
 }
 
