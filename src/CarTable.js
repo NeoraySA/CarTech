@@ -2,11 +2,15 @@ import React, { useMemo, useState } from 'react';
 import { useTable, useSortBy, useExpanded } from 'react-table';
 import './CarTable.css';
 
+import { formatLicenseNumber } from './utils';
+
 export default function CarTable({ data, filter }) {
   const columns = useMemo(() => [
     {
       Header: 'מס\' רישוי',
       accessor: 'license_number',
+    // שימוש בפונקציה עבור העיבוד והצגת התוכן של כל תא בעמודה
+    Cell: ({ value }) => formatLicenseNumber(value),
     },
     {
       Header: 'יצרן',
@@ -23,6 +27,14 @@ export default function CarTable({ data, filter }) {
     {
       Header: 'שנת ייצור',
       accessor: 'year',
+    },
+    {
+      Header: 'סניף',
+      accessor: 'branch_id',
+    },
+    {
+      Header: 'סטטוס',
+      accessor: 'status_id',
     },
   ], []);
 
@@ -44,7 +56,7 @@ export default function CarTable({ data, filter }) {
     <>
       <div className="expanded-content">
         <div className="vehicle-details">
-          <p>מס' רישוי: <strong>{row.values.license_number}</strong></p>
+          <p>מס' רישוי: <strong>{formatLicenseNumber(row.values.license_number)}</strong></p>
           <p>יצרן: <strong>{row.values.make}</strong></p>
           <p>דגם: <strong>{row.values.model}</strong></p>
           <p>צבע: <strong>{row.values.color}</strong></p>

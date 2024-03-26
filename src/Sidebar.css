@@ -20,6 +20,11 @@
   transition: all 0.3s ease-in-out;
   overflow-y: auto;
   z-index: 999; /* לוודא שהתפריט ישאר מעל לאלמנטים אחרים */
+text-align: start;
+}
+
+.sidebar.open {
+  display: block; /* הצגת התפריט כאשר הוא פתוח */
 }
 
 .sidebar-content {
@@ -47,22 +52,21 @@
   border-radius: 4px;
 }
 
-/* עיצוב כפתור הפתיחה/סגירה */
 .sidebar-toggle {
   display: none; /* הסתרה כברירת מחדל */
 }
 
-/* עיצוב עבור מצב נייד */
 @media (max-width: 768px) {
-
   .sidebar {
     width: 0;
-    padding: 20px 10px;
-    display: none;
+    padding: 20px 0px;
+    transition: width 0.3s ease-in-out;
   }
 
   .sidebar.open {
     width: var(--sidebar-width); /* פתיחת התפריט על כל המסך במצב נייד */
+    padding: 20px;
+    display: block; /* וודא שהתפריט נראה */
   }
 
   .sidebar-link span {
@@ -74,14 +78,6 @@
   }
 
   .sidebar-toggle {
-    display: block; /* הצגת הכפתור בתצוגה בנייד */
-    position: absolute; /* מיקום קבוע במסך */
-    top: 20px; /* מרווח מהשוליים העליונים */
-    right: 20px; /* מרווח מהשוליים הימניים */
-    background-color: transparent; /* רקע שקוף */
-    border: none; /* אין מסגרת */
-    color: var(--sidebar-text-color); /* צבע טקסט */
-    cursor: pointer; /* סמן של יד */
-    z-index: 1001; /* מוצג מעל תפריט הצד */
+    display: none; /* במקרה זה, אנחנו לא משתמשים בכפתור תוך כדי מדיה קוורי, אבל תוכל להתאים אותו לצורך שלך */
   }
 }

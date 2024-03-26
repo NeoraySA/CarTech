@@ -23,10 +23,16 @@
 @media (max-width: 768px) {
   .App {
     flex-direction: column; /* בנייד, התפריט והתוכן יסודרו בטור */
+    width: 100vW;
+    box-sizing: border-box;
   }
+  
 
   .content {
-    margin-top: 80px; /* ביטול המרווח בראש העמוד בנייד */
-    margin-right: 0px;
+    margin-top: 70px; /* ביטול המרווח בראש העמוד בנייד */
+    margin-right: 0;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
   }
 }

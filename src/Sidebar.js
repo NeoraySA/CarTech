@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faUsers, faCalendarAlt, faHandshake, faBook, faCog, faChevronLeft, faTimes } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
 
-function Sidebar({ toggleSidebar }) {
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-
+function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const links = [
     { name: "דשבורד", icon: faBook, path: "/dashboard" },
     { name: "הוספת לקוח", icon: faUsers, path: "/addCustomer" },
@@ -13,13 +11,8 @@ function Sidebar({ toggleSidebar }) {
     // רשימת הקישורים נמשכת...
   ];
 
-  const handleMobileToggle = () => {
-    setIsMobileSidebarOpen(!isMobileSidebarOpen);
-    toggleSidebar(); // קריאה לפונקציה toggleSidebar המועברת ב-props
-  };
-
   return (
-    <div className={`sidebar ${isMobileSidebarOpen ? "open" : "close"}`}>
+    <div className={`sidebar ${isSidebarOpen ? "open" : "close"}`}>
       <div className="sidebar-content">
         {links.map(({ name, icon, path }, index) => (
           <a key={index} href={path} className="sidebar-link">
@@ -28,9 +21,6 @@ function Sidebar({ toggleSidebar }) {
           </a>
         ))}
       </div>
-      <button onClick={handleMobileToggle} className="mobile-sidebar-toggle">
-        {isMobileSidebarOpen ? <FontAwesomeIcon icon={faTimes} /> : <FontAwesomeIcon icon={faChevronLeft} />}
-      </button>
     </div>
   );
 }
