@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CarTable from './CarTable';
+import ListHeader from './ListHeader';
+import ListFooter from './ListFooter';
 import './CarsList.css';
 
 function CarsList() {
@@ -19,40 +21,29 @@ function CarsList() {
     fetchCars();
   }, []);
 
-  // פונקציה לניקוי תיבת החיפוש
   const clearSearch = () => {
     setFilter("");
   };
 
+  const filteredCars = filter.trim() ? cars.filter(car =>
+    Object.values(car).some(value => 
+      String(value).toLowerCase().includes(filter.toLowerCase())
+    )
+  ) : cars;
+
   return (
     <div className="car-list-container">
-      <div className="section-bar-header">
-        <div className="section-bar-header-right">
-          <div className="section-bar-header-right-title"><b>רכבים</b></div>
-          <div className="section-bar-header-right-info">רשימת הרכבים במערכת</div>
-        </div>
-
-        <div className="section-bar-header-left">
-          <div className="search-box">
-            <input className='input-search-box'
-              type="text"
-              title="טקסט חיפוש"
-              placeholder="חיפוש"
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-            />
-            <i className="fa fa-times clear-icon" onClick={clearSearch}></i>
-          </div>
-        </div>
-      </div>
+      <ListHeader
+        title="רכבים"
+        subtitle="רשימת הרכבים במערכת"
+        filter={filter}
+        setFilter={setFilter}
+        clearSearch={clearSearch}
+      />
       
-      <CarTable className='section-table' data={cars} filter={filter} />
+      <CarTable data={filteredCars} />
 
-      <div className="section-bar-footer">
-        <div className='section-bar-footer-left'>
-          <div>סה"כ רכבים: {cars.length}</div>
-        </div>
-      </div>
+      <ListFooter footerText={`סה"כ רכבים: ${filteredCars.length}`} />
     </div>
   );
 }

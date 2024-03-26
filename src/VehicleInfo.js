@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import './VehicleInfo.css';
 
+import ListHeader from './ListHeader';
+
 function VehicleInfo() {
   const [licenseNumber, setLicenseNumber] = useState('');
   const [vehicleData, setVehicleData] = useState(null);
@@ -75,10 +77,16 @@ function VehicleInfo() {
   };
 
   return (
-    <div className="form-container">
+    <div className="ass">
+      <ListHeader
+        title="משרד התחבורה"
+        subtitle="קבלת מידע על רכב משרתי משרד התחבורה"
+        showSearchBox={false}
+      />
+      <div className="form-container">
       <div className="search-area">
         <div className="search-box">
-          <input
+          <input className='search-car-input'
             type="text"
             value={licenseNumber}
             onChange={(e) => setLicenseNumber(e.target.value)}
@@ -112,6 +120,7 @@ function VehicleInfo() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
