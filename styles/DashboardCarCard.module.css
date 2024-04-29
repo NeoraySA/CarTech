@@ -1,0 +1,43 @@
+/* DashboardCarCard.css */
+
+.car-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 300px;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+  }
+  
+  .car-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .car-card-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .car-card-content h3 {
+    margin: 0 0 10px;
+    font-size: 24px;
+  }
+  
+  .car-card-content .percentage {
+    font-size: 24px;
+    color: #00a0e5;
+    margin: 0;
+  }
+  
+  .car-card-content .details {
+    margin-top: 10px;
+  }
+  
+  .car-card-content .details p {
+    margin: 5px 0;
+    font-size: 18px;
+  }
+  

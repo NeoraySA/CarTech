@@ -1,0 +1,26 @@
+.section-bar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background-color: var(--accent-color);
+    padding: 0px;
+    border-radius: 5px;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .section-bar-footer-left {
+    display: flex;
+    align-items: center;
+    margin: 0px;
+    padding: 20px;
+  }
+
+  .footer-title, .footer-content {
+    display: inline-block; /* מאפשר לכותרת ולתוכן להיות צמודים זה לזה */
+  }
+  
+  .footer-content {
+    margin-right: 5px; /* הוספת רווח בין הכותרת לתוכן */
+    font-weight: bold;
+  }

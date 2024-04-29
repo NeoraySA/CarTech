@@ -1,0 +1,149 @@
+/* עיצוב כללי ומשתנים */
+:root {
+  --sidebar-width: 250px;
+  --sidebar-icon-size: 20px; /* הקטנת גודל האייקון להתאמה ויזואלית טובה יותר */
+  --sidebar-color: #34495E; /* צבע רקע עדכני יותר */
+  --sidebar-text-color: #ECF0F1;
+  --sidebar-hover-color: #1A5276; /* צבע עדכני להדגשת הקישור בעת העברת העכבר */
+  --sidebar-sublink-padding-left: 30px; /* הזחה לקישורי תת-קטגוריה */
+  --sidebar-sublink-color: #B3B6B7; /* צבע לתת-קטגוריות */
+}
+
+/* עיצוב בסיסי לתפריט הצידי */
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 60px; /* מתחיל מהקצה העליון של הדף */
+  right: 0;
+  height: 100vh; /* מלא את גובה המסך */
+  background-color: var(--sidebar-color);
+  color: var(--sidebar-text-color);
+  padding: 10px 20px; /* רווחים מעודכנים */
+  transition: all 0.3s; /* אנימציה חלקה יותר */
+  overflow-y: auto; /* מאפשר גלילה במקרה של תוכן רב */
+  z-index: 999; /* וודא שהתפריט יעלה מעל לכל */
+  align-items: end;
+}
+
+.sidebar.open {
+  right: 0; /* וודא שהתפריט יהיה נראה במצב פתוח */
+}
+
+.sidebar-header, .sidebar-footer {
+  padding: 10px;
+  align-items: center;
+  text-align: center;
+  color: var(--sidebar-text-color);
+}
+
+.sidebar-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.5em;
+}
+
+.sidebar-footer {
+  margin-top: auto; /* ממקם את חלק התחתון בקצה התחתון של התפריט */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-image {
+  width: 50px; /* או כל גודל אחר שמתאים */
+  height: 50px;
+  border-radius: 50%; /* יוצר תמונה עגולה */
+  margin-bottom: 10px;
+  object-fit: cover; /* מבטיח שהתמונה תתאים למסגרת ללא עיוות */
+}
+
+
+
+
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* וודא שהפריטים מתחילים מהצד השמאלי */
+  text-decoration: none;
+  color: var(--sidebar-text-color);
+  font-size: large;
+  margin-bottom: 5px;
+  padding: 10px 0;
+}
+
+.sidebar-sublinks {
+  display: flex;
+  flex-direction: column; /* שינוי הכיוון לוורטיקלי */
+  align-items: flex-start; /* התחלת סידור הפריטים מהצד השמאלי */
+  text-decoration: none;
+  
+  padding: 10px 0; /* רווח עליון ותחתון לקישורים */
+  transition: background-color 0.3s; /* החלקת המעבר של צבע הרקע */
+  padding-left: var(--sidebar-sublink-padding-left); /* הזחה של תת-קטגוריות */
+
+  margin-bottom: 10px; /* רווח קטן יותר בין פריטים */
+
+}
+
+.sidebar-sublinks a {
+  text-decoration: none; /* הסרת הקו התחתון */
+  font-size: large; /* גודל פונט קבוע */
+  color: var(--sidebar-sublink-color); /* צבע מותאם לתת-קטגוריות */
+  height: 40px;
+  justify-content: center;
+}
+
+.sidebar-icon {
+  margin-right: 0px; /* מרווח בין האייקון לטקסט */
+}
+
+
+.sidebar-chevron {
+  margin-right: 10px; /* מרווח בין האייקון לטקסט */
+}
+
+.sidebar-link:hover, .sidebar-sublinks a:hover {
+  background-color: var(--sidebar-hover-color);
+  border-radius: 5px; /* עיגול קל של הפינות */
+}
+
+
+
+/* אפקטים נוספים לקישורים והדגשות */
+.sidebar-link span, .sidebar-sublinks  span {
+  margin-right: 10px; /* רווח בין האייקון לטקסט */
+}
+
+/* תצוגה למצב מסך קטן או מובייל */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+    overflow: hidden; /* מונע תצוגה של תוכן התפריט כאשר הוא סגור */
+    padding: 0;
+    transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
+  }
+
+  .sidebar.open {
+    width: 100%; /* פתיחת התפריט ברוחב מלא */
+    padding: 10px 20px; /* שחזור הרווחים במצב פתוח */
+    overflow-y: auto; /* מאפשר גלילה אם יש יותר תוכן */
+  }
+
+
+
+  .sidebar.open .sidebar-link span, .sidebar.open .sidebar-sublink span {
+    display: inline; /* הצגת הטקסט בתפריט הפתוח */
+  }
+
+  .sidebar-sublinks {
+    padding-left: var(--sidebar-sublink-padding-left); /* תקינות ההזחה לתת-קטגוריות גם במצב מובייל */
+  }
+}
+
