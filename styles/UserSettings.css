@@ -1,0 +1,15 @@
+.user-settings {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .user-settings h2 {
+    margin-bottom: 20px;
+  }
+  
+  .user-settings .color-editor {
+    margin-top: 2rem;
+  }
+  
+  /* עיצוב נוסף עבור הקומפוננטה כאן */
+  

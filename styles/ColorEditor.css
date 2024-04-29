@@ -1,0 +1,24 @@
+.color-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.color-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.color-name {
+  margin-right: 10px;
+}
+
+input[type="color"] {
+  border: none;
+  padding: 0;
+  width: 200px;
+  height: 40px;
+  cursor: pointer;
+  margin-right: 20px;
+}

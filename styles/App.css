@@ -1,0 +1,60 @@
+/* App.css */
+
+/* משתנים */
+:root {
+  --main-font: 'Assistant', sans-serif;
+  --header-height: 60px; /* גובה ה-header */
+  --mobile-menu-width: 290px; /* רוחב תפריט נייד */
+  --main-color: #02112e; /* צבע ראשי */
+  --secondary-color: #f24806; /* צבע משני */
+  --heading-color: #000; /* צבע טקסט */
+  --accent-color: #9ac0f9; /* צבע קישוטים */
+  --secondary-accent-color: #6c757d; /* צבע קישוט משני */
+  --secondary-background-color: #f8f9fa; /* צבע רקע משני */
+  --heading-accent-color: #dc3545; /* צבע קישוט כותרת */
+  --text-accent-color: #28a745; /* צבע קישוט טקסט */
+}
+
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* עיצוב תוכן */
+.content {
+  flex-grow: 1; /* התוכן יתפשט לכל המקום הזמין */
+  padding: 20px;
+  margin-top: 60px; /* מניח שגובה ה-header הוא 60px */
+  margin-right: var(--mobile-menu-width); /* שימוש במשתנה לרוחב תפריט נייד */
+}
+
+.mobile-menu-open .content {
+  margin-right: 0; /* כאשר התפריט הנייד נפתח, נסגור את המרווח מימין */
+}
+
+@media (max-width: 768px) {
+  .App {
+    flex-direction: column; /* בנייד, התפריט והתוכן יסודרו בטור */
+    width: 100vW;
+    box-sizing: border-box;
+  }
+
+  .content {
+    margin-top: 70px; /* ביטול המרווח בראש העמוד בנייד */
+    margin-right: 0;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
