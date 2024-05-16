@@ -43,9 +43,10 @@ export default function CarTable({ data, filter }) {
           <p>דגם: <strong>{row.original.model}</strong></p>
           <p>צבע: <strong>{row.original.color}</strong></p>       
           <p>שנת ייצור: <strong>{row.original.year}</strong></p>
-          <p>צבע: <strong>{row.original.transmission_type}</strong></p>   
-          <p>צבע: <strong>{row.original.transmission_type}</strong></p>   
-          <p>צבע: <strong>{row.original.transmission_type}</strong></p>     
+          <p>תיבת הילוכים: <strong>{row.original.transmission_type}</strong></p>
+          <p>ק"מ לטיפול הבא: <strong>{row.original.km_to_next_service}</strong></p>   
+          <p>תאריך טסט: <strong>{row.original.test_date}</strong></p>   
+          <p>קוד: <strong>{row.original.transmission_type}</strong></p>     
           {/* הוספת פרטים נוספים כרצונך */}
         </div>
       </div>

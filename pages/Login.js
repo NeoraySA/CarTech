@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import Notification from '../components/Notification'; // ייבוא הקומפוננטה של ההודעות
+import styles from '../styles/LoginForm.module.css'; // ייבוא עיצוב ה-CSS
 
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [notification, setNotification] = useState({ message: '', type: '' });
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
+    setNotification({ message: '', type: '' });
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'; // שימוש במשתנה סביבה
 
     try {
-      const response = await fetch(`${apiUrl}/api/login`, {
+      const response = await fetch(`${apiUrl}/api/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,19 +29,28 @@ function LoginForm() {
       if (response.ok) {
         console.log('Login successful', data);
         localStorage.setItem('token', data.token); // שמירת הטוקן ב-localStorage
+        localStorage.setItem('company_id', data.companyId); // שמירת מזהה החברה ב-localStorage
+        localStorage.setItem('branch_id', data.branchId); // שמירת מזהה הסניף ב-localStorage
+        setNotification({ message: 'התחברת בהצלחה!', type: 'success' });
         router.push('/dashboard'); // הפניה לדף הדאשבורד או לדף הבית לאחר התחברות
       } else {
-        setErrorMsg(data.error || 'Failed to login');
+        setNotification({ message: data.error || 'Failed to login', type: 'error' });
       }
     } catch (error) {
-      setErrorMsg('Network error');
+      console.error('Login error:', error);
+      setNotification({ message: 'Network error', type: 'error' });
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
+    <div className={styles.loginContainer}>
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        onClose={() => setNotification({ message: '', type: '' })}
+      />
+      <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <div className={styles.formGroup}>
           <label htmlFor="username">Username:</label>
           <input
             id="username"
@@ -49,7 +60,7 @@ function LoginForm() {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label htmlFor="password">Password:</label>
           <input
             id="password"
@@ -59,8 +70,7 @@ function LoginForm() {
             required
           />
         </div>
-        {errorMsg && <div style={{ color: 'red' }}>{errorMsg}</div>}
-        <button type="submit">Login</button>
+        <button type="submit" className={styles.loginButton}>Login</button>
       </form>
     </div>
   );

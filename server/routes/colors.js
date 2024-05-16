@@ -1,51 +1,53 @@
 const express = require('express');
-const pool = require('../database'); // נניח שהגדרת החיבור למסד הנתונים מצוייה כאן
 const router = express.Router();
+const pool = require('../database');
+const authenticateToken = require('../middleware/authenticateToken');
 
-// Middleware לאימות JWT - אפשר לייבא אותו אם הוא מוגדר בקובץ חיצוני
-const authenticateToken = require('../middleware/authenticate');
-
-// נקודת קצה לקבלת כל הצבעים
 router.get('/', authenticateToken, (req, res) => {
   pool.query('SELECT * FROM colors', (err, results) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: 'שגיאה בחיבור למסד הנתונים' });
-    } else {
-      res.json(results);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
     }
+    res.json(results);
   });
 });
 
-// נקודת קצה להוספת צבע חדש
 router.post('/', authenticateToken, (req, res) => {
-  const { name, hexValue } = req.body;
-  pool.query('INSERT INTO colors (name, hexValue) VALUES (?, ?)', [name, hexValue], (err, results) => {
+  const { colorName, hexCode } = req.body;
+  const query = `INSERT INTO colors (color_name, hex_code) VALUES (?, ?)`;
+
+  pool.query(query, [colorName, hexCode], (err, results) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: 'לא ניתן להוסיף את הצבע למסד הנתונים' });
-    } else {
-      res.status(201).json({ message: 'הצבע נוסף בהצלחה', colorId: results.insertId });
+      res.status(500).json({ error: 'Failed to add the color to the database' });
+      return;
     }
+    res.status(201).json({ message: 'Color added successfully', colorId: results.insertId });
   });
 });
 
-// נקודת קצה לעדכון צבע קיים
 router.put('/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
-  const { hexValue } = req.body;
-  pool.query('UPDATE colors SET hexValue = ? WHERE id = ?', [hexValue, id], (err, results) => {
+  const { hex_code } = req.body;
+
+  if (!hex_code) {
+    return res.status(400).json({ error: 'Hex code is required' });
+  }
+
+  const query = 'UPDATE colors SET hex_code = ? WHERE color_id = ?';
+  pool.query(query, [hex_code, id], (err, results) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: 'שגיאה בעדכון הצבע' });
-    } else if (results.affectedRows === 0) {
-      res.status(404).json({ error: 'הצבע לא נמצא' });
-    } else {
-      res.json({ message: 'הצבע עודכן בהצלחה' });
+      res.status(500).json({ error: 'Failed to update the color in the database' });
+      return;
     }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'Color not found' });
+    }
+    res.json({ message: 'Color updated successfully' });
   });
 });
 
-// כאן ניתן להוסיף נקודות קצה נוספות לטיפול בצבעים
-
-module.exports = router; // ייצוא ה-router לשימוש בקובץ הראשי של האפליקציה
+module.exports = router;

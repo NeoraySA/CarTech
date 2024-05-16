@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+
 function ListHeader({ title, subtitle, showSearchBox = true, filter, setFilter, clearSearch }) {
   return (
     <div className="section-bar-header">
