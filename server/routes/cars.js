@@ -1,51 +1,36 @@
 const express = require('express');
-const pool = require('../database'); // נניח שהגדרת החיבור למסד הנתונים מצוייה כאן
 const router = express.Router();
+const pool = require('../database');
+const authenticateToken = require('../middleware/authenticateToken');
 
-// Middleware לאימות JWT - אפשר לייבא אותו אם הוא מוגדר בקובץ חיצוני
-const authenticateToken = require('../middleware/authenticate');
+router.get('/', authenticateToken, async (req, res) => {
+  console.log('User details:', req.user); // הדפס פרטי משתמש לבדיקה
+  const { companyId, branchId } = req.user; // שימוש בשמות הנכונים
+  console.log('companyId:', companyId, 'branchId:', branchId); // הדפס נתוני חברה וסניף
 
-// נקודת קצה לקבלת כל הרכבים
-router.get('/', authenticateToken, (req, res) => {
-  pool.query('SELECT * FROM cars', (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'שגיאה בחיבור למסד הנתונים' });
-    } else {
-      res.json(results);
-    }
-  });
+  try {
+    const [results] = await pool.query('SELECT * FROM cars WHERE company_id = ? AND branch_id = ?', [companyId, branchId]);
+    console.log('Query results:', results); // הדפס תוצאות שאילתה לבדיקה
+    res.json(results);
+  } catch (err) {
+    console.error("Internal server error:", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-// נקודת קצה להוספת רכב חדש
-router.post('/', authenticateToken, (req, res) => {
-  const { licenseNumber, make, model, year, color } = req.body; // ניתן להוסיף פרמטרים נוספים כרצונך
-  pool.query('INSERT INTO cars (licenseNumber, make, model, year, color) VALUES (?, ?, ?, ?, ?)', [licenseNumber, make, model, year, color], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'לא ניתן להוסיף את הרכב למסד הנתונים' });
-    } else {
-      res.status(201).json({ message: 'הרכב נוסף בהצלחה', carId: results.insertId });
-    }
-  });
+router.post('/', authenticateToken, async (req, res) => {
+  const { licenseNumber, make, model, year, color, transmissionType, fuelType, passenger, kmToNextService, testDate, category } = req.body;
+  const { companyId, branchId } = req.user; // שימוש בשמות הנכונים
+
+  const query = `INSERT INTO cars (license_number, make, model, year, color, transmission_type, fuel_type, passenger, km_to_next_service, test_date, category, company_id, branch_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  try {
+    const [results] = await pool.query(query, [licenseNumber, make, model, year, color, transmissionType, fuelType, passenger, kmToNextService, testDate, category, companyId, branchId]);
+    res.status(201).json({ message: 'Car added successfully', carId: results.insertId });
+  } catch (err) {
+    console.error("Failed to add the car to the database:", err);
+    res.status(500).json({ error: 'Failed to add the car to the database' });
+  }
 });
 
-// נקודת קצה לעדכון רכב קיים
-router.put('/:id', authenticateToken, (req, res) => {
-  const { id } = req.params;
-  const { color } = req.body; // לדוגמה, עדכון צבע הרכב. ניתן להוסיף פרמטרים נוספים לעדכון
-  pool.query('UPDATE cars SET color = ? WHERE id = ?', [color, id], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'שגיאה בעדכון הרכב' });
-    } else if (results.affectedRows === 0) {
-      res.status(404).json({ error: 'הרכב לא נמצא' });
-    } else {
-      res.json({ message: 'הרכב עודכן בהצלחה' });
-    }
-  });
-});
-
-// כאן ניתן להוסיף נקודות קצה נוספות לטיפול ברכבים
-
-module.exports = router; // ייצוא ה-router לשימוש בקובץ הראשי של האפליקציה
+module.exports = router;

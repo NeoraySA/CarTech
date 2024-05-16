@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faBars } from '@fortawesome/free-solid-svg-icons';
-
-import { pages } from '../src/pagesConfig';
+import { faSearch, faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function Header({ toggleSidebar }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const router = useRouter();
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-
     if (value.length > 0) {
       const filteredSuggestions = pages.filter(page =>
         page.name.toLowerCase().includes(value.toLowerCase())
@@ -24,9 +23,24 @@ function Header({ toggleSidebar }) {
   };
 
   const handleSuggestionClick = () => {
-    setSearchTerm(''); // Resets the search box content
-    setSuggestions([]); // Clears the suggestions
+    setSearchTerm('');
+    setSuggestions([]);
   };
+
+  const handleLogout = (event) => {
+    event.preventDefault(); // מניעת הגשת הטופס
+    event.stopPropagation(); // מניעת התפשטות האירוע
+    console.log("Logout button clicked");  // הדפסה לבדיקה
+  
+    localStorage.removeItem('token');  // מחיקת הטוקן מהאחסון המקומי
+    router.push('/Login');  // הפניה לדף ההתחברות
+  };
+  
+  // בשימוש בקוד הכפתור:
+  <button type="button" onClick={handleLogout} className="icon-button">
+    <FontAwesomeIcon icon={faSignOutAlt} />
+  </button>
+  
 
   return (
     <header className="header">
@@ -69,8 +83,9 @@ function Header({ toggleSidebar }) {
         )}
       </div>
       <div className="header-icons">
-        {/* Ensure you use FontAwesomeIcon or an equivalent for these icons */}
-        <i className="fas fa-user icon"></i>
+        <button type="button" onClick={handleLogout} className="icon-button"> {/* ודא שהtype של הכפתור מוגדר כbutton */}
+          <FontAwesomeIcon icon={faSignOutAlt} />
+        </button>
         <i className="fas fa-cog icon"></i>
         <i className="fas fa-envelope icon"></i>
       </div>

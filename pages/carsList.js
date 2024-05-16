@@ -11,19 +11,22 @@ function CarsList() {
 
   useEffect(() => {
     const fetchCars = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'; // שימוש במשתנה סביבה
-      const token = localStorage.getItem('token'); // קריאה של הטוקן מ-localStorage
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const token = localStorage.getItem('token');
+      const company_id = localStorage.getItem('company_id');
+      const branch_id = localStorage.getItem('branch_id');
 
       try {
         const response = await axios.get(`${apiUrl}/api/cars`, {
           headers: {
-            Authorization: `Bearer ${token}` // הוספת הטוקן לכותרות הבקשה
+            Authorization: `Bearer ${token}`,
+            'X-Company-ID': company_id, // שליחת מזהה החברה בכותרות
+            'X-Branch-ID': branch_id  // שליחת מזהה הסניף בכותרות
           }
         });
         setCars(response.data);
       } catch (error) {
         console.error('Error fetching cars:', error);
-        // טיפול בשגיאה או הצגת הודעה למשתמש
       }
     };
 
