@@ -3,6 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/carsList": "pages/carsList.js",
-  "/RentalAdd": "pages/RentalAdd.js",
-  "/CarAdd": "pages/CarAdd.js"
+  "/": "pages/index.js",
+  "/RentalAdd": "pages/RentalAdd.js"
 }
