@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
+import Notification from '../components/Notification';
 
 import '../styles/index.css';
 import '../styles/Header.css';
@@ -14,20 +15,40 @@ import '../styles/CarsList.css';
 import '../styles/CarTable.css';
 import '../styles/ListFooter.css';
 import '../styles/Dashboard.css';
-import '../styles/ListHeader.css'; // וודא שהנתיב נכון
+import '../styles/ListHeader.css';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Redirect to login page if not logged in
     const token = localStorage.getItem('token');
     if (!token && router.pathname !== '/Login') {
       router.push('/Login');
     }
-  }, []); // הוספת תלות ריקה כדי שה-Effect ירוץ רק פעם אחת בעת טעינת הקומפוננטה
+
+    const handleStart = (url) => {
+      if (url !== router.pathname) {
+        setLoading(true);
+      }
+    };
+
+    const handleComplete = (url) => {
+      setLoading(false);
+    };
+
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart);
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleComplete);
+    };
+  }, [router]);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -39,13 +60,14 @@ function MyApp({ Component, pageProps }) {
       {showMenus && (
         <>
           <Header toggleSidebar={toggleSidebar} toggleMobileMenu={toggleMobileMenu} />
-          <Sidebar isSidebarOpen={isSidebarOpen} />
+          <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         </>
       )}
       <div className={`content ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
         <Component {...pageProps} />
       </div>
       {showMenus && <Footer />}
+      {loading && <Notification message="טוען..." type="info" />}
     </>
   );
 }

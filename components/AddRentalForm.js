@@ -98,10 +98,11 @@ function AddRentalForm({ companyId, onSummaryChange }) {
       />
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.section}>
-        <h2
-        >בחירת לקוח ורכב
-        </h2>
-        <p>נא לבחור את הלקוח והרכב הרצויים</p>
+
+        <div className={styles.formGroup}>
+    <p className={styles.instruction}>נא לבחור את הלקוח והרכב הרצויים:</p>
+  </div>
+  
           <div className={styles.formGroup}>
             <label className={styles.label}>מספר הזמנה:</label>
             <input className={styles.input} type="text" name="order_id" value={rentalDetails.order_id} onChange={handleInputChange} />

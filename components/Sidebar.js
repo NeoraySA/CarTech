@@ -10,7 +10,7 @@ const userDemo = {
   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTardcKgEVE-N-mq7NhQhs3HPWdHlMQNnW3Jc75QRG--z8ilTk2P699__-2xCZKSev0wlE&usqp=CAU",
 };
 
-function Sidebar({ isSidebarOpen }) {
+function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const [openCategories, setOpenCategories] = useState({});
 
   const toggleCategory = (name) => {
@@ -35,7 +35,7 @@ function Sidebar({ isSidebarOpen }) {
             {openCategories[name] && (
               <div className="sidebar-sublinks">
                 {items.map(({ name, path }) => (
-                  <Link key={name} href={path}>
+                  <Link key={name} href={path} onClick={toggleSidebar}>
                     {name}
                   </Link>
                 ))}
