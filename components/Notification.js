@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaCheckCircle, FaExclamationCircle, FaInfoCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationCircle, FaInfoCircle, FaSpinner } from 'react-icons/fa';
 import styles from '../styles/Notification.module.css';
 
 const Notification = ({ message, type, onClose, onConfirm }) => {
@@ -16,6 +16,9 @@ const Notification = ({ message, type, onClose, onConfirm }) => {
     case 'info':
       icon = <FaInfoCircle className={styles.icon} />;
       break;
+    case 'loading':
+      icon = <FaSpinner className={`${styles.icon} ${styles.spinner}`} />;
+      break;
     default:
       icon = null;
   }
@@ -29,9 +32,9 @@ const Notification = ({ message, type, onClose, onConfirm }) => {
           <button className={styles.confirmButton} onClick={onConfirm}>אישור</button>
           <button className={styles.cancelButton} onClick={onClose}>ביטול</button>
         </div>
-      ) : (
+      ) : type !== 'loading' ? (
         <button className={styles.closeButton} onClick={onClose}>&times;</button>
-      )}
+      ) : null}
     </div>
   );
 };
