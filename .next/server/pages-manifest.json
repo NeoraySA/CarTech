@@ -2,8 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/carsList": "pages/carsList.js",
-  "/RentalAdd": "pages/RentalAdd.js",
-  "/Settings": "pages/Settings.js",
-  "/CarAdd": "pages/CarAdd.js"
+  "/car-details/[id]": "pages/car-details/[id].js",
+  "/CarAdd": "pages/CarAdd.js",
+  "/dashboard": "pages/dashboard.js"
 }
