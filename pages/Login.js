@@ -29,6 +29,7 @@ function LoginForm() {
       if (response.ok) {
         console.log('Login successful', data);
         localStorage.setItem('token', data.token); // שמירת הטוקן ב-localStorage
+        localStorage.setItem('user_id', data.userId); // שמירת מזהה המשתמש ב-localStorage
         localStorage.setItem('company_id', data.companyId); // שמירת מזהה החברה ב-localStorage
         localStorage.setItem('branch_id', data.branchId); // שמירת מזהה הסניף ב-localStorage
         setNotification({ message: 'התחברת בהצלחה!', type: 'success' });

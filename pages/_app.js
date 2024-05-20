@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import Notification from '../components/Notification';
+import { SettingsProvider } from '../context/SettingsContext'; // Import the SettingsProvider
 
 import '../styles/index.css';
 import '../styles/Header.css';
@@ -22,6 +23,8 @@ function MyApp({ Component, pageProps }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const companyId = 1; // Define companyId
+  const branchId = 1; // Define branchId
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -56,7 +59,7 @@ function MyApp({ Component, pageProps }) {
   const showMenus = router.pathname !== '/Login';
 
   return (
-    <>
+    <SettingsProvider companyId={companyId} branchId={branchId}>
       {showMenus && (
         <>
           <Header toggleSidebar={toggleSidebar} toggleMobileMenu={toggleMobileMenu} />
@@ -68,7 +71,7 @@ function MyApp({ Component, pageProps }) {
       </div>
       {showMenus && <Footer />}
       {loading && <Notification message="טוען..." type="info" />}
-    </>
+    </SettingsProvider>
   );
 }
 

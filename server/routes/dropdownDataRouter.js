@@ -33,4 +33,19 @@ router.get('/carCategories/:companyId', authenticateToken, async (req, res) => {
   }
 });
 
+
+// Fetch fuel levels with authentication
+router.get('/fuel_levels', authenticateToken, async (req, res) => {
+  console.log("Fetching fuel levels");
+  try {
+    const [results] = await pool.query('SELECT level_id, level_description FROM fuel_levels');
+    console.log("Fuel levels fetched:", results);
+    res.json(results.map(level => ({ label: level.level_description, value: level.level_id })));
+  } catch (err) {
+    console.error("Error retrieving fuel levels:", err);
+    res.status(500).json({ error: 'Server error retrieving fuel levels' });
+  }
+});
+
+
 module.exports = router;

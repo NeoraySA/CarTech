@@ -12,11 +12,6 @@
   ],
   "rootMainFiles": [],
   "pages": {
-    "/404": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/404.js"
-    ],
     "/CarAdd": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -26,6 +21,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/RentalAdd.js"
+    ],
+    "/Settings": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/Settings.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

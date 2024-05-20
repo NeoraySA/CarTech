@@ -4,6 +4,6 @@
   "/_document": "pages/_document.js",
   "/carsList": "pages/carsList.js",
   "/RentalAdd": "pages/RentalAdd.js",
-  "/CarAdd": "pages/CarAdd.js",
-  "/404": "pages/404.js"
+  "/Settings": "pages/Settings.js",
+  "/CarAdd": "pages/CarAdd.js"
 }

@@ -5,11 +5,22 @@ const authenticateToken = require('../middleware/authenticateToken');
 
 // GET request to fetch all customers
 router.get('/', authenticateToken, async (req, res) => {
-  const { companyId, branchId } = req.user; // שימוש בשמות הנכונים
-  console.log('companyId:', companyId, 'branchId:', branchId); // הדפס נתוני חברה וסניף לבדיקה
+  const { companyId, branchId } = req.user; // Use the correct company and branch IDs from user data
+  const { is_active } = req.query; // Retrieve the is_active parameter from the query string, if provided
+
+  console.log('companyId:', companyId, 'branchId:', branchId, 'is_active:', is_active); // Print for verification
 
   try {
-    const [results] = await pool.query('SELECT * FROM customers WHERE company_id = ? AND branch_id = ?', [companyId, branchId]);
+    let query = 'SELECT * FROM customers WHERE company_id = ? AND branch_id = ?';
+    let params = [companyId, branchId];
+
+    // Dynamically append 'is_active' condition if provided
+    if (is_active !== undefined) {
+      query += ' AND is_active = ?';
+      params.push(is_active);
+    }
+
+    const [results] = await pool.query(query, params);
     res.json(results);
   } catch (error) {
     console.error('Internal server error:', error);
@@ -19,8 +30,8 @@ router.get('/', authenticateToken, async (req, res) => {
 
 // POST request to add a new customer
 router.post('/', authenticateToken, async (req, res) => {
-  const { companyId, branchId } = req.user; // שימוש בשמות הנכונים
-  console.log('companyId:', companyId, 'branchId:', branchId); // הדפס נתוני חברה וסניף לבדיקה
+  const { companyId, branchId } = req.user; // Use the correct company and branch IDs from user data
+  console.log('companyId:', companyId, 'branchId:', branchId); // Print company and branch ID for verification
 
   try {
     // Destructuring all fields from the form data
@@ -39,7 +50,7 @@ router.post('/', authenticateToken, async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    // Using array to pass values ensures they match the placeholders in the query
+    // Using an array to pass values ensures they match the placeholders in the query
     const values = [
       last_name, first_name, company_name, street, building_number, city, country,
       telephone, cellphone, fax, email, gender, category, is_active,
