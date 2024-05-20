@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
-import AddCustomerForm from '../components/AddCustomerForm'; // קומפוננטה שתיצור להוספת הטופס
+import AddCustomerForm from '../components/AddCustomerForm';
 import ListHeader from '../components/ListHeader';
 import ListFooter from '../components/ListFooter';
-
+import Notification from '../components/Notification';
 
 function AddCustomerPage() {
   const [formData, setFormData] = useState({
@@ -25,10 +25,10 @@ function AddCustomerPage() {
     is_active: false,
     vat_exempt: false,
     deposit_exempt: false,
-    branch: '',
-    added_by: '',
     notes: ''
   });
+
+  const [notification, setNotification] = useState({ message: '', type: '' });
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -41,20 +41,33 @@ function AddCustomerPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-    const token = localStorage.getItem('token'); // קריאה של הטוקן מ-localStorage
+    const token = localStorage.getItem('token'); 
+    const company_id = localStorage.getItem('company_id');
+    const branch_id = localStorage.getItem('branch_id');
+    const added_by = localStorage.getItem('user_id');
+
+    const completeFormData = {
+      ...formData,
+      company_id,
+      branch_id,
+      added_by,
+      is_active: formData.is_active ? 1 : 0,
+      vat_exempt: formData.vat_exempt ? 1 : 0,
+      deposit_exempt: formData.deposit_exempt ? 1 : 0
+    };
 
     try {
-      const response = await axios.post(`${apiUrl}/api/customers`, formData, {
+      const response = await axios.post(`${apiUrl}/api/customers`, completeFormData, {
         headers: {
-          Authorization: `Bearer ${token}` // הוספת הטוקן לכותרות הבקשה
+          Authorization: `Bearer ${token}`
         }
       });
       if (response.status === 201) {
-        alert('הלקוח נוסף בהצלחה!');
+        setNotification({ message: 'הלקוח נוסף בהצלחה!', type: 'success' });
       }
     } catch (error) {
       console.error('Failed to add customer:', error);
-      alert('Failed to add customer');
+      setNotification({ message: 'הוספת הלקוח נכשלה!', type: 'error' });
     }
   };
 
@@ -66,10 +79,11 @@ function AddCustomerPage() {
       <ListHeader
         title="הוספת לקוח חדש"
         subtitle="מילוי פרטי הלקוח"
-        showSearchBox={false}  // מונע את הצגת תיבת החיפוש
+        showSearchBox={false}
       />
-
+      <Notification message={notification.message} type={notification.type} onClose={() => setNotification({ message: '', type: '' })} />
       <AddCustomerForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
+      <ListFooter />
     </div>
   );
 }

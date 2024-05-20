@@ -11,6 +11,7 @@ import { zonedTimeToUtc } from 'date-fns-tz';
 import { format } from 'date-fns';
 import styles from '../styles/AddForm.module.css';
 
+
 function AddRentalForm({ companyId, onSummaryChange }) {
   const { settings, loading: settingsLoading } = useSettings();
 

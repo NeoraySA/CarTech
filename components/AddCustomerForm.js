@@ -10,6 +10,10 @@ function AddCustomerForm({ formData, handleChange, handleSubmit }) {
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.section}>
+        <div className={styles.formGroup}>
+            <label className={styles.label}>תעודת זהות:</label>
+            <input className={styles.input} type="text" name="id_number" value={formData.id_number} onChange={handleChange} required />
+          </div>
           <div className={styles.formGroup}>
             <label className={styles.label}>שם משפחה:</label>
             <input className={styles.input} type="text" name="last_name" value={formData.last_name} onChange={handleChange} required />

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import CarCategoriesSelector from './CarCategoriesSelector';
 import Notification from './Notification';
@@ -22,6 +23,7 @@ function AddCarForm({ companyId }) {
 
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ message: '', type: '', onConfirm: null });
+  const router = useRouter(); // הוספת useRouter מ-Next.js
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -57,6 +59,8 @@ function AddCarForm({ companyId }) {
       });
       if (response.status === 201) {
         setNotification({ message: 'הרכב נוסף בהצלחה!', type: 'success', onConfirm: null });
+        const newCarId = response.data.carId; // הנחת שה-ID של הרכב החדש מוחזר מהשרת כ-response.data.carId
+        router.push(`/car-details/${newCarId}`); // ניווט לדף פרטי הרכב
       }
     } catch (error) {
       console.error('Failed to add the car:', error);
