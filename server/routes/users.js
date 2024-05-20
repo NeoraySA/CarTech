@@ -19,7 +19,7 @@ router.post('/login', async (req, res) => {
         
         const SECRET_KEY = process.env.SECRET_KEY || 'your_very_secret_key_here';
         const token = jwt.sign({
-          userId: user.id,
+          userId: user.user_id, // הוספת מזהה המשתמש ל־JWT
           username: user.user_name,
           companyId: user.company_id,
           branchId: user.branch_id
@@ -28,6 +28,7 @@ router.post('/login', async (req, res) => {
         return res.status(200).json({
           message: 'התחברות מוצלחת',
           token,
+          userId: user.user_id, // הוספת מזהה המשתמש לתגובה
           companyId: user.company_id,
           branchId: user.branch_id
         });

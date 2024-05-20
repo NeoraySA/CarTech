@@ -48,7 +48,7 @@ export const categoriesConfig = [
     name: "הגדרות",
     icon: faCog,
     items: [
-      { name: "הגדרות חברה", path: "/settings/general" },
+      { name: "הגדרות חברה", path: "/Settings" },
       { name: "הגדרות סניף", path: "/settings/general" },
       { name: "כללי", path: "/settings/general" },
       { name: "אבטחה", path: "/settings/security" },
