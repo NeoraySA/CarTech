@@ -26,13 +26,9 @@ router.get('/', authenticateToken, async (req, res) => {
 
   try {
     const [results] = await pool.query(query, params);
-    console.log('Query results:', results);
     res.json(results);
   } catch (err) {
     console.error("Internal server error:", err);
-    console.error("Error message:", err.message);
-    console.error("SQL State:", err.sqlState);
-    console.error("Error stack:", err.stack);
     res.status(500).json({ error: 'Internal server error', details: err.message });
   }
 });
@@ -72,9 +68,6 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(201).json({ message: 'New car added successfully', carId: results.insertId });
   } catch (err) {
     console.error("Failed to add new car:", err);
-    console.error("Error message:", err.message);
-    console.error("SQL State:", err.sqlState);
-    console.error("Error stack:", err.stack);
     res.status(500).json({ error: 'Failed to add new car', details: err.message });
   }
 });

@@ -9,6 +9,7 @@ export const categoriesConfig = [
     items: [
       { name: "הוספת רכב", path: "/CarAdd" },
       { name: "רשימת רכבים", path: "/carsList" },
+      { name: "קטגוריות רכבים", path: "/CarCategories" },
       { name: "מעקב טיפולים", path: "/addVehicle" },
       { name: "מעקב טסטים", path: "/addVehicle" },
       // הוסף כאן כל תת-קטגוריות נוספות שתרצה

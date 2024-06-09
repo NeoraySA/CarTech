@@ -1,0 +1,104 @@
+.table-container {
+    font-family: inherit;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.universal-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+}
+
+.cell-license-number {
+    white-space: nowrap;
+}
+
+.universal-table thead tr {
+    background-color: transparent;
+    text-align: left;
+    color: var(--main-color);
+}
+
+.universal-table th,
+.universal-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.universal-table th {
+    text-align: right;
+}
+
+.universal-table td {
+    text-align: right;
+}
+
+.universal-table tbody tr {
+    background-color: white;
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.universal-table tbody tr.expanded-row,
+.universal-table tbody tr.expanded-row + tr {
+    box-shadow: inset -3px 0 0 #007bff;
+}
+
+.expanded-content {
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e5e5e5;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.details-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    text-align: right;
+    font-size: large;
+}
+
+.details-content p {
+    margin: 0;
+    flex: 1 1 auto;
+}
+
+.details-content p strong {
+    font-weight: bold;
+}
+
+.actions-content {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0px;
+    padding-top: 0px;
+    border-top: 1px solid #e5e5e5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button {
+    margin: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+    font-size: medium;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.button i {
+    font-size: 1rem;
+}

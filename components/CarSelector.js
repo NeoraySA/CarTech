@@ -2,19 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 
-function CarSelector({ onChange, filters }) {
+function CarSelector({ value, onChange, filters }) {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(false);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
   useEffect(() => {
     async function fetchCars() {
-      const companyId = localStorage.getItem('company_id');
-      const branchId = localStorage.getItem('branch_id');
-      if (!companyId || !branchId) {
-        console.log('חסר מזהה חברה או מזהה סניף');
-        return;
-      }
       const token = localStorage.getItem('token');
       if (!token) {
         console.log('האסימון אינו נמצא באחסון המקומי');
@@ -22,13 +16,17 @@ function CarSelector({ onChange, filters }) {
       }
       setLoading(true);
       try {
-        let query = `${apiUrl}/api/cars?company_id=${companyId}&branch_id=${branchId}`;
+        let query = `${apiUrl}/api/cars`;
         if (filters) {
+          const filterParams = [];
           if (filters.available) {
-            query += `&is_available=${filters.available}`;
+            filterParams.push(`is_available=${filters.available}`);
           }
           if (filters.statusId) {
-            query += `&status_id=${filters.statusId}`;
+            filterParams.push(`status_id=${filters.statusId}`);
+          }
+          if (filterParams.length > 0) {
+            query += `?${filterParams.join('&')}`;
           }
         }
         console.log('שולח בקשה אל:', query);
@@ -40,8 +38,7 @@ function CarSelector({ onChange, filters }) {
           const carOptions = response.data.map(car => ({
             value: car.id,
             label: `${car.license_number} | ${car.make} ${car.model} | ${car.color}`,
-            current_km: car.current_km,
-            current_fuel_level: car.current_fuel_level
+            car // שמירת כל פרטי הרכב
           }));
           setCars(carOptions);
         } else {
@@ -60,8 +57,12 @@ function CarSelector({ onChange, filters }) {
 
   return (
     <Select
+      value={cars.find(option => option.value === value)}
       options={cars}
-      onChange={option => onChange(option.value, option.current_km, option.current_fuel_level)}
+      onChange={option => {
+        console.log('נבחר רכב:', option);
+        onChange(option.value, option.car);
+      }}
       placeholder="בחר רכב..."
       noOptionsMessage={() => 'לא נמצאו תוצאות'}
       isLoading={loading}

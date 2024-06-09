@@ -66,4 +66,22 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
+// GET request to fetch drivers by customer ID
+router.get('/drivers', authenticateToken, async (req, res) => {
+  const { customerId } = req.query; // Retrieve the customer ID from the query string
+
+  if (!customerId) {
+    return res.status(400).json({ error: 'Customer ID is required' });
+  }
+
+  try {
+    const query = 'SELECT * FROM drivers WHERE customer_id = ?';
+    const [results] = await pool.query(query, [customerId]);
+    res.json(results);
+  } catch (error) {
+    console.error('Failed to fetch drivers for customer:', error);
+    res.status(500).json({ error: 'Failed to fetch drivers for customer' });
+  }
+});
+
 module.exports = router;

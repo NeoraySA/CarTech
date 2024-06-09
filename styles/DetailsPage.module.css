@@ -1,0 +1,203 @@
+.container {
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  gap: 20px; /* רווח בין הקונטיינרים */
+}
+
+.formContainer {
+  flex: 3; /* חלק רחב יותר עבור הטופס */
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.summaryContainer {
+  flex: 1; /* חלק צר יותר עבור הסיכום */
+  background-color: var(--accent-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.section {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  flex: 1 1 calc(33.33% - 30px);
+  box-sizing: border-box;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input, .select, .textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: medium;
+}
+
+.checkbox {
+  margin-top: 5px;
+}
+
+.textarea {
+  height: 100px;
+}
+
+.submitButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: start;
+  font-family: inherit;
+}
+
+.loader {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  margin-top: 2px;
+  animation: spin 1s linear infinite;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagePreview {
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .formContainer, .summaryContainer {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    flex: 1 1 100%;
+  }
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.universalTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.universalTable th,
+.universalTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.universalTable th {
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+
+.universalTable th.sorting {
+  background-color: #eaeaea;
+}
+
+.expandedContent {
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.expandedRow {
+  background-color: #f1f1f1;
+}
+
+.tableButtons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}

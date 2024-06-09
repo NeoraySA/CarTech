@@ -13,15 +13,11 @@ function CarsList() {
     const fetchCars = async () => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       const token = localStorage.getItem('token');
-      const company_id = localStorage.getItem('company_id');
-      const branch_id = localStorage.getItem('branch_id');
 
       try {
         const response = await axios.get(`${apiUrl}/api/cars`, {
           headers: {
-            Authorization: `Bearer ${token}`,
-            'X-Company-ID': company_id, // שליחת מזהה החברה בכותרות
-            'X-Branch-ID': branch_id  // שליחת מזהה הסניף בכותרות
+            Authorization: `Bearer ${token}`
           }
         });
         setCars(response.data);

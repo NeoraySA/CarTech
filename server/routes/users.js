@@ -7,7 +7,7 @@ const pool = require('../database');
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const query = 'SELECT * FROM users WHERE user_name = ? AND is_active = 1';
+    const query = 'SELECT * FROM user_details_view WHERE user_name = ? AND user_is_active = 1';
     
     const [results] = await pool.query(query, [username]);
     if (results.length > 0) {
@@ -25,12 +25,19 @@ router.post('/login', async (req, res) => {
           branchId: user.branch_id
         }, SECRET_KEY, { expiresIn: '1d' });
 
+        // החזרת הערכים הרלוונטיים בלבד
+        const userResponse = {
+          user_name: user.user_name,
+          profile_image_url: user.profile_image_url,
+          company_name: user.company_name,
+          company_logo: user.company_logo_url,
+          branch_name: user.branch_name
+        };
+
         return res.status(200).json({
           message: 'התחברות מוצלחת',
           token,
-          userId: user.user_id, // הוספת מזהה המשתמש לתגובה
-          companyId: user.company_id,
-          branchId: user.branch_id
+          user: userResponse
         });
       } else {
         return res.status(401).json({ error: 'שם משתמש או סיסמה שגויים' });

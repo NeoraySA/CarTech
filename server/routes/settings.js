@@ -4,8 +4,8 @@ const pool = require('../database');
 const authenticateToken = require('../middleware/authenticateToken');
 
 // Get settings for a company/branch
-router.get('/:companyId/:branchId?', authenticateToken, async (req, res) => {
-  const { companyId, branchId } = req.params;
+router.get('/', authenticateToken, async (req, res) => {
+  const { companyId, branchId } = req.user; // שימוש במידע מתוך הטוקן
   try {
     const query = branchId 
       ? 'SELECT * FROM settings WHERE company_id = ? AND (branch_id = ? OR branch_id IS NULL)' 
@@ -21,7 +21,8 @@ router.get('/:companyId/:branchId?', authenticateToken, async (req, res) => {
 
 // Update settings for a company/branch
 router.put('/', authenticateToken, async (req, res) => {
-  const { companyId, branchId, settings } = req.body;
+  const { companyId, branchId } = req.user; // שימוש במידע מתוך הטוקן
+  const { settings } = req.body;
   try {
     for (const setting of settings) {
       const query = 'INSERT INTO settings (company_id, branch_id, setting_name, setting_value) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)';

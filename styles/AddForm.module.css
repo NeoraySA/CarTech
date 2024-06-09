@@ -2,7 +2,6 @@
   display: flex;
   justify-content: start;
   width: 100%;
-  
   gap: 20px; /* רווח בין הקונטיינרים */
 }
 
@@ -25,7 +24,6 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   padding: 20px;
   box-sizing: border-box;
-
 }
 
 .section {
@@ -106,6 +104,12 @@
   animation: spin 1s linear infinite;
   align-items: center;
   justify-content: center;
+}
+
+.imagePreview {
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 4px;
 }
 
 @keyframes spin {

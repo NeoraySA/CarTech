@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
+import axios from 'axios';
 
 import AddRentalForm from '../components/AddRentalForm';
 import ListHeader from '../components/ListHeader';
@@ -7,17 +8,15 @@ import DetailsSummaryComponent from '../components/DetailsSummaryComponent'; // 
 import styles from '../styles/AddForm.module.css'; // ודא שהנתיב נכון
 
 function RentalAdd() {
-  const [companyId, setCompanyId] = useState('');
   const [summaryData, setSummaryData] = useState({
-
     totalDays: 0,
     totalKmRental: 0
   });
 
   useEffect(() => {
-    const storedCompanyId = localStorage.getItem('company_id');
-    if (storedCompanyId) {
-      setCompanyId(storedCompanyId);
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
   }, []);
 
@@ -40,7 +39,7 @@ function RentalAdd() {
       />
       <div className={styles.container}>
         <div className={styles.formContainer}>
-          <AddRentalForm companyId={companyId} onSummaryChange={handleSummaryChange} />
+          <AddRentalForm onSummaryChange={handleSummaryChange} />
         </div>
         <div className={styles.summaryContainer}>
           <DetailsSummaryComponent summaryData={summaryData} />

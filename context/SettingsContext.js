@@ -13,7 +13,7 @@ export const SettingsProvider = ({ children, companyId, branchId }) => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`${apiUrl}/api/settings/${companyId}/${branchId}`, {
+        const response = await axios.get(`${apiUrl}/api/settings/`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const settingsData = response.data.reduce((acc, setting) => {

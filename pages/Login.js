@@ -26,19 +26,19 @@ function LoginForm() {
 
       const data = await response.json();
 
+      console.log("Response Data:", data); // הדפסת נתוני התגובה לבדיקה
+
       if (response.ok) {
-        console.log('Login successful', data);
         localStorage.setItem('token', data.token); // שמירת הטוקן ב-localStorage
-        localStorage.setItem('user_id', data.userId); // שמירת מזהה המשתמש ב-localStorage
-        localStorage.setItem('company_id', data.companyId); // שמירת מזהה החברה ב-localStorage
-        localStorage.setItem('branch_id', data.branchId); // שמירת מזהה הסניף ב-localStorage
+        localStorage.setItem('user', JSON.stringify(data.user)); // שמירת פרטי המשתמש ב-localStorage
+        console.log("Saved to localStorage:", data.user); // הדפסת הנתונים שנשמרו ב-localStorage
         setNotification({ message: 'התחברת בהצלחה!', type: 'success' });
         router.push('/dashboard'); // הפניה לדף הדאשבורד או לדף הבית לאחר התחברות
       } else {
         setNotification({ message: data.error || 'Failed to login', type: 'error' });
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login Error:", error); // הדפסת שגיאות לקונסול
       setNotification({ message: 'Network error', type: 'error' });
     }
   };

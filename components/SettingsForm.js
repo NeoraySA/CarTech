@@ -13,7 +13,7 @@ function SettingsForm({ companyId, branchId }) {
       setLoading(true);
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`${apiUrl}/api/settings/${companyId}/${branchId || ''}`, {
+        const response = await axios.get(`${apiUrl}/api/settings`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.status === 200) {
@@ -47,7 +47,7 @@ function SettingsForm({ companyId, branchId }) {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      await axios.put(`${apiUrl}/api/settings`, { companyId, branchId, settings }, {
+      await axios.put(`${apiUrl}/api/settings`, { settings }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotification({ message: 'Settings saved successfully', type: 'success' });
