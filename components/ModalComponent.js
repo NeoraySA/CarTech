@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styles from '../styles/ModalComponent.module.css'; // עיצוב כללי למודל
 
-const ModalComponent = ({ isOpen, onClose, title, children, onSave, description, footerText }) => {
+const ModalComponent = ({ isOpen, onClose, title, children, description }) => {
   const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
@@ -23,16 +23,13 @@ const ModalComponent = ({ isOpen, onClose, title, children, onSave, description,
           {children}
         </div>
         <div className={styles.modalFooter}>
-          <div className={styles.footerText}>{footerText}</div>
-          <div>
-            <button onClick={onSave} className={styles.confirmButton}>אישור</button>
-            <button onClick={onClose} className={styles.cancelButton}>ביטול</button>
-          </div>
+          <div className={styles.footerText}></div>
         </div>
       </div>
     </div>,
     document.getElementById('modal-root')
   );
 };
+
 
 export default ModalComponent;

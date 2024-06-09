@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import CarAvailabilityCalendar from '../components/CarAvailabilityCalendar';
+import CarAvailabilityTable from '../components/CarAvailabilityTable';
 
 const CarAvailabilityPage = () => {
   const [cars, setCars] = useState([]);
@@ -7,28 +7,24 @@ const CarAvailabilityPage = () => {
   useEffect(() => {
     const exampleCars = [
       { id: 1, name: 'טויוטה קורולה', category: 'קומפקט', bookings: [
-        { startDate: '2024-06-15', endDate: '2024-06-18', status: 'מוזמן' },
-        { startDate: '2024-06-19', endDate: '2024-06-21', status: 'מושכר' }
+        { startDate: '2024-06-10T09:00', endDate: '2024-06-19T19:00', status: 'מוזמן' },
+        { startDate: '2024-06-19T08:00', endDate: '2024-06-21T17:00', status: 'מושכר' }
       ] },
       { id: 2, name: 'הונדה סיוויק', category: 'סדאן', bookings: [
-        { startDate: '2024-06-10', endDate: '2024-06-12', status: 'חסום' },
-        { startDate: '2024-06-14', endDate: '2024-06-16', status: 'מושכר' }
+        { startDate: '2024-06-10T10:00', endDate: '2024-06-12T14:00', status: 'חסום' },
+        { startDate: '2024-06-14T13:00', endDate: '2024-06-16T20:00', status: 'מושכר' }
       ] },
-      { id: 3, name: 'פורד פוקוס', category: 'סדאן', bookings: [
-        { startDate: '2024-06-22', endDate: '2024-06-24', status: 'מוזמן' },
-        { startDate: '2024-06-25', endDate: '2024-06-30', status: 'חסום' }
-      ] },
-      { id: 4, name: 'ניסאן מיקרה', category: 'קומפקט', bookings: [
-        { startDate: '2024-06-01', endDate: '2024-06-03', status: 'מושכר' },
-        { startDate: '2024-06-05', endDate: '2024-06-08', status: 'מוזמן' }
-      ] }
+      { id: 3, name: 'הונדה סיוויק', category: 'סדאן', bookings: [] 
+        
+      },
+      // כלל הרכבים כמו שצוין
     ];
     setCars(exampleCars);
   }, []);
 
   return (
     <div>
-      <CarAvailabilityCalendar cars={cars} />
+      <CarAvailabilityTable cars={cars} />
     </div>
   );
 };

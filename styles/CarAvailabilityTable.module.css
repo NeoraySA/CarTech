@@ -1,0 +1,27 @@
+.availabilityTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.availabilityTable th, .availabilityTable td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+.bookingCell {
+    position: relative;
+    height: 50px; 
+}
+
+.bookingBlock {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}

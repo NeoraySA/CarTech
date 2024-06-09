@@ -2,6 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/CarAvailability": "pages/CarAvailability.js"
+  "/rentals/[id]": "pages/rentals/[id].js",
+  "/404": "pages/404.js",
+  "/carsList": "pages/carsList.js",
+  "/CarAdd": "pages/CarAdd.js",
+  "/CarAvailability": "pages/CarAvailability.js",
+  "/Login": "pages/Login.js"
 }

@@ -15,7 +15,7 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-// Get rental by ID
+// Get rental by ID with all associated details
 router.get('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
@@ -24,10 +24,15 @@ router.get('/:id', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Rental not found' });
     }
 
-    const [drivers] = await pool.query('SELECT * FROM authorized_drivers_view WHERE rental_id = ?', [id]);
+    // Fetch additional details associated with the rental
+    const [drivers] = await pool.query('SELECT * FROM authorized_drivers WHERE rental_id = ?', [id]);
     const [charges] = await pool.query('SELECT * FROM rental_charges WHERE rental_id = ?', [id]);
     const [insurances] = await pool.query('SELECT * FROM insurances WHERE rental_id = ?', [id]);
     const [securities] = await pool.query('SELECT * FROM credit_securities WHERE rental_id = ?', [id]);
+    const [trafficReports] = await pool.query('SELECT * FROM traffic_reports WHERE rental_id = ?', [id]);
+    const [tollTravels] = await pool.query('SELECT * FROM toll_travels WHERE rental_id = ?', [id]);
+    const [vehicleDamages] = await pool.query('SELECT * FROM vehicle_damages WHERE rental_id = ?', [id]);
+    const [payments] = await pool.query('SELECT * FROM payment_rental WHERE rental_id = ?', [id]);
 
     res.json({
       rental,
@@ -35,12 +40,17 @@ router.get('/:id', authenticateToken, async (req, res) => {
       charges,
       insurances,
       securities,
+      trafficReports,
+      tollTravels,
+      vehicleDamages,
+      payments
     });
   } catch (err) {
     console.error("Error retrieving rental:", err);
     res.status(500).json({ error: 'Server error retrieving rental' });
   }
 });
+
 
 // Create new rental
 router.post('/', authenticateToken, async (req, res) => {
