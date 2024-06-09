@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 import { categoriesConfig } from '../src/pagesConfig';
 
-const userDemo = {
-  name: "לוי רחמים",
-  image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTardcKgEVE-N-mq7NhQhs3HPWdHlMQNnW3Jc75QRG--z8ilTk2P699__-2xCZKSev0wlE&usqp=CAU",
-};
-
 function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const [openCategories, setOpenCategories] = useState({});
+  const [user, setUser] = useState({ name: '', image: '', companyName: '', branchName: '' });
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+      setUser({
+        name: userData.user_name || 'שם לא זמין',
+        image: userData.profile_image_url || 'https://via.placeholder.com/150',
+        companyName: userData.company_name || 'שם החברה לא זמין',
+        branchName: userData.branch_name || 'סניף לא זמין'
+      });
+    }
+  }, []);
 
   const toggleCategory = (name) => {
     setOpenCategories((prev) => ({ ...prev, [name]: !prev[name] }));
@@ -20,8 +28,8 @@ function Sidebar({ isSidebarOpen, toggleSidebar }) {
   return (
     <div className={`sidebar ${isSidebarOpen ? "open" : "close"}`}>
       <div className="sidebar-header">
-        <h2>חושן קאר</h2>
-        <p>סניף בני ברק</p>
+        <h2>{user.companyName}</h2>
+        <p>סניף {user.branchName}</p>
       </div>
 
       <div className="sidebar-content">
@@ -46,8 +54,8 @@ function Sidebar({ isSidebarOpen, toggleSidebar }) {
       </div>
 
       <div className="sidebar-footer">
-        <img src={userDemo.image} alt="User" className="user-image" />
-        <span>{userDemo.name}</span>
+        <img src={user.image} alt="User" className="user-image" />
+        <span>{user.name}</span>
       </div>
     </div>
   );

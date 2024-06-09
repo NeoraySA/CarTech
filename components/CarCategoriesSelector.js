@@ -2,25 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 
-
-
-function CarCategoriesSelector({ companyId, onChange }) {
+function CarCategoriesSelector({ onChange }) {
   const [categories, setCategories] = useState([]);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
   useEffect(() => {
     async function fetchCategories() {
-      if (!companyId) {
-        console.log('companyId is missing');
-        return;
-      }
       const token = localStorage.getItem('token');
       if (!token) {
         console.log('Token not found in localStorage');
         return;
       }
       try {
-        const response = await axios.get(`${apiUrl}/api/data/carCategories/${companyId}`, {
+        const response = await axios.get(`${apiUrl}/api/data/carCategories`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log('Raw response data:', response.data);  // הדפסת התגובה הגולמית מהשרת
@@ -31,7 +25,7 @@ function CarCategoriesSelector({ companyId, onChange }) {
     }
 
     fetchCategories();
-  }, [companyId]);  // תלות ב-companyId כדי להבטיח רענון נתונים כשהערך משתנה
+  }, []);  // הפעלת useEffect פעם אחת בלבד עם הרכיב נטען
 
   console.log('Categories to render in Select:', categories);  // הדפסת הקטגוריות לפני ה-Return
 

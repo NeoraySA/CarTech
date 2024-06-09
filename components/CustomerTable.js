@@ -5,40 +5,40 @@ export default function CustomerTable({ data }) {
   const columns = useMemo(() => [
     {
       Header: 'שם מלא',
-      accessor: 'first_name', // הנתיב באובייקט של הנתונים
-      className: 'cell-full-name' // הוספת קלאס לתאים של השם המלא
+      accessor: 'first_name',
+      className: 'cell-full-name'
     },
     {
       Header: 'טלפון',
       accessor: 'cellphone',
-      className: 'cell-phone' // הוספת קלאס לתאים של הטלפון
+      className: 'cell-phone'
     },
     {
       Header: 'דוא"ל',
       accessor: 'email',
-      className: 'cell-email' // הוספת קלאס לתאים של הדוא"ל
+      className: 'cell-email'
     },
     {
       Header: 'כתובת',
       accessor: 'street',
-      className: 'cell-address' // הוספת קלאס לתאים של הכתובת
+      className: 'cell-address'
     },
     {
       Header: 'עיר',
       accessor: 'city',
-      className: 'cell-city' // הוספת קלאס לתאים של העיר
+      className: 'cell-city'
     },
     {
       Header: 'מדינה',
       accessor: 'country',
-      className: 'cell-country' // הוספת קלאס לתאים של המדינה
+      className: 'cell-country'
     },
   ], []);
 
   const renderRowSubComponent = (row) => (
     <>
       <div className="expanded-content">
-        <div className="vehicle-details">
+        <div className="details-content">
           <p>שם מלא: <strong>{row.original.first_name}</strong></p>
           <p>טלפון: <strong>{row.original.phone}</strong></p>
           <p>דוא"ל: <strong>{row.original.email}</strong></p>
@@ -64,8 +64,8 @@ export default function CustomerTable({ data }) {
   );
 
   return (
-    <div className="div-table">
-      <table {...getTableProps()} className="car-list">
+    <div className="table-container">
+      <table {...getTableProps()} className="universal-table">
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>

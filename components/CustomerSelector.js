@@ -2,19 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 
-function CustomerSelector({ onChange, filters }) {
+function CustomerSelector({ value, onChange, filters }) {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
   useEffect(() => {
     async function fetchCustomers() {
-      const companyId = localStorage.getItem('company_id');
-      const branchId = localStorage.getItem('branch_id');
-      if (!companyId || !branchId) {
-        console.log('CompanyId or BranchId is missing');
-        return;
-      }
       const token = localStorage.getItem('token');
       if (!token) {
         console.log('Token not found in localStorage');
@@ -22,9 +16,9 @@ function CustomerSelector({ onChange, filters }) {
       }
       setLoading(true);
       try {
-        let query = `${apiUrl}/api/customers?company_id=${companyId}&branch_id=${branchId}`;
-        if (filters && filters.isActive) {
-          query += `&is_active=${filters.isActive}`;
+        let query = `${apiUrl}/api/customers`;
+        if (filters && filters.isActive !== undefined) {
+          query += `?is_active=${filters.isActive}`;
         }
         console.log('Sending request to:', query); // Log the full query URL
         const response = await axios.get(query, {
@@ -53,8 +47,12 @@ function CustomerSelector({ onChange, filters }) {
 
   return (
     <Select
+      value={customers.find(option => option.value === value)}
       options={customers}
-      onChange={onChange}
+      onChange={option => {
+        console.log('נבחר לקוח:', option);
+        onChange(option);
+      }}
       placeholder="בחר לקוח..."
       noOptionsMessage={() => 'לא נמצאו תוצאות'}
       isLoading={loading}

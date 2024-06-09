@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,7 +7,15 @@ import { faSearch, faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icon
 function Header({ toggleSidebar }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [companyLogo, setCompanyLogo] = useState('/images/logo.png'); // לוגו ברירת מחדל
   const router = useRouter();
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData && userData.company_logo) {
+      setCompanyLogo(userData.company_logo);
+    }
+  }, []);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -33,14 +41,9 @@ function Header({ toggleSidebar }) {
     console.log("Logout button clicked");  // הדפסה לבדיקה
   
     localStorage.removeItem('token');  // מחיקת הטוקן מהאחסון המקומי
+    localStorage.removeItem('user');   // מחיקת פרטי המשתמש מהאחסון המקומי
     router.push('/Login');  // הפניה לדף ההתחברות
   };
-  
-  // בשימוש בקוד הכפתור:
-  <button type="button" onClick={handleLogout} className="icon-button">
-    <FontAwesomeIcon icon={faSignOutAlt} />
-  </button>
-  
 
   return (
     <header className="header">
@@ -50,7 +53,7 @@ function Header({ toggleSidebar }) {
         </button>
       </div>
       <Link href="/" className="logo-link">
-        <img src="/images/logo.png" alt="Logo" className="logo" />
+        <img src={companyLogo} alt="Logo" className="logo" />
       </Link>
       <div className="header-search">
         <input
@@ -83,7 +86,7 @@ function Header({ toggleSidebar }) {
         )}
       </div>
       <div className="header-icons">
-        <button type="button" onClick={handleLogout} className="icon-button"> {/* ודא שהtype של הכפתור מוגדר כbutton */}
+        <button type="button" onClick={handleLogout} className="icon-button">
           <FontAwesomeIcon icon={faSignOutAlt} />
         </button>
         <i className="fas fa-cog icon"></i>
