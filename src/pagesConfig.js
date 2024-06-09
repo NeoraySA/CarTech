@@ -10,6 +10,7 @@ export const categoriesConfig = [
       { name: "הוספת רכב", path: "/CarAdd" },
       { name: "רשימת רכבים", path: "/carsList" },
       { name: "קטגוריות רכבים", path: "/CarCategories" },
+      { name: "זמינות רכבים", path: "/CarAvailability" },
       { name: "מעקב טיפולים", path: "/addVehicle" },
       { name: "מעקב טסטים", path: "/addVehicle" },
       // הוסף כאן כל תת-קטגוריות נוספות שתרצה
@@ -30,7 +31,6 @@ export const categoriesConfig = [
     icon: faHandshake,
     items: [
       { name: "ניהול הזמנות", path: "/manageRentals" },
-      { name: "בדיקת זמינות", path: "/checkAvailability" },
       { name: "פתיחת חוזה", path: "/RentalAdd" },
       { name: "רשימת חוזים", path: "/checkAvailability" },
       // הוסף כאן כל תת-קטגוריות נוספות שתרצה

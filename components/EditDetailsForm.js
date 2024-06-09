@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from '../styles/EditDetailsForm.module.css';
+import labelTranslations from '../src/translations';
 
-const EditDetailsForm = ({ rentalDetails, groupTitle, onClose, onSave }) => {
+const EditDetailsForm = ({ rentalDetails, groupTitle, onClose, onSave, summaryGroups }) => {
   const [formData, setFormData] = useState({ ...rentalDetails });
 
   const handleChange = (e) => {
@@ -10,9 +11,7 @@ const EditDetailsForm = ({ rentalDetails, groupTitle, onClose, onSave }) => {
   };
 
   const handleSave = () => {
-    // ביצוע שמירת הפרטים
-    onSave({ ...rentalDetails, ...formData });
-    onClose();
+    onSave(formData);
   };
 
   const renderFields = () => {
