@@ -38,6 +38,31 @@
   color: #000;
 }
 
+.rateTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.rateTable th, .rateTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: right;
+}
+
+.rateTable th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.rateTable tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.rateTable tr:hover {
+  background-color: #ddd;
+}
+
 /* Media queries for responsive design */
 @media (max-width: 768px) {
   .detailsSummaryComponent {
@@ -51,5 +76,9 @@
 
   .detailsSummaryItem {
     font-size: 1rem;
+  }
+
+  .rateTable th, .rateTable td {
+    padding: 6px;
   }
 }

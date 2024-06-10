@@ -18,9 +18,11 @@ const ModalComponent = ({ isOpen, onClose, title, children, description }) => {
           <button onClick={onClose} className={styles.closeButton}>X</button>
           <h4 className={styles.title}>{title}</h4>
         </div>
-        <p className={styles.description}>{description}</p>
-        <div className={styles.inputField}>
-          {children}
+        <div className={styles.modalBody}>
+          <p className={styles.description}>{description}</p>
+          <div className={styles.inputFields}>
+            {children}
+          </div>
         </div>
         <div className={styles.modalFooter}>
           <div className={styles.footerText}></div>
@@ -30,6 +32,5 @@ const ModalComponent = ({ isOpen, onClose, title, children, description }) => {
     document.getElementById('modal-root')
   );
 };
-
 
 export default ModalComponent;

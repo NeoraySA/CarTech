@@ -31,9 +31,13 @@ const EditDetailsForm = ({ rentalDetails, groupTitle, onClose, onSave, summaryGr
 
   return (
     <div className={styles.editDetailsForm}>
-      {renderFields()}
-      <button onClick={handleSave} className={styles.saveButton}>שמור</button>
-      <button onClick={onClose} className={styles.cancelButton}>בטל</button>
+      <div className={styles.inputFieldsContainer}>
+        {renderFields()}
+      </div>
+      <div className={styles.buttonContainer}>
+        <button onClick={handleSave} className={styles.saveButton}>שמור</button>
+        <button onClick={onClose} className={styles.cancelButton}>בטל</button>
+      </div>
     </div>
   );
 };
