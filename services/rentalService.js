@@ -23,3 +23,19 @@ export const updateRentalDetails = async (id, updatedDetails, token) => {
     throw new Error('Failed to update rental details');
   }
 };
+
+export const calculateRentalDetails = async (startDate, endDate, carId, billingBasisId, token) => {
+  try {
+    const response = await axios.post(`${apiUrl}/api/rentals/calculate`, {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      carId,
+      billingBasisId
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error calculating rental details:', error);
+  }
+};

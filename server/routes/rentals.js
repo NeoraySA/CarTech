@@ -33,6 +33,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
     const [tollTravels] = await pool.query('SELECT * FROM toll_travels WHERE rental_id = ?', [id]);
     const [vehicleDamages] = await pool.query('SELECT * FROM vehicle_damages WHERE rental_id = ?', [id]);
     const [payments] = await pool.query('SELECT * FROM payment_rental WHERE rental_id = ?', [id]);
+    const [rates] = await pool.query('SELECT * FROM rental_rates WHERE rental_id = ?', [id]);
 
     res.json({
       rental,
@@ -43,7 +44,8 @@ router.get('/:id', authenticateToken, async (req, res) => {
       trafficReports,
       tollTravels,
       vehicleDamages,
-      payments
+      payments,
+      rates // Adding the rates to the response object
     });
   } catch (err) {
     console.error("Error retrieving rental:", err);
@@ -52,25 +54,39 @@ router.get('/:id', authenticateToken, async (req, res) => {
 });
 
 
-// Create new rental
+
 router.post('/', authenticateToken, async (req, res) => {
   const rentalData = req.body;
-  const { companyId, branchId } = req.user; // הוספת מזהה החברה והסניף מהטוקן
+  const { companyId, branchId } = req.user;
 
   rentalData.company_id = companyId;
   rentalData.branch_id = branchId;
-  rentalData.pickup_branch = branchId; // הנחה כי pickup_branch הוא תמיד הסניף הנוכחי
+  rentalData.pickup_branch = branchId;
 
-  console.log("Received rental data:", rentalData); // הדפסת הנתונים המתקבלים
   try {
-    const [result] = await pool.query('INSERT INTO rentals SET ?', [rentalData]);
-    console.log("Insert result:", result); // הדפסת תוצאות ההכנסה
-    res.status(201).json({ rental_id: result.insertId, ...rentalData });
+    const [rentalResult] = await pool.query('INSERT INTO rentals SET ?', [rentalData]);
+    
+    if (rentalData.rates && rentalData.rates.length > 0) {
+      rentalData.rates.forEach(async (rate) => {
+        const rateData = {
+          rental_id: rentalResult.insertId,
+          rate_name: rate.rateName,
+          rate_type: rate.rateType,
+          daily_rate: rate.dailyRate,
+          quantity: rate.quantity
+        };
+        await pool.query('INSERT INTO rental_rates SET ?', [rateData]);
+      });
+    }
+
+    res.status(201).json({ rental_id: rentalResult.insertId, ...rentalData });
   } catch (err) {
     console.error("Error creating rental:", err);
     res.status(500).json({ error: 'Server error creating rental' });
   }
 });
+
+
 
 // Update rental
 router.put('/:id', authenticateToken, async (req, res) => {

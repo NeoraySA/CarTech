@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { fetchRentalDetails, updateRentalDetails } from '../../services/rentalService'; // ייבוא שירות ה-API
-import RentalDetailsForm from '../../components/RentalDetails';
+import { fetchRentalDetails, updateRentalDetails } from '../../services/rentalService';
+import RentalDetailsForm from '../../components/RentalDetails'; // אם שם הקומפוננטה שגוי, יש להחליף לשם הנכון
 import UniversalTabsComponent from '../../components/UniversalTabsComponent';
 import DetailsSummaryComponent from '../../components/DetailsSummaryComponent';
 import ListHeader from '../../components/ListHeader';
@@ -21,10 +21,17 @@ const RentalDetailsPage = () => {
   const [editGroupTitle, setEditGroupTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const token = localStorage.getItem('token');
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    if (id) {
+    if (typeof window !== 'undefined') {
+      const tokenFromStorage = localStorage.getItem('token');
+      setToken(tokenFromStorage);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (id && token) {
       setLoading(true);
       fetchRentalDetails(id, token)
         .then(data => {
@@ -80,7 +87,7 @@ const RentalDetailsPage = () => {
     { title: 'איסוף', fields: ['start_date', 'fuel_pickup_level_description', 'km_pickup'] },
     { title: 'החזרה', fields: ['end_date', 'fuel_return_level_description', 'km_return'] },
     { title: 'עמלות', fields: ['traffic_fee', 'toll_fee'] },
-    { title: 'מגבלות ק"מ', fields: ['km_limit_per_unit', 'km_calculation_days', 'total_km_limit', 'price_per_km'] }
+    { title: 'מגבלות ק"מ', fields: ['km_limit_per_unit', 'km_units', 'total_km_limit', 'price_per_km'] }
   ];
 
   if (loading) return <div>Loading...</div>;
@@ -103,12 +110,11 @@ const RentalDetailsPage = () => {
         subtitle="צפיה בחוזה ההשכרה"
         showSearchBox={false}
       />
-      
       <div className={styles.container}>
         {rentalDetails && (
           <>
             <div className={styles.formContainer}>
-              <RentalDetailsForm rentalId={id} rentalDetails={rentalDetails} setRentalDetails={setRentalDetails} />
+              <RentalDetailsForm rentalId={id} rentalDetails={rentalDetails.rental} setRentalDetails={setRentalDetails} />
               <div className={styles.section}>
                 <UniversalTabsComponent rentalDetails={rentalDetails} customerId={rentalDetails.rental.customer_id} />
               </div>

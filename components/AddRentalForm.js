@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router'; // ייבוא useRouter
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -12,7 +12,7 @@ import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/AddForm.module.css';
 
 function AddRentalForm({ companyId, onSummaryChange }) {
-  const router = useRouter(); // שימוש ב-useRouter להפניה
+  const router = useRouter();
   const { settings, loading: settingsLoading } = useSettings();
 
   const [rentalDetails, setRentalDetails] = useState({
@@ -21,21 +21,40 @@ function AddRentalForm({ companyId, onSummaryChange }) {
     customer_id: '',
     start_date: new Date(),
     status: '1',
-    estimated_return: '',
-    billing_basis_id: '', // שדה לבסיס החיוב
+    estimated_return: new Date(),
+    billing_basis_id: '',
     current_km: '',
     current_fuel_level: ''
   });
 
-  const [carDetails, setCarDetails] = useState(null); // סטייט לפרטי הרכב הנבחר
-  const [notification, setNotification] = useState({ message: '', type: '', onConfirm: null });
+  const [isCalculating, setIsCalculating] = useState(false);
   const [calculatedDetails, setCalculatedDetails] = useState(null);
+  const [carDetails, setCarDetails] = useState(null);
+  const [notification, setNotification] = useState({ message: '', type: '', onConfirm: null });
 
   useEffect(() => {
-    if (rentalDetails.start_date && rentalDetails.estimated_return && rentalDetails.car_id && rentalDetails.billing_basis_id) {
-      calculateRentalDetails(rentalDetails.start_date, rentalDetails.estimated_return);
-    }
-  }, [rentalDetails.start_date, rentalDetails.estimated_return, rentalDetails.car_id, rentalDetails.billing_basis_id]);
+    const fetchCalculation = async () => {
+      if (rentalDetails.start_date && rentalDetails.estimated_return && rentalDetails.car_id && rentalDetails.billing_basis_id && !isCalculating) {
+        setIsCalculating(true);
+        try {
+          await onSummaryChange(rentalDetails.start_date, rentalDetails.estimated_return, rentalDetails.car_id, rentalDetails.billing_basis_id)
+            .then(data => {
+              if (data) {
+                setCalculatedDetails(data);
+              } else {
+                console.error('Failed to receive calculation data');
+              }
+            });
+        } catch (error) {
+          console.error('Error fetching calculation data:', error);
+        } finally {
+          setIsCalculating(false);
+        }
+      }
+    };
+
+    fetchCalculation();
+  }, [rentalDetails.start_date, rentalDetails.estimated_return, rentalDetails.car_id, rentalDetails.billing_basis_id, onSummaryChange]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,28 +95,6 @@ function AddRentalForm({ companyId, onSummaryChange }) {
     }));
   };
 
-  const calculateRentalDetails = async (startDate, estimatedReturn) => {
-    if (!startDate || !estimatedReturn) return;
-
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      const token = localStorage.getItem('token');
-      const response = await axios.post(`${apiUrl}/api/rentals/calculate`, {
-        startDate: startDate.toISOString(),
-        endDate: estimatedReturn.toISOString(),
-        carId: rentalDetails.car_id,
-        billingBasisId: rentalDetails.billing_basis_id
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setCalculatedDetails(response.data);
-    } catch (error) {
-      console.error('Error calculating rental details:', error);
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setNotification({
@@ -110,7 +107,7 @@ function AddRentalForm({ companyId, onSummaryChange }) {
   const confirmAddRental = async () => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
     const token = localStorage.getItem('token');
-    const contractIssuer = localStorage.getItem('user_id'); // הבאת מזהה המשתמש מה-localStorage
+    const contractIssuer = localStorage.getItem('user_id');
 
     if (!contractIssuer) {
       setNotification({ message: 'משתמש לא מחובר. נא להתחבר מחדש.', type: 'error' });
@@ -123,14 +120,16 @@ function AddRentalForm({ companyId, onSummaryChange }) {
       start_date: formatDateForMySQL(rentalDetails.start_date),
       estimated_return: formatDateForMySQL(rentalDetails.estimated_return),
       billing_basis_id: rentalDetails.billing_basis_id,
-      contract_issuer: contractIssuer, // הוספת מזהה המשתמש
-      km_pickup: rentalDetails.current_km, // הוספת ק"מ נוכחי
-      fuel_pickup: rentalDetails.current_fuel_level, // הוספת דלק נוכחי
-      km_limit_per_unit: calculatedDetails.kmLimitPerUnit, // הוספת km_limit_per_unit
-      km_units: calculatedDetails.kmCalculationDays, // הוספת km_units
-      price_per_km: calculatedDetails.extraKmPrice, // הוספת price_per_km
-      traffic_fee: calculatedDetails.trafficFee, // הוספת traffic_fee
-      toll_fee: calculatedDetails.tollFee // הוספת toll_fee
+      contract_issuer: contractIssuer,
+      km_pickup: rentalDetails.current_km,
+      fuel_pickup: rentalDetails.current_fuel_level,
+
+      km_limit_per_unit: calculatedDetails.kmLimitPerUnit,
+      km_units: calculatedDetails.kmCalculationDays,
+
+      price_per_km: calculatedDetails.extraKmPrice,
+      traffic_fee: calculatedDetails.trafficFee,
+      toll_fee: calculatedDetails.tollFee
     };
 
     try {
@@ -139,7 +138,7 @@ function AddRentalForm({ companyId, onSummaryChange }) {
       });
       if (response.status === 201) {
         setNotification({ message: 'ההשכרה נוספה בהצלחה!', type: 'success' });
-        router.push(`/rentals/${response.data.rental_id}`); // הפניה לדף פרטי ההשכרה
+        router.push(`/rentals/${response.data.rental_id}`);
       }
     } catch (error) {
       console.error('נכשל בהוספת ההשכרה:', error);
@@ -189,7 +188,6 @@ function AddRentalForm({ companyId, onSummaryChange }) {
                   name="current_km"
                   value={rentalDetails.current_km}
                   onChange={handleInputChange}
-                  className={styles.input}
                 />
               </div>
               <div className={styles.formGroup}>
@@ -220,7 +218,6 @@ function AddRentalForm({ companyId, onSummaryChange }) {
               timeIntervals={15}
               dateFormat="dd/MM/yyyy HH:mm"
               className={styles.input}
-              required
             />
           </div>
           <div className={styles.formGroup}>
@@ -240,26 +237,6 @@ function AddRentalForm({ companyId, onSummaryChange }) {
           <button type="submit" className={styles.submitButton}>הוספת חוזה השכרה</button>
         </div>
       </form>
-      {calculatedDetails && (
-        <div className={styles.details}>
-          <p>סה"כ ימים: {calculatedDetails.totalDays}</p>
-          <p>ימי חול: {calculatedDetails.weekdays}</p>
-          <p>שבתות וחגים: {calculatedDetails.saturdaysAndHolidays}</p>
-          <p>הגבלת ק"מ ליום: {calculatedDetails.kmLimitPerUnit}</p>
-          <p>סה"כ ק"מ: {calculatedDetails.totalKmLimit}</p>
-          <p>ימים לחישוב ק"מ: {calculatedDetails.kmCalculationDays}</p>
-          <p>מחיר לק"מ נוסף: {calculatedDetails.extraKmPrice}</p>
-          <p>מחיר כולל: {calculatedDetails.totalPrice}</p>
-          <h3>פירוט תעריפים:</h3>
-          <ul>
-            {calculatedDetails.rateBreakdown.map((rate, index) => (
-              <li key={index}>
-                {rate.rateType === 'מיוחד' ? `תעריף מיוחד (${rate.rateName})` : rate.rateName}: {rate.dailyRate} ש"ח | כמות: {rate.quantity}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
@@ -271,8 +248,8 @@ function formatDateForMySQL(date) {
   const year = date.getFullYear();
   const month = ('0' + (date.getMonth() + 1)).slice(-2);
   const day = ('0' + date.getDate()).slice(-2);
-  const hours = ('0' + date.getHours()).slice(-2);
-  const minutes = ('0' + date.getMinutes()).slice(-2);
-  const seconds = ('0' + date.getSeconds()).slice(-2);
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  the_hours = ('0' + date.getHours()).slice(-2);
+  the_minutes = ('0' + date.getMinutes()).slice(-2);
+  the_seconds = ('0' + date.getSeconds()).slice(-2);
+  return `${year}-${month}-${day} ${the_hours}:${the_minutes}:${the_seconds}`;
 }
