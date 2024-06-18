@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { fetchRentalDetails, updateRentalDetails } from '../../services/rentalService';
-import RentalDetailsForm from '../../components/RentalDetails'; // אם שם הקומפוננטה שגוי, יש להחליף לשם הנכון
+import RentalDetailsForm from '../../components/RentalDetails'; 
 import UniversalTabsComponent from '../../components/UniversalTabsComponent';
 import DetailsSummaryComponent from '../../components/DetailsSummaryComponent';
 import ListHeader from '../../components/ListHeader';
@@ -10,6 +10,7 @@ import Notification from '../../components/Notification';
 import ModalComponent from '../../components/ModalComponent';
 import EditDetailsForm from '../../components/EditDetailsForm';
 import ProcessTracker from '../../components/ProcessTracker';
+import DriverRentalSelector from '../../components/DriverRentalSelector';
 import styles from '../../styles/DetailsPage.module.css';
 
 const RentalDetailsPage = () => {
@@ -22,6 +23,7 @@ const RentalDetailsPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -83,6 +85,71 @@ const RentalDetailsPage = () => {
     }
   };
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+  };
+
+  const columns = {
+    drivers: [
+      { Header: 'שם הנהג', accessor: 'name' },
+      { Header: 'מתאריך', accessor: 'start_date', Cell: ({ value }) => formatDate(value) },
+      { Header: 'עד תאריך', accessor: 'end_date', Cell: ({ value }) => formatDate(value) },
+      { Header: 'הערות', accessor: 'notes' },
+    ],
+    charges: [
+      { Header: 'Charge ID', accessor: 'charge_id' },
+      { Header: 'Description', accessor: 'description' },
+      { Header: 'Amount', accessor: 'amount' },
+    ],
+    insurances: [
+      { Header: 'Insurance ID', accessor: 'insurance_id' },
+      { Header: 'Type', accessor: 'type' },
+      { Header: 'Coverage Amount', accessor: 'coverage_amount' },
+    ],
+    securities: [
+      { Header: 'Security ID', accessor: 'security_id' },
+      { Header: 'Credit Card Number', accessor: 'credit_card_number' },
+      { Header: 'Hold Amount', accessor: 'hold_amount' },
+    ],
+    trafficReports: [
+      { Header: 'Report ID', accessor: 'report_id' },
+      { Header: 'Report Date', accessor: 'report_date', Cell: ({ value }) => formatDate(value) },
+      { Header: 'Location', accessor: 'location' },
+      { Header: 'Report Type', accessor: 'report_type' },
+      { Header: 'Amount', accessor: 'amount' }
+    ],
+    tollTravels: [
+      { Header: 'Travel ID', accessor: 'travel_id' },
+      { Header: 'Travel Date', accessor: 'travel_date', Cell: ({ value }) => formatDate(value) },
+      { Header: 'Road Type', accessor: 'road_type' },
+      { Header: 'Toll Amount', accessor: 'toll_amount' }
+    ],
+    vehicleDamages: [
+      { Header: 'Damage ID', accessor: 'damage_id' },
+      { Header: 'Damage Date', accessor: 'damage_date', Cell: ({ value }) => formatDate(value) },
+      { Header: 'Description', accessor: 'description' },
+      { Header: 'Repair Cost', accessor: 'repair_cost' }
+    ],
+    payments: [
+      { Header: 'Payment ID', accessor: 'payment_id' },
+      { Header: 'Payment Date', accessor: 'payment_date', Cell: ({ value }) => formatDate(value) },
+      { Header: 'Amount Received', accessor: 'amount_received' },
+      { Header: 'Payment Method', accessor: 'payment_method' }
+    ]
+  };
+
+  const tabsConfig = [
+    { title: 'חיובים', dataKey: 'charges', columns: columns.charges, tableType: 'charges' },
+    { title: 'נהגים מורשים', dataKey: 'drivers', columns: columns.drivers, tableType: 'drivers' },
+    { title: 'בטחונות אשראי', dataKey: 'securities', columns: columns.securities, tableType: 'securities' },
+    { title: 'ביטוחים', dataKey: 'insurances', columns: columns.insurances, tableType: 'insurances' },
+    { title: 'כבישי אגרה', dataKey: 'tollTravels', columns: columns.tollTravels, tableType: 'tollTravels' },
+    { title: 'דוחות תנועה', dataKey: 'trafficReports', columns: columns.trafficReports, tableType: 'trafficReports' },
+    { title: 'נזקים ברכב', dataKey: 'vehicleDamages', columns: columns.vehicleDamages, tableType: 'vehicleDamages' },
+    { title: 'תקבולים', dataKey: 'payments', columns: columns.payments, tableType: 'payments' }
+  ];
+
   const summaryGroups = [
     { title: 'איסוף', fields: ['start_date', 'fuel_pickup_level_description', 'km_pickup'] },
     { title: 'החזרה', fields: ['end_date', 'fuel_return_level_description', 'km_return'] },
@@ -116,7 +183,7 @@ const RentalDetailsPage = () => {
             <div className={styles.formContainer}>
               <RentalDetailsForm rentalId={id} rentalDetails={rentalDetails.rental} setRentalDetails={setRentalDetails} />
               <div className={styles.section}>
-                <UniversalTabsComponent rentalDetails={rentalDetails} customerId={rentalDetails.rental.customer_id} />
+                <UniversalTabsComponent details={rentalDetails} tabsConfig={tabsConfig} />
               </div>
             </div>
             <div className={styles.summaryContainer}>

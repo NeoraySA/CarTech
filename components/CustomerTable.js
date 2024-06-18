@@ -1,53 +1,32 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTable, useSortBy, useExpanded } from 'react-table';
+import { useRouter } from 'next/router'; // לניווט בין דפים
 
 export default function CustomerTable({ data }) {
+  const router = useRouter(); // השתמש ב-hook זה לניווט
   const columns = useMemo(() => [
-    {
-      Header: 'שם מלא',
-      accessor: 'first_name',
-      className: 'cell-full-name'
-    },
-    {
-      Header: 'טלפון',
-      accessor: 'cellphone',
-      className: 'cell-phone'
-    },
-    {
-      Header: 'דוא"ל',
-      accessor: 'email',
-      className: 'cell-email'
-    },
-    {
-      Header: 'כתובת',
-      accessor: 'street',
-      className: 'cell-address'
-    },
-    {
-      Header: 'עיר',
-      accessor: 'city',
-      className: 'cell-city'
-    },
-    {
-      Header: 'מדינה',
-      accessor: 'country',
-      className: 'cell-country'
-    },
+    { Header: 'שם מלא', accessor: 'first_name', className: 'cell-full-name' },
+    { Header: 'טלפון', accessor: 'cellphone', className: 'cell-phone' },
+    { Header: 'דוא"ל', accessor: 'email', className: 'cell-email' },
+    { Header: 'כתובת', accessor: 'street', className: 'cell-address' },
+    { Header: 'עיר', accessor: 'city', className: 'cell-city' },
+    { Header: 'מדינה', accessor: 'country', className: 'cell-country' },
   ], []);
 
   const renderRowSubComponent = (row) => (
-    <>
-      <div className="expanded-content">
-        <div className="details-content">
-          <p>שם מלא: <strong>{row.original.first_name}</strong></p>
-          <p>טלפון: <strong>{row.original.phone}</strong></p>
-          <p>דוא"ל: <strong>{row.original.email}</strong></p>
-          <p>כתובת: <strong>{row.original.address}</strong></p>
-          <p>עיר: <strong>{row.original.city}</strong></p>
-          <p>מדינה: <strong>{row.original.country}</strong></p>
-        </div>
+    <div className="expanded-content">
+      <div className="details-content">
+        <p>שם מלא: <strong>{row.original.first_name} {row.original.last_name}</strong></p>
+        <p>טלפון: <strong>{row.original.cellphone}</strong></p>
+        <p>דוא"ל: <strong>{row.original.email}</strong></p>
+        <p>כתובת: <strong>{row.original.street}, {row.original.city}</strong></p>
+        <p>מדינה: <strong>{row.original.country}</strong></p>
       </div>
-    </>
+      <div className="actions-content">
+        <button type="button" className="button" onClick={() => router.push(`/CustomerDetails/${row.original.customer_id}`)}>כרטיס לקוח</button>
+        {/* הוסף פה כפתורים נוספים אם צריך */}
+      </div>
+    </div>
   );
 
   const {
@@ -57,11 +36,7 @@ export default function CustomerTable({ data }) {
     rows,
     prepareRow,
     toggleRowExpanded,
-  } = useTable(
-    { columns, data },
-    useSortBy,
-    useExpanded,
-  );
+  } = useTable({ columns, data }, useSortBy, useExpanded);
 
   return (
     <div className="table-container">
@@ -72,9 +47,7 @@ export default function CustomerTable({ data }) {
               {headerGroup.headers.map(column => (
                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                   {column.render('Header')}
-                  <span>
-                    {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
-                  </span>
+                  <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
                 </th>
               ))}
             </tr>

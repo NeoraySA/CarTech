@@ -11,24 +11,26 @@ const usersRouter = require('./routes/users');
 const linksRouter = require('./routes/links');
 const dropdownDataRouter = require('./routes/dropdownDataRouter');
 const transportMinistryData = require('./routes/transportMinistryDataRouter');
-const rentalsRouter = require('./routes/rentals'); // Import the new router
-const settingsRouter = require('./routes/settings'); // Import the new router for settings
-const carCategoriesRouter = require('./routes/carCategories'); // Import the new router for car categories
+const rentalsRouter = require('./routes/rentals'); 
+const settingsRouter = require('./routes/settings'); 
+const carCategoriesRouter = require('./routes/carCategories'); 
+const testRouter = require('./routes/test'); // Import the new test router
 
 app.use(cors());
 app.use(express.json());
 require('dotenv').config();
 
-app.use('/api/rentals', rentalsRouter); // Use the new router
+app.use('/api/rentals', rentalsRouter); 
 app.use('/api/cars', carsRouter);
 app.use('/api/colors', colorsRouter);
 app.use('/api/customers', customersRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/links', linksRouter);
-app.use('/api/data', dropdownDataRouter); // Use the new router under a specific path
+app.use('/api/data', dropdownDataRouter); 
 app.use('/api/transportMinistryData', transportMinistryData);
-app.use('/api/settings', settingsRouter); // Use the new router for settings
-app.use('/api/carCategories', carCategoriesRouter); // Use the new router for car categories
+app.use('/api/settings', settingsRouter); 
+app.use('/api/carCategories', carCategoriesRouter); 
+app.use('/api/test', testRouter); // Use the new test router
 
 app.get('/', authenticateToken, (req, res) => {
   res.json({ message: 'Hello from server!' });
