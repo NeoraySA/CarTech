@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import styles from '../styles/ModalComponent.module.css'; // עיצוב כללי למודל
+import styles from '../styles/ModalComponent.module.css';
 
-const ModalComponent = ({ isOpen, onClose, title, children, description }) => {
+const ModalComponent = ({ isOpen, onClose, title, children }) => {
   const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
@@ -19,7 +19,6 @@ const ModalComponent = ({ isOpen, onClose, title, children, description }) => {
           <h4 className={styles.title}>{title}</h4>
         </div>
         <div className={styles.modalBody}>
-          <p className={styles.description}>{description}</p>
           <div className={styles.inputFields}>
             {children}
           </div>

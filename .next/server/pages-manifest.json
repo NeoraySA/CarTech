@@ -2,8 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/CustomerDetails/[id]": "pages/CustomerDetails/[id].js",
+  "/Login": "pages/Login.js",
   "/carsList": "pages/carsList.js",
-  "/CarAdd": "pages/CarAdd.js",
-  "/rentals/[id]": "pages/rentals/[id].js",
-  "/CustomerAdd": "pages/CustomerAdd.js"
+  "/dashboard": "pages/dashboard.js",
+  "/CustomerList": "pages/CustomerList.js"
 }

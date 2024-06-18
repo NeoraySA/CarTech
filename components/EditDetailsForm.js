@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../styles/EditDetailsForm.module.css';
 import labelTranslations from '../src/translations';
 
-const EditDetailsForm = ({ rentalDetails, groupTitle, onClose, onSave, summaryGroups }) => {
-  const [formData, setFormData] = useState({ ...rentalDetails });
+const EditDetailsForm = ({ details, group, onClose, onSave }) => {
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (group && details) {
+      const groupFields = group.fields.reduce((acc, field) => {
+        acc[field.key] = details[field.key] || '';
+        return acc;
+      }, {});
+      setFormData(groupFields);
+    }
+  }, [group, details]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,14 +25,13 @@ const EditDetailsForm = ({ rentalDetails, groupTitle, onClose, onSave, summaryGr
   };
 
   const renderFields = () => {
-    const fields = summaryGroups.find(group => group.title === groupTitle)?.fields || [];
-    return fields.map((field, index) => (
+    return group?.fields.map((field, index) => (
       <div key={index} className={styles.inputField}>
-        <label>{labelTranslations[field] || field}:</label>
+        <label>{labelTranslations[field.key] || field.label}:</label>
         <input
           type="text"
-          name={field}
-          value={formData[field] || ''}
+          name={field.key}
+          value={formData[field.key] || ''}
           onChange={handleChange}
         />
       </div>
