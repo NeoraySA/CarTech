@@ -1,0 +1,38 @@
+/* styles/SearchDetails.module.css */
+.searchDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.searchDates {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchSummary {
+  display: flex;
+  flex-direction: column;
+}
+
+.sortOptions {
+  display: flex;
+  align-items: center;
+}
+
+.sortOptions label {
+  margin-right: 10px;
+}
+
+.sortOptions select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
