@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../database');
-const { calculateRentalAvailability } = require('../services/rentalService');
+const { calculateRentalAvailability } = require('../utils/calculateRentalAvailability');
 
 // GET request to fetch all car categories
 router.get('/car-categories', async (req, res) => {
