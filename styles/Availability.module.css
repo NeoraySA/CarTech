@@ -1,0 +1,261 @@
+/* styles/Availability.module.css */
+.boxSizing {
+    box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    direction: rtl; /* הגדרה לעבודה ב-RTL */
+}
+
+.carList {
+    width: 100%;
+    margin-block-start: 0;
+    padding-inline-start: 0; /* ביטול padding-inline-start */
+    list-style-type: none; /* ביטול list-style-type */
+    box-sizing: border-box;
+}
+
+.carItem {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 30px; /* מרווח מתחת לכל פריט */
+    margin-top: 0; /* ביטול הרווח העליון */
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+    position: relative; /* מאפשר הצמדת אלמנטים לקצוות */
+}
+
+.carItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.carImageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.carImage {
+    width: 200px; /* הגדרת רוחב */
+    height: auto;
+    border-radius: 10px;
+}
+
+.carDetails, .carStats, .carPriceContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.carDetails {
+    flex: 1;
+    margin-left: 15px; 
+}
+
+.carStats {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 1;
+    margin-left: 30px; 
+    text-align: right; 
+}
+
+.carStatsColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.carStat {
+    margin-bottom: 10px;
+}
+
+.carStatLabel {
+    font-size: 0.8em;
+    color: #777;
+}
+
+.carStatValue {
+    font-size: 1.2em;
+    color: #ff5722;
+    font-weight: bold;
+}
+
+.carPriceContainer {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center; 
+    margin-left: 15px;
+    flex: 1;
+}
+
+.carPriceLabel {
+    font-size: 0.8em;
+    color: #777;
+}
+
+.carPrice {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ff5722;
+}
+
+.carInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between; /* הצמדת הפרטים העליונים והאייקונים לקצוות */
+    margin-left: 30px;
+    flex: 1;
+    position: relative;
+    width: 100%;
+}
+
+.carTopInfo {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.carTopInfoRow {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.carTopInfoRight {
+    display: flex;
+    flex-direction: column;
+}
+
+.carIcons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: auto; /* דוחף את האייקונים לתחתית */
+}
+
+.carIcons div {
+    display: flex;
+    align-items: center;
+}
+
+.carIcons div .iconWithSpace {
+    margin-left: 10px; /* מוסיף רווח של 10px לפני הטקסט */
+}
+
+.carName {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.carAdditionalInfo {
+    display: flex;
+    justify-content: start;
+    width: 100%;
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.licensePlate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffeb3b;
+    color: black;
+    font-weight: bold;
+    padding: 3px;
+    border-radius: 3px;
+    border: 1px solid #000;
+    white-space: nowrap; /* מבטיח שתוכן לוחית הרישוי לא ירד שורה */
+}
+
+.carButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0.5;
+}
+
+.carButton button {
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.carButton button:hover {
+    background-color: #e64a19;
+}
+
+/* התאמות לנייד */
+@media (max-width: 600px) {
+    .carItem {
+        flex-direction: column; /* שינוי תצורה לטורית */
+        align-items: start;
+     
+    }
+
+    .carImage {
+        width: 100%; /* רוחב מלא */
+        max-width: 300px; /* מקסימום רוחב */
+    }
+
+    .carDetails, .carStats, .carPriceContainer {
+        margin-left: 0;
+        width: 100%;
+        margin-top: 10px; /* מרווח מעל כל חלק */
+    }
+
+    .carStats {
+        flex-direction: column;
+        margin-left: 0;
+    }
+
+    .carPriceContainer {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .carTopInfoRow {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .licensePlate {
+        margin-top: 10px;
+    }
+
+    .carButton {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .carButton button {
+        width: 100%;
+    }
+}

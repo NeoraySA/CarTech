@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../database');
 const authenticateToken = require('../middleware/authenticateToken');
 const calculateRentalDetails = require('../utils/calculateRentalDetails');
+const calculateRentalAvailability = require('../utils/calculateRentalAvailability');
 
 // Get all rentals
 router.get('/', authenticateToken, async (req, res) => {
@@ -53,8 +54,6 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-
-
 router.post('/', authenticateToken, async (req, res) => {
   const rentalData = req.body;
   const { companyId, branchId } = req.user;
@@ -85,8 +84,6 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Server error creating rental' });
   }
 });
-
-
 
 // Update rental
 router.put('/:id', authenticateToken, async (req, res) => {
@@ -156,6 +153,19 @@ router.post('/:id/drivers', authenticateToken, async (req, res) => {
   }
 });
 
+// Calculate rental availability
+router.post('/availability', authenticateToken, async (req, res) => {
+  const { startDate, endDate, isNewDriver, isYoungDriver } = req.body;
+  const { companyId, branchId } = req.user;
 
+  console.log(`Calculating rental availability for startDate: ${startDate}, endDate: ${endDate}, companyId: ${companyId}, branchId: ${branchId}, isNewDriver: ${isNewDriver}, isYoungDriver: ${isYoungDriver}`);
+  try {
+    const availability = await calculateRentalAvailability(startDate, endDate, companyId, branchId, isNewDriver, isYoungDriver);
+    res.status(200).json(availability);
+  } catch (error) {
+    console.error("Error calculating rental availability:", error);
+    res.status(500).json({ message: 'Error calculating rental availability', error });
+  }
+});
 
 module.exports = router;
