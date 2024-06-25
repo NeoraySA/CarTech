@@ -4,7 +4,7 @@ import 'react-tabs/style/react-tabs.css';
 import UniversalTableRental from './UniversalTableRental';
 import styles from '../styles/TabsComponent.module.css';
 
-const UniversalTabsComponent = ({ details, tabsConfig, renderButtons, ModalComponent, modalProps }) => {
+const UniversalTabsComponent = ({ details, tabsConfig, renderButtons, modalComponent: ModalComponent, modalProps }) => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const tabs = useMemo(() => {
@@ -32,7 +32,7 @@ const UniversalTabsComponent = ({ details, tabsConfig, renderButtons, ModalCompo
           </TabPanel>
         ))}
       </Tabs>
-      <ModalComponent {...modalProps} />
+      {ModalComponent && <ModalComponent {...modalProps} />}
     </div>
   );
 };

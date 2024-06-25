@@ -4,6 +4,7 @@ const pool = require('../database');
 const authenticateToken = require('../middleware/authenticateToken');
 const calculateRentalDetails = require('../utils/calculateRentalDetails');
 const calculateRentalAvailability = require('../utils/calculateRentalAvailability');
+const { format } = require('date-fns');
 
 // Get all rentals
 router.get('/', authenticateToken, async (req, res) => {
@@ -58,32 +59,55 @@ router.post('/', authenticateToken, async (req, res) => {
   const rentalData = req.body;
   const { companyId, branchId } = req.user;
 
-  rentalData.company_id = companyId;
-  rentalData.branch_id = branchId;
-  rentalData.pickup_branch = branchId;
+  // מאפיינים בטבלת השכרות
+  const {
+    customer_id,
+    start_date,
+    end_date,
+    car_id,
+    km_pickup,
+    fuel_pickup,
+    price_per_km,
+    km_limit_per_unit,
+    km_units
+  } = rentalData;
+
+  // בדיקת תאריכים תקינים
+  if (isNaN(new Date(start_date)) || isNaN(new Date(end_date))) {
+    return res.status(400).json({ error: 'Invalid date format' });
+  }
+
+  // המרת התאריכים לפורמט MySQL DATETIME
+  const startDate = format(new Date(start_date), 'yyyy-MM-dd HH:mm:ss');
+  const estimatedReturn = format(new Date(end_date), 'yyyy-MM-dd HH:mm:ss'); // שימוש ב-end_date כ-estimated_return
+
+  // בניית האובייקט לכניסה לטבלה
+  const newRentalData = {
+    customer_id,
+    start_date: startDate,
+    estimated_return: estimatedReturn, // שימוש בשדה estimated_return
+    car_id,
+    fuel_pickup,
+    km_pickup,
+    price_per_km,
+    km_limit_per_unit,
+    km_units,
+    company_id: companyId,
+    branch_id: branchId,
+    pickup_branch: branchId
+  };
 
   try {
-    const [rentalResult] = await pool.query('INSERT INTO rentals SET ?', [rentalData]);
+    const [rentalResult] = await pool.query('INSERT INTO rentals SET ?', [newRentalData]);
     
-    if (rentalData.rates && rentalData.rates.length > 0) {
-      rentalData.rates.forEach(async (rate) => {
-        const rateData = {
-          rental_id: rentalResult.insertId,
-          rate_name: rate.rateName,
-          rate_type: rate.rateType,
-          daily_rate: rate.dailyRate,
-          quantity: rate.quantity
-        };
-        await pool.query('INSERT INTO rental_rates SET ?', [rateData]);
-      });
-    }
-
-    res.status(201).json({ rental_id: rentalResult.insertId, ...rentalData });
+    res.status(201).json({ rental_id: rentalResult.insertId, ...newRentalData });
   } catch (err) {
     console.error("Error creating rental:", err);
     res.status(500).json({ error: 'Server error creating rental' });
   }
 });
+
+
 
 // Update rental
 router.put('/:id', authenticateToken, async (req, res) => {
