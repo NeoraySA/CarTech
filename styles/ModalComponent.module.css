@@ -1,151 +1,155 @@
 .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Make sure the modal is on top of other content */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items at the top */
+  padding: 20px; /* Add padding at the top */
+  z-index: 1000; /* Make sure the modal is on top of other content */
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 1000px;
+  width: 90%; /* Slightly less than full width */
+  z-index: 1001; /* Above the overlay */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Add spacing between elements */
+  top: 0;
+}
+
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between; /* Distribute space between elements */
+  align-items: center; /* Center vertically */
+}
+
+.title {
+  margin: 0;
+  margin-left: auto; /* Push title to the right */
+  text-align: right; /* Align text to the right */
+}
+
+.description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+  text-align: right; /* Align text to the right */
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  left: 10px; /* Changed to left */
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 10px; /* Add spacing between buttons */
+  margin-top: auto; /* Push footer to the bottom */
+}
+
+.footerText {
+  font-size: 14px;
+  color: #666;
+}
+
+.confirmButton, .cancelButton {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none; /* Add border none */
+  border-radius: 4px; /* Add border radius */
+}
+
+.confirmButton {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.cancelButton {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
   }
-  
-  .modalContent {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    width: 90%; /* Slightly less than full width */
-    z-index: 1001; /* Above the overlay */
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Add spacing between elements */
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .modalHeader {
-    display: flex;
-    justify-content: space-between; /* Distribute space between elements */
-    align-items: center; /* Center vertically */
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .title {
-    margin: 0;
-    margin-left: auto; /* Push title to the right */
-    text-align: right; /* Align text to the right */
+  to {
+    opacity: 1;
   }
-  
-  .description {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 20px;
-    text-align: right; /* Align text to the right */
-  }
-  
-  .closeButton {
-    position: absolute;
-    top: 10px;
-    left: 10px; /* Changed to left */
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #333;
-    cursor: pointer;
-  }
-  
-  .modalFooter {
-    display: flex;
-    justify-content: flex-start; /* Align buttons to the left */
-    gap: 10px; /* Add spacing between buttons */
-    margin-top: auto; /* Push footer to the bottom */
-  }
-  
-  .footerText {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .confirmButton, .cancelButton {
-    padding: 10px 20px;
-    cursor: pointer;
-    border: none; /* Add border none */
-    border-radius: 4px; /* Add border radius */
-  }
-  
-  .confirmButton {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .cancelButton {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  /* Animations */
-  @keyframes modalFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes overlayFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  .modalOverlay {
-    animation: overlayFadeIn 0.3s;
-  }
-  
-  .modalContent {
-    animation: modalFadeIn 0.3s;
-  }
-  
-  /* Advanced Styling */
-  .inputField {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: row; /* Align labels to the right and fields to the left */
-    align-items: center; /* Center items vertically */
-  }
-  
-  .inputField label {
-    margin-left: 10px;
-    font-weight: bold;
-    width: 120px; /* Set a fixed width for labels */
-    text-align: right; /* Align text to the right */
-  }
-  
-  .inputField input[type="checkbox"] {
-    width: auto;
-    margin-top: 5px; /* Align checkbox with text fields */
-  }
-  
-  .inputField input, .inputField textarea, .inputField select, .inputField .react-select__control {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    flex: 1; /* Take available space */
-    box-sizing: border-box;
-  }
-  
-  .inputField .react-select__control {
-    width: 100%; /* Make sure the select box takes full width */
-  }
-  
-  .inputField textarea {
-    resize: vertical; /* Allow vertical resize */
-  }
-  
+}
+
+.modalOverlay {
+  animation: overlayFadeIn 0.3s;
+}
+
+.modalContent {
+  animation: modalFadeIn 0.3s;
+}
+
+/* Advanced Styling */
+.inputField {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: row; /* Align labels to the right and fields to the left */
+  align-items: center; /* Center items vertically */
+}
+
+.inputField label {
+  margin-left: 10px;
+  font-weight: bold;
+  width: 120px; /* Set a fixed width for labels */
+  text-align: right; /* Align text to the right */
+}
+
+.inputField input[type="checkbox"] {
+  width: auto;
+  margin-top: 5px; /* Align checkbox with text fields */
+}
+
+.inputField input, .inputField textarea, .inputField select, .inputField .react-select__control {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1; /* Take available space */
+  box-sizing: border-box;
+}
+
+.inputField .react-select__control {
+  width: 100%; /* Make sure the select box takes full width */
+}
+
+.inputField textarea {
+  resize: vertical; /* Allow vertical resize */
+}

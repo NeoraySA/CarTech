@@ -1,57 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CustomerSelector from './CustomerSelector';
 import styles from '../styles/AddForm.module.css';
 
-function AddRentalForm({ onSubmit }) {
-  const [rentalDetails, setRentalDetails] = useState({
-    customer_id: '',
-    start_date: new Date(),
-    estimated_return: new Date(),
-    is_new_driver: false,
-    is_young_driver: false,
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setRentalDetails(prevDetails => ({
-      ...prevDetails,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleDateChange = (name, date) => {
-    setRentalDetails(prevDetails => ({
-      ...prevDetails,
-      [name]: date
-    }));
-  };
-
-  const handleCustomerChange = (customer) => {
-    setRentalDetails(prevDetails => ({
-      ...prevDetails,
-      customer_id: customer.value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit({
-      customer_id: rentalDetails.customer_id,
-      startDate: rentalDetails.start_date.toISOString(),
-      endDate: rentalDetails.estimated_return.toISOString(),
-      isNewDriver: rentalDetails.is_new_driver,
-      isYoungDriver: rentalDetails.is_young_driver,
-    });
-  };
-
+function AddRentalForm({ rentalDetails, onInputChange, onDateChange, onCustomerChange, onOpenModal, onSubmit }) {
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form onSubmit={onSubmit} className={styles.form}>
       <div className={styles.section}>
         <div className={styles.formGroup}>
           <label className={styles.label}>בחירת לקוח:</label>
-          <CustomerSelector onChange={handleCustomerChange} />
+          <CustomerSelector onChange={onCustomerChange} />
         </div>
       </div>
       <div className={styles.section}>
@@ -60,7 +19,7 @@ function AddRentalForm({ onSubmit }) {
           <label className={styles.label}>תאריך איסוף:</label>
           <DatePicker
             selected={rentalDetails.start_date}
-            onChange={(date) => handleDateChange('start_date', date)}
+            onChange={(date) => onDateChange('start_date', date)}
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={15}
@@ -72,7 +31,7 @@ function AddRentalForm({ onSubmit }) {
           <label className={styles.label}>תאריך החזרה משוער:</label>
           <DatePicker
             selected={rentalDetails.estimated_return}
-            onChange={(date) => handleDateChange('estimated_return', date)}
+            onChange={(date) => onDateChange('estimated_return', date)}
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={15}
@@ -89,7 +48,7 @@ function AddRentalForm({ onSubmit }) {
             type="checkbox"
             name="is_new_driver"
             checked={rentalDetails.is_new_driver}
-            onChange={handleInputChange}
+            onChange={onInputChange}
           />
         </div>
         <div className={styles.formGroup}>
@@ -98,9 +57,20 @@ function AddRentalForm({ onSubmit }) {
             type="checkbox"
             name="is_young_driver"
             checked={rentalDetails.is_young_driver}
-            onChange={handleInputChange}
+            onChange={onInputChange}
           />
         </div>
+      </div>
+      <div className={styles.section}>
+        <h2>בחירת רכב</h2>
+        <button type="button" onClick={onOpenModal} className={styles.selectCarButton}>
+          בחר רכב
+        </button>
+        {rentalDetails.selected_car && (
+          <div className={styles.selectedCarDetails}>
+            <p>רכב נבחר: {rentalDetails.selected_car.make} {rentalDetails.selected_car.model}</p>
+          </div>
+        )}
       </div>
       <div className={styles.container}>
         <button type="submit" className={styles.submitButton}>הבא</button>

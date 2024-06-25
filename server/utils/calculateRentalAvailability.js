@@ -77,7 +77,8 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
         newDriverPriceIncrease,
         youngDriverPriceIncrease,
         totalPrice,
-        additionalCost // תוספת מחיר עבור נהג חדש וצעיר
+        additionalCost, // תוספת מחיר עבור נהג חדש וצעיר
+        kmUnits: weekdays // מספר יחידות ק"מ
       };
     });
 
