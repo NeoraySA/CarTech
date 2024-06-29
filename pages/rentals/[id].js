@@ -5,6 +5,7 @@ import { fetchRentalDetails, updateRentalDetails } from '../../services/rentalSe
 import RentalDetailsForm from '../../components/RentalDetails'; 
 import UniversalTabsComponent from '../../components/UniversalTabsComponent';
 import DetailsSummaryComponent from '../../components/DetailsSummaryComponent';
+import UniversalTableRental from '../../components/UniversalTableRental'; // ייבוא הקומפוננטה החסרה
 import ListHeader from '../../components/ListHeader';
 import Notification from '../../components/Notification';
 import ModalComponent from '../../components/ModalComponent';
@@ -23,7 +24,6 @@ const RentalDetailsPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -140,14 +140,14 @@ const RentalDetailsPage = () => {
   };
 
   const tabsConfig = [
-    { title: 'חיובים', dataKey: 'charges', columns: columns.charges, tableType: 'charges' },
-    { title: 'נהגים מורשים', dataKey: 'drivers', columns: columns.drivers, tableType: 'drivers' },
-    { title: 'בטחונות אשראי', dataKey: 'securities', columns: columns.securities, tableType: 'securities' },
-    { title: 'ביטוחים', dataKey: 'insurances', columns: columns.insurances, tableType: 'insurances' },
-    { title: 'כבישי אגרה', dataKey: 'tollTravels', columns: columns.tollTravels, tableType: 'tollTravels' },
-    { title: 'דוחות תנועה', dataKey: 'trafficReports', columns: columns.trafficReports, tableType: 'trafficReports' },
-    { title: 'נזקים ברכב', dataKey: 'vehicleDamages', columns: columns.vehicleDamages, tableType: 'vehicleDamages' },
-    { title: 'תקבולים', dataKey: 'payments', columns: columns.payments, tableType: 'payments' }
+    { title: 'חיובים', Component: UniversalTableRental, props: { data: rentalDetails?.charges, columns: columns.charges, tableType: 'charges' } },
+    { title: 'נהגים מורשים', Component: UniversalTableRental, props: { data: rentalDetails?.drivers, columns: columns.drivers, tableType: 'drivers' } },
+    { title: 'בטחונות אשראי', Component: UniversalTableRental, props: { data: rentalDetails?.securities, columns: columns.securities, tableType: 'securities' } },
+    { title: 'ביטוחים', Component: UniversalTableRental, props: { data: rentalDetails?.insurances, columns: columns.insurances, tableType: 'insurances' } },
+    { title: 'כבישי אגרה', Component: UniversalTableRental, props: { data: rentalDetails?.tollTravels, columns: columns.tollTravels, tableType: 'tollTravels' } },
+    { title: 'דוחות תנועה', Component: UniversalTableRental, props: { data: rentalDetails?.trafficReports, columns: columns.trafficReports, tableType: 'trafficReports' } },
+    { title: 'נזקים ברכב', Component: UniversalTableRental, props: { data: rentalDetails?.vehicleDamages, columns: columns.vehicleDamages, tableType: 'vehicleDamages' } },
+    { title: 'תקבולים', Component: UniversalTableRental, props: { data: rentalDetails?.payments, columns: columns.payments, tableType: 'payments' } }
   ];
 
   const summaryGroups = [
