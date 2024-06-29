@@ -1,100 +1,112 @@
-/* קובץ CSS לעיצוב קומפוננטת הטאבים */
-
 .tabs-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 10px;
-    box-sizing: border-box;
-  }
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
   
-  .react-tabs__tab-list {
-    display: flex;
-    border-bottom: 2px solid #e5e5e5;
-    padding: 0;
-    margin: 0 0 20px 0;
-    list-style: none;
-    width: 100%;
-  }
+}
+
+.react-tabs__tab-list {
+  display: flex;
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  width: 100%;
+}
+
+
+
+
+
+.react-tabs__tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s, color 0.2s;
+  font-family: inherit;
+  font-size: large;
+  color: #333;
+
   
+  
+}
+
+.panel {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.react-tabs__tab--selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #e5e5e5;
+  border-bottom: 2px solid white;
+  
+}
+
+.react-tabs__tab--selected:hover {
+  background-color: #0056b3;
+}
+
+.react-tabs__tab:hover {
+  background-color: #f0f0f0;
+}
+
+.react-tabs__tab-panel {
+  display: none;
+}
+
+.react-tabs__tab-panel--selected {
+  display: block;
+  
+}
+
+.table-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  font-family: inherit;
+  font-size: medium;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.modal-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  
+}
+
+@media (max-width: 768px) {
   .react-tabs__tab {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.2s, color 0.2s;
-    font-family: inherit;
-    font-size: large;
-    color: #333;
-    border: 1px solid transparent;
-  }
-  
-  .react-tabs__tab--selected {
-    background-color: #007bff;
-    color: white;
-    border-color: #e5e5e5;
-    border-bottom: 2px solid white;
-  }
-  
-  .react-tabs__tab--selected:hover {
-    background-color: #0056b3;
-  }
-  
-  .react-tabs__tab:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .react-tabs__tab-panel {
-    display: none;
-  }
-  
-  .react-tabs__tab-panel--selected {
-    display: block;
-  }
-  
-  .table-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-    font-family: inherit;
     font-size: medium;
+    padding: 8px 10px;
   }
-  
-  .btn:hover {
-    background-color: #0056b3;
+
+  .btn {
+    padding: 8px 10px;
+    font-size: small;
   }
-  
+
   .modal-container {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
+    padding: 10px;
   }
-  
-  @media (max-width: 768px) {
-    .react-tabs__tab {
-      font-size: medium;
-      padding: 8px 10px;
-    }
-  
-    .btn {
-      padding: 8px 10px;
-      font-size: small;
-    }
-  
-    .modal-container {
-      padding: 10px;
-    }
-  }
-  
+}

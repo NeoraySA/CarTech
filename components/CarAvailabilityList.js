@@ -17,17 +17,16 @@ function CarAvailabilityList({ cars, onSelectCar }) {
                 </div>
                 <div className={styles.licensePlate}>{formatLicensePlate(car.license_number)}</div>
               </div>
-              
             </div>
             <div className={styles.carImageContainer}>
               <img src={car.image_url} alt={`${car.make} ${car.model}`} className={styles.carImage} />
             </div>
             <div className={styles.carAdditionalInfo}>
-                <span><FontAwesomeIcon icon={faCalendarAlt} className="iconWithSpace" /> {car.year}</span>
-                <span><FontAwesomeIcon icon={faPalette} className="iconWithSpace" /> {car.color || 'לא זמין'}</span>
-                <span><FontAwesomeIcon icon={faTachometerAlt} className="iconWithSpace" /> {formatNumber(car.current_km)}</span>
-                <span><FontAwesomeIcon icon={faGasPump} className="iconWithSpace" /> {car.current_fuel_level}</span>
-              </div>
+              <span><FontAwesomeIcon icon={faCalendarAlt} className="iconWithSpace" /> {car.year}</span>
+              <span><FontAwesomeIcon icon={faPalette} className="iconWithSpace" /> {car.color || 'לא זמין'}</span>
+              <span><FontAwesomeIcon icon={faTachometerAlt} className="iconWithSpace" /> {formatNumber(car.current_km)}</span>
+              <span><FontAwesomeIcon icon={faGasPump} className="iconWithSpace" /> {car.current_fuel_level}</span>
+            </div>
           </div>
           <div className={styles.carStats}>
             <div className={styles.carStatsColumn}>
@@ -44,28 +43,38 @@ function CarAvailabilityList({ cars, onSelectCar }) {
                 <div className={styles.carStatValue}>{formatCurrency(car.extraKmPrice)}</div>
               </div>
             </div>
-            <div className={styles.carStatsColumn}>
-              <div className={styles.carStat}>
-                <div className={styles.carStatLabel}>מחיר יומי:</div>
-                <div className={styles.carStatValue}>{formatCurrency(car.pricePerDay)}</div>
-              </div>
-              <div className={styles.carStat}>
-                <div className={styles.carStatLabel}>מחיר לשבת/חג:</div>
-                <div className={styles.carStatValue}>{formatCurrency(car.saturdayHolidayPrice)}</div>
-              </div>
-              <div className={styles.carStat}>
-                <div className={styles.carStatLabel}>תוספת נהג חדש/צעיר:</div>
-                <div className={styles.carStatValue}>{formatCurrency(car.additionalCost)}</div>
-              </div>
-            </div>
-            
+           
+          </div>
+          <div className={styles.ratesTableContainer}>
+            <table className={styles.ratesTable}>
+              <thead>
+                <tr>
+                  <th>תעריף</th>
+                  <th>מחיר יומי</th>
+                  <th>כמות</th>
+                  
+                  <th>סה"כ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {car.ratesDetails.map((rate, index) => (
+                  <tr key={index}>
+                    <td>{rate.rate_name}</td>
+                    <td>{formatCurrency(rate.daily_rate)}</td>
+                    <td>{formatNumber(rate.quantity)}</td>
+                    
+                    <td>{formatCurrency(rate.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           <div className={styles.carPriceContainer}>
             <div className={styles.carPriceLabel}>מחיר כולל:</div>
             <div className={styles.carPrice}>{formatCurrency(car.totalPrice)}</div>
           </div>
           <div className={styles.carButton}>
-            <button onClick={() => onSelectCar(car)}>בחר רכב</button>
+            <button onClick={() => onSelectCar(car)}>בחירה</button>
           </div>
         </li>
       ))}

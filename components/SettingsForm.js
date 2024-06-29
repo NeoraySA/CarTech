@@ -1,92 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// components/SettingsForm.js
+import React from 'react';
 import styles from '../styles/SettingsForm.module.css';
 
-function SettingsForm({ companyId, branchId }) {
-  const [settings, setSettings] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [notification, setNotification] = useState({ message: '', type: '' });
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      try {
-        const response = await axios.get(`${apiUrl}/api/settings`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (response.status === 200) {
-          setSettings(response.data);
-        } else {
-          throw new Error('Failed to fetch settings');
-        }
-      } catch (error) {
-        console.error('Error fetching settings:', error);
-        setNotification({ message: 'Failed to fetch settings', type: 'error' });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSettings();
-  }, [apiUrl, companyId, branchId]);
-
-  const handleInputChange = (e, settingName) => {
-    const { value } = e.target;
-    setSettings(prevSettings => 
-      prevSettings.map(setting => 
-        setting.setting_name === settingName 
-          ? { ...setting, setting_value: value } 
-          : setting
-      )
-    );
-  };
-
-  const handleSave = async () => {
-    setLoading(true);
-    const token = localStorage.getItem('token');
-    try {
-      await axios.put(`${apiUrl}/api/settings`, { settings }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setNotification({ message: 'Settings saved successfully', type: 'success' });
-    } catch (error) {
-      console.error('Error saving settings:', error);
-      setNotification({ message: 'Failed to save settings', type: 'error' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+function SettingsForm({ settings, handleInputChange, handleSave, category }) {
   return (
     <div className={styles.container}>
-      {notification.message && (
-        <div className={`${styles.notification} ${styles[notification.type]}`}>
-          {notification.message}
-        </div>
-      )}
-      <h2>Settings</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <form className={styles.form}>
-          {settings.map(setting => (
-            <div key={setting.setting_name} className={styles.formGroup}>
-              <label className={styles.label}>{setting.setting_name}</label>
+      <h2>{category === 'rental' ? 'הגדרות השכרת רכב' : 'הגדרות כלליות'}</h2>
+      <form className={styles.form}>
+        {category === 'rental' && (
+          <>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>אגרת כביש אגרה</label>
               <input
                 className={styles.input}
                 type="text"
-                value={setting.setting_value}
-                onChange={(e) => handleInputChange(e, setting.setting_name)}
+                name="toll_fee"
+                value={settings.toll_fee}
+                onChange={handleInputChange}
               />
             </div>
-          ))}
-          <button type="button" onClick={handleSave} className={styles.saveButton}>
-            Save Settings
-          </button>
-        </form>
-      )}
+            <div className={styles.formGroup}>
+              <label className={styles.label}>אגרת תנועה</label>
+              <input
+                className={styles.input}
+                type="text"
+                name="traffic_fee"
+                value={settings.traffic_fee}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>החזרה באותו זמן כמו איסוף</label>
+              <input
+                className={styles.checkbox}
+                type="checkbox"
+                name="return_same_time_as_pickup"
+                checked={settings.return_same_time_as_pickup === 'yes'}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>שעת החזרה ברירת מחדל</label>
+              <input
+                className={styles.input}
+                type="text"
+                name="default_return_time"
+                value={settings.default_return_time}
+                onChange={handleInputChange}
+              />
+            </div>
+          </>
+        )}
+        {category === 'general' && (
+          <div className={styles.formGroup}>
+            <label className={styles.label}>אחוז מע"מ</label>
+            <input
+              className={styles.input}
+              type="text"
+              name="vat_percentage"
+              value={settings.vat_percentage}
+              onChange={handleInputChange}
+            />
+          </div>
+        )}
+        <button type="button" onClick={handleSave} className={styles.saveButton}>
+          שמור הגדרות
+        </button>
+      </form>
     </div>
   );
 }

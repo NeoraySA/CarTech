@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -8,42 +8,82 @@ import ModalComponent from '../components/ModalComponent';
 import SearchDetails from '../components/SearchDetails';
 import CarAvailabilityList from '../components/CarAvailabilityList';
 import Notification from '../components/Notification';
+import AddCustomerForm from '../components/AddCustomerForm';
 import styles from '../styles/AddForm.module.css';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 function RentalAdd() {
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCarModalOpen, setIsCarModalOpen] = useState(false);
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [availableCars, setAvailableCars] = useState([]);
+  const [settings, setSettings] = useState({});
+  const [loading, setLoading] = useState(true);
   const [rentalDetails, setRentalDetails] = useState({
     customer_id: '',
-    start_date: new Date(),
-    estimated_return: new Date(),
+    pickup_date: new Date(),
+    pickup_time: new Date(),
+    return_date: new Date(),
+    return_time: new Date(),
     is_new_driver: false,
     is_young_driver: false,
   });
   const [notification, setNotification] = useState({ message: '', type: '', onConfirm: null });
 
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get(`${apiUrl}/api/settings/`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const settingsData = response.data;
+        setSettings(settingsData);
+
+        // עדכון שעת החזרה ברירת מחדל אם יש הגדרה לכך
+        if (settingsData.return_same_time_as_pickup === 'yes') {
+          setRentalDetails(prevDetails => ({
+            ...prevDetails,
+            return_time: prevDetails.pickup_time
+          }));
+        } else if (settingsData.default_return_time) {
+          const defaultReturnTime = new Date();
+          const [hours, minutes] = settingsData.default_return_time.split(':');
+          defaultReturnTime.setHours(hours);
+          defaultReturnTime.setMinutes(minutes);
+          setRentalDetails(prevDetails => ({
+            ...prevDetails,
+            return_time: defaultReturnTime
+          }));
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch settings:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
   const handleRentalSubmit = async () => {
     try {
       const token = localStorage.getItem('token');
-  
       if (!token) {
         throw new Error("Missing token in local storage");
       }
-  
+
       const response = await axios.post(`${apiUrl}/api/rentals/availability`, {
-        startDate: rentalDetails.start_date.toISOString(),
-        endDate: rentalDetails.estimated_return.toISOString(),
+        startDate: rentalDetails.pickup_date.toISOString(),
+        endDate: rentalDetails.return_date.toISOString(),
         isNewDriver: rentalDetails.is_new_driver,
         isYoungDriver: rentalDetails.is_young_driver,
       }, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}` }
       });
-  
+
       setAvailableCars(response.data.cars);
       setRentalDetails(prevDetails => ({
         ...prevDetails,
@@ -51,25 +91,24 @@ function RentalAdd() {
         saturdays: response.data.saturdays,
         weekdays: response.data.weekdays
       }));
-      setIsModalOpen(true);
-  
+      setIsCarModalOpen(true);
+
     } catch (error) {
       setNotification({ message: 'Error fetching rental availability: ' + error.message, type: 'error' });
     }
   };
-  
 
   const handleCarSelection = (selectedCar) => {
     setRentalDetails(prevDetails => ({
       ...prevDetails,
       selected_car: selectedCar,
       km_limit_per_unit: selectedCar.kmLimitPerUnit,
-      km_units: selectedCar.kmUnits, // Assuming km_units is totalKmLimit, adjust if necessary
+      km_units: selectedCar.kmUnits,
       price_per_km: selectedCar.extraKmPrice,
       current_km: selectedCar.current_km,
       current_fuel_level: selectedCar.current_fuel_level
     }));
-    setIsModalOpen(false);
+    setIsCarModalOpen(false);
   };
 
   const handleInputChange = (e) => {
@@ -104,8 +143,8 @@ function RentalAdd() {
 
       const response = await axios.post(`${apiUrl}/api/rentals`, {
         customer_id: rentalDetails.customer_id,
-        start_date: rentalDetails.start_date.toISOString(),
-        end_date: rentalDetails.estimated_return.toISOString(),
+        start_date: rentalDetails.pickup_date.toISOString(),
+        end_date: rentalDetails.return_date.toISOString(),
         car_id: rentalDetails.selected_car.id,
         km_pickup: rentalDetails.selected_car.current_km,
         fuel_pickup: rentalDetails.selected_car.current_fuel_level,
@@ -121,7 +160,7 @@ function RentalAdd() {
         }
       });
 
-      router.push(`/rentals/${response.data.rental_id}`); // Redirect to rentals page after successful submission
+      router.push(`/rentals/${response.data.rental_id}`);
     } catch (error) {
       setNotification({ message: 'Error submitting rental: ' + error.message, type: 'error' });
     }
@@ -134,12 +173,16 @@ function RentalAdd() {
       return;
     }
     setNotification({
-      message: 'Are you sure you want to add this rental?',
+      message: 'האם אתה בטוח שברצונך להקים חוזה השכרה?',
       type: 'info',
       onConfirm: confirmSubmit,
       onClose: () => setNotification({ message: '', type: '', onConfirm: null })
     });
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -147,8 +190,8 @@ function RentalAdd() {
         <title>הוספת השכרה חדשה</title>
       </Head>
       <ListHeader
-        title="הוספת השכרה חדשה"
-        subtitle="מילוי פרטי השכרה"
+        title="פתיחת חוזה"
+        subtitle="נא לבחור את הלקוח, התאריכים והרכב הרצויים"
         showSearchBox={false}
       />
       <div className={styles.container}>
@@ -159,26 +202,32 @@ function RentalAdd() {
             onDateChange={handleDateChange}
             onCustomerChange={handleCustomerChange}
             onOpenModal={handleRentalSubmit}
+            onAddCustomerClick={() => setIsCustomerModalOpen(true)}
             onSubmit={handleSubmit}
+            settings={settings}
           />
         </div>
       </div>
-      <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="בחירת רכב">
-  {rentalDetails && (
-    <>
-      <SearchDetails 
-        startDate={rentalDetails.start_date.toISOString()}
-        endDate={rentalDetails.estimated_return.toISOString()}
-        isNewDriver={rentalDetails.is_new_driver}
-        isYoungDriver={rentalDetails.is_young_driver}
-        totalDays={rentalDetails.totalDays}
-        saturdays={rentalDetails.saturdays}
-        weekdays={rentalDetails.weekdays}
-      />
-      <CarAvailabilityList cars={availableCars} onSelectCar={handleCarSelection} />
-    </>
-  )}
-</ModalComponent>
+      <ModalComponent isOpen={isCarModalOpen} onClose={() => setIsCarModalOpen(false)} title="בחירת רכב">
+        {rentalDetails && (
+          <>
+            <SearchDetails 
+              startDate={rentalDetails.pickup_date.toISOString()}
+              endDate={rentalDetails.return_date.toISOString()}
+              isNewDriver={rentalDetails.is_new_driver}
+              isYoungDriver={rentalDetails.is_young_driver}
+              totalDays={rentalDetails.totalDays}
+              saturdays={rentalDetails.saturdays}
+              weekdays={rentalDetails.weekdays}
+            />
+            <CarAvailabilityList cars={availableCars} onSelectCar={handleCarSelection} />
+          </>
+        )}
+      </ModalComponent>
+
+      <ModalComponent isOpen={isCustomerModalOpen} onClose={() => setIsCustomerModalOpen(false)} title="הוספת לקוח חדש">
+        <AddCustomerForm onClose={() => setIsCustomerModalOpen(false)} /> 
+      </ModalComponent>
 
       <Notification
         message={notification.message}

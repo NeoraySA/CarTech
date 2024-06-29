@@ -1,16 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../styles/AddForm.module.css'; // וודא שהנתיב נכון
 
 import CitySelector from './CitySelector';
 import StreetSelector from './StreetSelector';
 import CustomersCategoriesSelector from './CustomersCategoriesSelector';
 
-function AddCustomerForm({ formData, handleChange, handleSubmit }) {
+function AddCustomerForm({ onClose }) {
+  const initialFormData = {
+    id_number: '',
+    last_name: '',
+    first_name: '',
+    company_name: '',
+    telephone: '',
+    cellphone: '',
+    fax: '',
+    email: '',
+    city: '',
+    street: '',
+    building_number: '',
+    country: '',
+    gender: '',
+    category: '',
+    referral: '',
+    is_active: false,
+    vat_exempt: false,
+    deposit_exempt: false,
+    notes: ''
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("Missing token in local storage");
+      }
+
+      await axios.post(`${apiUrl}/api/customers`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setNotification({ message: 'לקוח נוסף בהצלחה', type: 'success' });
+      onClose(); // סגירת המודל לאחר הוספת הלקוח בהצלחה
+
+    } catch (error) {
+      setNotification({ message: 'Error adding customer: ' + error.message, type: 'error' });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.section}>
-        <div className={styles.formGroup}>
+          <div className={styles.formGroup}>
             <label className={styles.label}>תעודת זהות:</label>
             <input className={styles.input} type="text" name="id_number" value={formData.id_number} onChange={handleChange} required />
           </div>
@@ -48,11 +102,11 @@ function AddCustomerForm({ formData, handleChange, handleSubmit }) {
         </div>
 
         <div className={styles.section}>
-        <div className={styles.formGroup}>
-          <label className={styles.label}>עיר:</label>
-          <CitySelector onChange={(option) => handleChange({ target: { name: 'city', value: option ? option.value : '' }})} />
-        </div>
-        <div className={styles.formGroup}>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>עיר:</label>
+            <CitySelector onChange={(option) => handleChange({ target: { name: 'city', value: option ? option.value : '' }})} />
+          </div>
+          <div className={styles.formGroup}>
             <label className={styles.label}>רחוב:</label>
             <StreetSelector city={formData.city} onChange={(option) => handleChange({ target: { name: 'street', value: option ? option.value : '' }})} />
           </div>
@@ -77,9 +131,9 @@ function AddCustomerForm({ formData, handleChange, handleSubmit }) {
             </select>
           </div>
           <div className={styles.formGroup}>
-  <label className={styles.label}>קטגוריה:</label>
-  <CustomersCategoriesSelector onChange={(selectedOption) => handleChange({ target: { name: 'category', value: selectedOption.value }})} />
-</div>
+            <label className={styles.label}>קטגוריה:</label>
+            <CustomersCategoriesSelector onChange={(selectedOption) => handleChange({ target: { name: 'category', value: selectedOption.value }})} />
+          </div>
 
           <div className={styles.formGroup}>
             <label className={styles.label}>דרכי הגעה:</label>
@@ -101,9 +155,8 @@ function AddCustomerForm({ formData, handleChange, handleSubmit }) {
             <input className={styles.checkbox} type="checkbox" name="deposit_exempt" checked={formData.deposit_exempt} onChange={handleChange} />
           </div>
         </div>
-        
-        <div className={styles.section}>
 
+        <div className={styles.section}>
           <div className={styles.formGroup}>
             <label className={styles.label}>הערות:</label>
             <textarea className={styles.textarea} name="notes" value={formData.notes} onChange={handleChange} />
