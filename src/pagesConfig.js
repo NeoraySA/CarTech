@@ -32,7 +32,7 @@ export const categoriesConfig = [
     items: [
       { name: "ניהול הזמנות", path: "/manageRentals" },
       { name: "פתיחת חוזה", path: "/RentalAdd" },
-      { name: "רשימת חוזים", path: "/checkAvailability" },
+      { name: "רשימת חוזים", path: "/RentalsList" },
       // הוסף כאן כל תת-קטגוריות נוספות שתרצה
     ],
   },

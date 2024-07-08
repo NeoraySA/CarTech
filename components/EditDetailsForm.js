@@ -8,7 +8,7 @@ const EditDetailsForm = ({ details, group, onClose, onSave }) => {
   useEffect(() => {
     if (group && details) {
       const groupFields = group.fields.reduce((acc, field) => {
-        acc[field.key] = details[field.key] || '';
+        acc[field] = details[field] || '';
         return acc;
       }, {});
       setFormData(groupFields);
@@ -27,11 +27,11 @@ const EditDetailsForm = ({ details, group, onClose, onSave }) => {
   const renderFields = () => {
     return group?.fields.map((field, index) => (
       <div key={index} className={styles.inputField}>
-        <label>{labelTranslations[field.key] || field.label}:</label>
+        <label>{labelTranslations[field] || field}:</label>
         <input
           type="text"
-          name={field.key}
-          value={formData[field.key] || ''}
+          name={field}
+          value={formData[field] || ''}
           onChange={handleChange}
         />
       </div>

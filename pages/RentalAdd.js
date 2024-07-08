@@ -67,7 +67,37 @@ function RentalAdd() {
     fetchSettings();
   }, []);
 
+  const validateForm = () => {
+    const { customer_id, pickup_date, pickup_time, return_date, return_time } = rentalDetails;
+
+    if (!customer_id) {
+      setNotification({ message: 'נא לבחור לקוח.', type: 'error' });
+      return false;
+    }
+    if (!pickup_date) {
+      setNotification({ message: 'נא לבחור תאריך איסוף.', type: 'error' });
+      return false;
+    }
+    if (!pickup_time) {
+      setNotification({ message: 'נא לבחור שעת איסוף.', type: 'error' });
+      return false;
+    }
+    if (!return_date) {
+      setNotification({ message: 'נא לבחור תאריך החזרה.', type: 'error' });
+      return false;
+    }
+    if (!return_time) {
+      setNotification({ message: 'נא לבחור שעת החזרה.', type: 'error' });
+      return false;
+    }
+    return true;
+  };
+
   const handleRentalSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -106,7 +136,10 @@ function RentalAdd() {
       km_units: selectedCar.kmUnits,
       price_per_km: selectedCar.extraKmPrice,
       current_km: selectedCar.current_km,
-      current_fuel_level: selectedCar.current_fuel_level
+      current_fuel_level: selectedCar.current_fuel_level,
+      toll_fee: selectedCar.toll_fee,
+      traffic_fee: selectedCar.traffic_fee,
+      vat_percentage: selectedCar.vat_percentage
     }));
     setIsCarModalOpen(false);
   };
@@ -153,7 +186,11 @@ function RentalAdd() {
         price_per_km: rentalDetails.price_per_km,
         company_id: rentalDetails.company_id,
         branch_id: rentalDetails.branch_id,
-        pickup_branch: rentalDetails.branch_id
+        pickup_branch: rentalDetails.branch_id,
+        toll_fee: rentalDetails.toll_fee,
+        traffic_fee: rentalDetails.traffic_fee,
+        vat_percentage: rentalDetails.vat_percentage
+
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -169,7 +206,7 @@ function RentalAdd() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!rentalDetails.selected_car) {
-      setNotification({ message: "Please select a car before submitting.", type: 'info' });
+      setNotification({ message: "נא לבחור את הרכב הרצוי!", type: 'error' });
       return;
     }
     setNotification({
@@ -181,7 +218,7 @@ function RentalAdd() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>טוען נתונים...</div>;
   }
 
   return (

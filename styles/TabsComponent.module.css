@@ -2,50 +2,42 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10px;
+  padding: 20px;
   box-sizing: border-box;
-  
+  direction: rtl; /* ודא שהאתר מוגדר כ-RTL */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .react-tabs__tab-list {
   display: flex;
-
   padding: 0;
   margin: 0;
   list-style: none;
   width: 100%;
+  border-bottom: 1px solid #ddd;
 }
-
-
-
-
 
 .react-tabs__tab {
   flex: 1;
   text-align: center;
-  padding: 10px;
+  padding: 15px;
   cursor: pointer;
   user-select: none;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
   font-family: inherit;
   font-size: large;
-  color: #333;
-
-  
-  
-}
-
-.panel {
-  border: 1px solid #ccc;
-  padding: 10px;
+  color: #555;
+  border-radius: 8px 8px 0 0;
 }
 
 .react-tabs__tab--selected {
   background-color: #007bff;
   color: white;
-  border-color: #e5e5e5;
+  border-color: #ddd;
   border-bottom: 2px solid white;
-  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .react-tabs__tab--selected:hover {
@@ -62,51 +54,75 @@
 
 .react-tabs__tab-panel--selected {
   display: block;
-  
+  padding: 20px;
+  background-color: white;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .table-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-top: 20px;
   margin-bottom: 20px;
+  gap: 10px;
 }
 
-.btn {
+.btn, .actionButton {
   background-color: #007bff;
   color: white;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s, transform 0.2s;
   font-family: inherit;
   font-size: medium;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.btn:hover {
+.btn:hover, .actionButton:hover {
   background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.buttonIcon {
+  margin-left: 5px;
+  font-size: 1.2em;
 }
 
 .modal-container {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
   .react-tabs__tab {
     font-size: medium;
-    padding: 8px 10px;
+    padding: 10px 8px;
   }
 
-  .btn {
+  .btn, .actionButton {
     padding: 8px 10px;
     font-size: small;
   }
 
-  .modal-container {
-    padding: 10px;
+  .buttonIcon {
+    margin-left: 3px;
+    font-size: 1em;
   }
 }

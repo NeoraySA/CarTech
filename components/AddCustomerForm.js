@@ -142,26 +142,14 @@ function AddCustomerForm({ onClose }) {
         </div>
 
         <div className={styles.section}>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>לקוח פעיל:</label>
-            <input className={styles.checkbox} type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} />
-          </div>
+         
           <div className={styles.formGroup}>
             <label className={styles.label}>פטור מע"מ:</label>
             <input className={styles.checkbox} type="checkbox" name="vat_exempt" checked={formData.vat_exempt} onChange={handleChange} />
           </div>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>פטור פיקדון:</label>
-            <input className={styles.checkbox} type="checkbox" name="deposit_exempt" checked={formData.deposit_exempt} onChange={handleChange} />
-          </div>
         </div>
 
-        <div className={styles.section}>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>הערות:</label>
-            <textarea className={styles.textarea} name="notes" value={formData.notes} onChange={handleChange} />
-          </div>
-        </div>
+       
 
         <button className={styles.submitButton} type="submit">הוסף לקוח</button>
       </form>

@@ -30,6 +30,7 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
       return acc;
     }, {});
 
+    // Get available cars
     const [availableCars] = await pool.query(`
       SELECT c.id, c.license_number, c.make, c.model, c.color, c.year, c.current_km, c.current_fuel_level, c.image_url, cc.category_id, cc.km_limit_per_unit, cc.price_per_day, cc.saturday_holiday_price, cc.extra_km_price, cc.new_driver_price_increase, cc.young_driver_price_increase, cc.include_new_young_driver_on_saturday_holiday
       FROM cars c
@@ -38,6 +39,12 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
       AND c.company_id = ?
       AND c.branch_id = ?
     `, [companyId, branchId]);
+
+    // Get settings
+    const [settings] = await pool.query('SELECT * FROM settings WHERE company_id = ? AND branch_id = ?', [companyId, branchId]);
+    const toll_fee = parseFloat(settings[0].toll_fee) || 0;
+    const traffic_fee = parseFloat(settings[0].traffic_fee) || 0;
+    const vat_percentage = parseFloat(settings[0].vat_percentage) || 0;
 
     let driverType = 'נהג ותיק';
     if (isNewDriver && isYoungDriver) {
@@ -160,7 +167,10 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
         totalPrice,
         additionalCost, // תוספת מחיר עבור נהג חדש וצעיר
         kmUnits: weekdays, // מספר יחידות ק"מ
-        ratesDetails // פרטי התעריפים
+        ratesDetails, // פרטי התעריפים
+        toll_fee, // עלות עמלה בכבישי אגרה
+        traffic_fee, // עלות עמלה בטיפול בדוחות
+        vat_percentage
       };
     });
 

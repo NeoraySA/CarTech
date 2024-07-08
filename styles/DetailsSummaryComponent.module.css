@@ -15,7 +15,7 @@
 .detailsSummaryTitle {
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 20px;
+  
   color: #333;
   border-bottom: 2px solid #f0f0f0;
   padding-bottom: 10px;
@@ -38,29 +38,27 @@
   color: #000;
 }
 
-.rateTable {
+.editButton {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+  border: 1px solid var(--main-color);
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--main-color);
+  cursor: pointer; 
+  transition: background-color 0.2s ease-in-out;
+  gap: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 5px;
+  text-align: center;
+  align-items: center;
 }
 
-.rateTable th, .rateTable td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: right;
-}
+.editButton:hover {
 
-.rateTable th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-}
+  background-color: var(--main-color);
+  color: white;
 
-.rateTable tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.rateTable tr:hover {
-  background-color: #ddd;
 }
 
 /* Media queries for responsive design */
@@ -78,7 +76,4 @@
     font-size: 1rem;
   }
 
-  .rateTable th, .rateTable td {
-    padding: 6px;
-  }
 }

@@ -7,15 +7,31 @@ const calculateRentalAvailability = require('../utils/calculateRentalAvailabilit
 const { format } = require('date-fns');
 
 // Get all rentals
+
 router.get('/', authenticateToken, async (req, res) => {
+  const { companyId, branchId } = req.user;
   try {
-    const [results] = await pool.query('SELECT * FROM rentals');
+    console.log('Token:', req.token); // הדפסת הטוקן
+    console.log('Query: SELECT * FROM rental_details_view WHERE company_id = ? AND branch_id = ?'); // הדפסת השאילתה
+
+    const [results] = await pool.query('SELECT * FROM rental_details_view WHERE company_id = ? AND branch_id = ?', [companyId, branchId]);
+    console.log('Results:', results); // הדפסת התוצאות
+
+    if (!Array.isArray(results)) {
+      console.error('Error: Results is not an array');
+      return res.status(500).json({ error: 'Server error: results is not an array' });
+    }
+
     res.json(results);
   } catch (err) {
     console.error("Error retrieving rentals:", err);
     res.status(500).json({ error: 'Server error retrieving rentals' });
   }
 });
+
+
+
+
 
 // Get rental by ID with all associated details
 router.get('/:id', authenticateToken, async (req, res) => {
@@ -69,7 +85,10 @@ router.post('/', authenticateToken, async (req, res) => {
     fuel_pickup,
     price_per_km,
     km_limit_per_unit,
-    km_units
+    km_units,
+    toll_fee,
+    traffic_fee,
+    vat_percentage
   } = rentalData;
 
   // בדיקת תאריכים תקינים
@@ -92,6 +111,9 @@ router.post('/', authenticateToken, async (req, res) => {
     price_per_km,
     km_limit_per_unit,
     km_units,
+    toll_fee,
+    traffic_fee,
+    vat_percentage,
     company_id: companyId,
     branch_id: branchId,
     pickup_branch: branchId

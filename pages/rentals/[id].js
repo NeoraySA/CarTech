@@ -5,7 +5,7 @@ import { fetchRentalDetails, updateRentalDetails } from '../../services/rentalSe
 import RentalDetailsForm from '../../components/RentalDetails'; 
 import UniversalTabsComponent from '../../components/UniversalTabsComponent';
 import DetailsSummaryComponent from '../../components/DetailsSummaryComponent';
-import UniversalTableRental from '../../components/UniversalTableRental'; // ייבוא הקומפוננטה החסרה
+import UniversalTable from '../../components/UniversalTable'; // שינוי שם הקומפוננטה
 import ListHeader from '../../components/ListHeader';
 import Notification from '../../components/Notification';
 import ModalComponent from '../../components/ModalComponent';
@@ -13,6 +13,7 @@ import EditDetailsForm from '../../components/EditDetailsForm';
 import ProcessTracker from '../../components/ProcessTracker';
 import DriverRentalSelector from '../../components/DriverRentalSelector';
 import styles from '../../styles/DetailsPage.module.css';
+import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 
 const RentalDetailsPage = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const RentalDetailsPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
+  const [editGroup, setEditGroup] = useState(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -50,17 +52,20 @@ const RentalDetailsPage = () => {
 
   const openEditModal = (groupTitle) => {
     setEditGroupTitle(groupTitle);
+    const group = summaryGroups.find(g => g.title === groupTitle);
+    setEditGroup(group);
     setIsEditModalOpen(true);
   };
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setEditGroupTitle('');
+    setEditGroup(null);
   };
 
   const handleSave = async (updatedDetails) => {
     try {
-      const filteredDetails = summaryGroups.find(group => group.title === editGroupTitle)?.fields.reduce((obj, field) => {
+      const filteredDetails = editGroup.fields.reduce((obj, field) => {
         if (updatedDetails[field] !== rentalDetails.rental[field]) {
           obj[field] = updatedDetails[field];
         }
@@ -139,22 +144,155 @@ const RentalDetailsPage = () => {
     ]
   };
 
-  const tabsConfig = [
-    { title: 'חיובים', Component: UniversalTableRental, props: { data: rentalDetails?.charges, columns: columns.charges, tableType: 'charges' } },
-    { title: 'נהגים מורשים', Component: UniversalTableRental, props: { data: rentalDetails?.drivers, columns: columns.drivers, tableType: 'drivers' } },
-    { title: 'בטחונות אשראי', Component: UniversalTableRental, props: { data: rentalDetails?.securities, columns: columns.securities, tableType: 'securities' } },
-    { title: 'ביטוחים', Component: UniversalTableRental, props: { data: rentalDetails?.insurances, columns: columns.insurances, tableType: 'insurances' } },
-    { title: 'כבישי אגרה', Component: UniversalTableRental, props: { data: rentalDetails?.tollTravels, columns: columns.tollTravels, tableType: 'tollTravels' } },
-    { title: 'דוחות תנועה', Component: UniversalTableRental, props: { data: rentalDetails?.trafficReports, columns: columns.trafficReports, tableType: 'trafficReports' } },
-    { title: 'נזקים ברכב', Component: UniversalTableRental, props: { data: rentalDetails?.vehicleDamages, columns: columns.vehicleDamages, tableType: 'vehicleDamages' } },
-    { title: 'תקבולים', Component: UniversalTableRental, props: { data: rentalDetails?.payments, columns: columns.payments, tableType: 'payments' } }
-  ];
-
   const summaryGroups = [
     { title: 'איסוף', fields: ['start_date', 'fuel_pickup_level_description', 'km_pickup'] },
-    { title: 'החזרה', fields: ['end_date', 'fuel_return_level_description', 'km_return'] },
+    { title: 'החזרה', fields: ['end_date', 'fuel_return_level_description', 'km_return', 'estimated_return'] },
     { title: 'עמלות', fields: ['traffic_fee', 'toll_fee'] },
-    { title: 'מגבלות ק"מ', fields: ['km_limit_per_unit', 'km_units', 'total_km_limit', 'price_per_km'] }
+    { title: 'מגבלות ק"מ', fields: ['km_limit_per_unit', 'km_units', 'total_km_limit', 'price_per_km'] },
+    { title: 'מעמ', fields: ['vat_percentage'] }
+  ];
+
+  const filteredSummaryGroups = summaryGroups.map(group => {
+    if (group.title === 'החזרה') {
+      return {
+        ...group,
+        fields: rentalDetails?.rental?.status >= 3 
+          ? group.fields.filter(field => field !== 'estimated_return')
+          : ['estimated_return']
+      };
+    }
+    return group;
+  });
+
+  const tabsConfig = [
+    {
+      title: 'חיובים',
+      Component: UniversalTable,
+      props: {
+        data: rentalDetails?.charges,
+        columns: columns.charges,
+        tableType: 'charges',
+        actionButtons: [
+          { label: 'ערוך', icon: FaEdit, onClick: (row) => console.log('Edit charge', row) },
+          { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete charge', row) }
+        ]
+      },
+      buttons: [
+        { label: 'הוסף', icon: FaPlus, onClick: () => console.log('Add charge') }
+      ]
+    },
+    {
+      title: 'נהגים מורשים',
+      Component: UniversalTable,
+      props: {
+        data: rentalDetails?.drivers,
+        columns: columns.drivers,
+        tableType: 'drivers',
+        actionButtons: [
+          { label: 'ערוך', icon: FaEdit, onClick: (row) => console.log('Edit driver', row) },
+          { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete driver', row) }
+        ]
+      },
+      buttons: [
+        { label: 'הוסף', icon: FaPlus, onClick: () => console.log('Add driver') }
+      ]
+    },
+    {
+      title: 'בטחונות אשראי',
+      Component: UniversalTable,
+      props: {
+        data: rentalDetails?.securities,
+        columns: columns.securities,
+        tableType: 'securities',
+        actionButtons: [
+          { label: 'ערוך', icon: FaEdit, onClick: (row) => console.log('Edit security', row) },
+          { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete security', row) }
+        ]
+      },
+      buttons: [
+        { label: 'הוסף', icon: FaPlus, onClick: () => console.log('Add security') }
+      ]
+    },
+    {
+      title: 'ביטוחים',
+      Component: UniversalTable,
+      props: {
+        data: rentalDetails?.insurances,
+        columns: columns.insurances,
+        tableType: 'insurances',
+        actionButtons: [
+          { label: 'ערוך', icon: FaEdit, onClick: (row) => console.log('Edit insurance', row) },
+          { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete insurance', row) }
+        ]
+      },
+      buttons: [
+        { label: 'הוסף', icon: FaPlus, onClick: () => console.log('Add insurance') }
+      ]
+    },
+    {
+      title: 'כבישי אגרה',
+      Component: UniversalTable,
+      props: {
+        data: rentalDetails?.tollTravels,
+        columns: columns.tollTravels,
+        tableType: 'tollTravels',
+        actionButtons: [
+          { label: 'ערוך', icon: FaEdit, onClick: (row) => console.log('Edit toll travel', row) },
+          { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete toll travel', row) }
+        ]
+      },
+      buttons: [
+        { label: 'הוסף', icon: FaPlus, onClick: () => console.log('Add toll travel') }
+      ]
+    },
+    {
+      title: 'דוחות תנועה',
+      Component: UniversalTable,
+      props: {
+        data: rentalDetails?.trafficReports,
+        columns: columns.trafficReports,
+        tableType: 'trafficReports',
+        actionButtons: [
+          { label: 'ערוך', icon: FaEdit, onClick: (row) => console.log('Edit traffic report', row) },
+          { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete traffic report', row) }
+        ]
+      },
+      buttons: [
+        { label: 'הוסף', icon: FaPlus, onClick: () => console.log('Add traffic report') }
+      ]
+    },
+    {
+      title: 'נזקים ברכב',
+      Component: UniversalTable,
+      props: {
+        data: rentalDetails?.vehicleDamages,
+        columns: columns.vehicleDamages,
+        tableType: 'vehicleDamages',
+        actionButtons: [
+          { label: 'ערוך', icon: FaEdit, onClick: (row) => console.log('Edit vehicle damage', row) },
+          { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete vehicle damage', row) }
+        ]
+      },
+      buttons: [
+        { label: 'הוסף', icon: FaPlus, onClick: () => console.log('Add vehicle damage') }
+      ]
+    },
+    {
+      title: 'תקבולים',
+      Component: UniversalTable,
+      props: {
+        data: rentalDetails?.payments,
+        columns: columns.payments,
+        tableType: 'payments',
+        actionButtons: [
+          { label: 'ערוך', icon: FaEdit, onClick: (row) => console.log('Edit payment', row) },
+          { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete payment', row) }
+        ]
+      },
+      buttons: [
+        { label: 'הוסף', icon: FaPlus, onClick: () => console.log('Add payment') }
+      ]
+    }
   ];
 
   if (loading) return <div>Loading...</div>;
@@ -190,7 +328,7 @@ const RentalDetailsPage = () => {
               <ProcessTracker steps={['הקמת חוזה', 'פתיחת חוזה', 'החזרת רכב', 'תשלום', 'סגירת חוזה']} currentStep={rentalDetails.rental.status - 1} />
               <DetailsSummaryComponent
                 summaryData={rentalDetails.rental}
-                summaryGroups={summaryGroups}
+                summaryGroups={filteredSummaryGroups}
                 onEdit={openEditModal}
               />
             </div>
@@ -203,11 +341,10 @@ const RentalDetailsPage = () => {
         title={`ערוך ${editGroupTitle}`}
       >
         <EditDetailsForm
-          rentalDetails={rentalDetails?.rental}
-          groupTitle={editGroupTitle}
+          details={rentalDetails?.rental}
+          group={editGroup}
           onClose={closeEditModal}
           onSave={handleSave}
-          summaryGroups={summaryGroups}
         />
       </ModalComponent>
     </div>

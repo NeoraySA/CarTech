@@ -10,7 +10,7 @@ function SettingsForm({ settings, handleInputChange, handleSave, category }) {
         {category === 'rental' && (
           <>
             <div className={styles.formGroup}>
-              <label className={styles.label}>אגרת כביש אגרה</label>
+              <label className={styles.label}>דמי טיפול - דוחות תעבורה</label>
               <input
                 className={styles.input}
                 type="text"
@@ -20,7 +20,7 @@ function SettingsForm({ settings, handleInputChange, handleSave, category }) {
               />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label}>אגרת תנועה</label>
+              <label className={styles.label}>דמי טיפול - כבישי אגרה</label>
               <input
                 className={styles.input}
                 type="text"

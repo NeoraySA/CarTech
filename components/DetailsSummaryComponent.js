@@ -1,11 +1,7 @@
 import React from 'react';
 import styles from '../styles/DetailsSummaryComponent.module.css';
-import { format } from 'date-fns';
+import { formatDateTime, formatNumber, formatCurrency, formatLicensePlate } from '../utils/formatUtils';
 import labelTranslations from '../src/translations'; // ייבוא התרגומים מהקובץ המרכזי
-
-const formatDate = (date) => {
-  return format(new Date(date), 'dd/MM/yyyy hh:mm');
-};
 
 const renderValue = (key, value) => {
   if (typeof value === 'object' && value !== null) {
@@ -23,38 +19,24 @@ const renderValue = (key, value) => {
       );
     }
   }
-  return value;
-};
 
-const renderRateBreakdown = (rates, title) => {
-  if (!Array.isArray(rates)) {
-    return null;
+  if (key.includes('date') || key.includes('estimated_return') ) {
+    return formatDateTime(value);
   }
-  return (
-    <div>
-      <h3 className={styles.detailsSummaryGroupTitle}>{title}</h3>
-      <table className={styles.rateTable}>
-        <thead>
-          <tr>
-            <th>{labelTranslations.rateName || 'rateName'}</th>
-            <th>{labelTranslations.rateType || 'rateType'}</th>
-            <th>{labelTranslations.dailyRate || 'dailyRate'}</th>
-            <th>{labelTranslations.quantity || 'quantity'}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rates.map((rate, index) => (
-            <tr key={index}>
-              <td>{rate.rateName}</td>
-              <td>{rate.rateType}</td>
-              <td>{rate.dailyRate}</td>
-              <td>{rate.quantity}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+
+  if (key.includes('amount') || key.includes('price') || key.includes('fee')) {
+    return formatCurrency(value);
+  }
+
+  if (key.includes('km') || key.includes('count')) {
+    return formatNumber(value);
+  }
+
+  if (key.includes('license')) {
+    return formatLicensePlate(value);
+  }
+
+  return value;
 };
 
 const DetailsSummaryComponent = ({ summaryData, summaryGroups, onEdit }) => {
@@ -70,16 +52,12 @@ const DetailsSummaryComponent = ({ summaryData, summaryGroups, onEdit }) => {
                 <span className={styles.detailsSummaryLabel}>{labelTranslations[field] || field}:</span>
                 <span className={styles.detailsSummaryValue}>
                   {summaryData && summaryData[field] !== undefined ?
-                    (field.includes('date') && summaryData[field] !== null
-                      ? formatDate(summaryData[field])
-                      : renderValue(field, summaryData[field]))
+                    renderValue(field, summaryData[field])
                     : 'לא זמין'}
                 </span>
               </div>
             )
           ))}
-          {summaryData.rateBreakdown && renderRateBreakdown(summaryData.rateBreakdown, 'פירוט תעריפים')}
-          {summaryData.specialRates && renderRateBreakdown(summaryData.specialRates, 'תעריפים מיוחדים')}
           <button className={styles.editButton} onClick={() => onEdit(group.title)}>עריכת {group.title}</button>
         </div>
       ))}

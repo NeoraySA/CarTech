@@ -11,7 +11,9 @@ import EditDetailsForm from '../../components/EditDetailsForm';
 import ProcessTracker from '../../components/ProcessTracker';
 import UniversalTabsComponent from '../../components/UniversalTabsComponent';
 import AddDriverForm from '../../components/AddDriverForm';
+import UniversalTable from '../../components/UniversalTable'; // ייבוא הקומפוננטה החדשה
 import styles from '../../styles/DetailsPage.module.css';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 const CustomerDetailsPage = () => {
   const router = useRouter();
@@ -103,33 +105,28 @@ const CustomerDetailsPage = () => {
   };
 
   const tabsConfig = [
-    { title: 'נהגים', dataKey: 'drivers', columns: columns.drivers, tableType: 'drivers' },
-    { title: 'כרטיסי אשראי', dataKey: 'creditCards', columns: columns.creditCards, tableType: 'creditCards' }
+    {
+      title: 'נהגים',
+      Component: UniversalTable,
+      props: { data: customerDetails?.drivers, columns: columns.drivers, tableType: 'drivers' },
+      buttons: [
+        { label: 'הוסף נהג', icon: FaPlus, onClick: () => setIsModalOpen(true) },
+        { label: 'הסר נהג', icon: FaTrash, onClick: () => console.log('Delete driver') }
+      ]
+    },
+    {
+      title: 'כרטיסי אשראי',
+      Component: UniversalTable,
+      props: { data: customerDetails?.creditCards, columns: columns.creditCards, tableType: 'creditCards' },
+      buttons: [
+        { label: 'הוסף כרטיס אשראי', icon: FaPlus, onClick: () => console.log('Add credit card') },
+        { label: 'הסר כרטיס אשראי', icon: FaTrash, onClick: () => console.log('Delete credit card') }
+      ]
+    }
   ];
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  const renderButtons = (tableType) => {
-    switch (tableType) {
-      case 'drivers':
-        return (
-          <div className={styles["table-buttons"]}>
-            <button onClick={openModal} className={styles["btn"]}>הוסף נהג</button>
-            <button className={styles["btn"]}>הסר נהג</button>
-          </div>
-        );
-      case 'creditCards':
-        return (
-          <div className={styles["table-buttons"]}>
-            <button className={styles["btn"]}>הוסף כרטיס אשראי</button>
-            <button className={styles["btn"]}>הסר כרטיס אשראי</button>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -160,9 +157,7 @@ const CustomerDetailsPage = () => {
               />
               <div className={styles.section}>
                 <UniversalTabsComponent
-                  details={customerDetails}
                   tabsConfig={tabsConfig}
-                  renderButtons={renderButtons}
                   ModalComponent={ModalComponent}
                   modalProps={{
                     isOpen: isModalOpen,

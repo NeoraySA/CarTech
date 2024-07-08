@@ -2,6 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/Settings": "pages/Settings.js",
+  "/RentalsList": "pages/RentalsList.js",
+  "/Login": "pages/Login.js",
+  "/RentalAdd": "pages/RentalAdd.js",
   "/rentals/[id]": "pages/rentals/[id].js"
 }

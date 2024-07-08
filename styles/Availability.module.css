@@ -6,13 +6,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    
     padding: 20px;
     box-sizing: border-box;
 }
 
 .carList {
-    width: 100%;
+    width: 1200px;
     margin-block-start: 0;
     padding-inline-start: 0; /* ביטול padding-inline-start */
     list-style-type: none; /* ביטול list-style-type */

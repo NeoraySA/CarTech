@@ -3,6 +3,7 @@ const labelTranslations = {
   fuel_pickup_level_description: 'דלק באיסוף',
   km_pickup: 'ק"מ באיסוף',
   end_date: 'תאריך החזרה',
+  estimated_return: 'תאריך החזרה משוער',
   fuel_return_level_description: 'דלק בהחזרה',
   km_return: 'ק"מ בהחזרה',
   totalDays: 'סה"כ ימים',
@@ -20,7 +21,8 @@ const labelTranslations = {
   rateName: 'שם התעריף',
   rateType: 'סוג התעריף',
   dailyRate: 'תעריף יומי',
-  quantity: 'כמות'
+  quantity: 'כמות',
+  vat_percentage: 'אחוז מע"מ'
 };
 
 export default labelTranslations;
