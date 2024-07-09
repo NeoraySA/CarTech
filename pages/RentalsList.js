@@ -6,6 +6,7 @@ import UniversalTable from '../components/UniversalTable';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import ListHeader from '../components/ListHeader';
 import FilterComponent from '../components/FilterComponent';
+import ListFooter from '../components/ListFooter';
 import styles from '../styles/RentalsList.module.css';
 import {
   formatNumber,
@@ -13,13 +14,13 @@ import {
   formatDateTime,
   formatDateOnly,
   formatLicensePlate
-} from '../utils/formatUtils'; // ייבוא הפונקציות מהקובץ formatUtils
+} from '../utils/formatUtils';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 const RentalsList = () => {
   const [rentals, setRentals] = useState([]);
-  const [filter, setFilter] = useState(""); // הוספת הגדרה של filter ו-setFilter
+  const [filter, setFilter] = useState("");
   const [error, setError] = useState(null);
   const router = useRouter();
   const [filterValues, setFilterValues] = useState({
@@ -104,9 +105,7 @@ const RentalsList = () => {
         <ListHeader
           title="רשימת חוזה השכרה"
           subtitle="רשימת חוזה השכרה במערכת"
-          filter={filter}
-          setFilter={setFilter}
-          clearSearch={clearSearch}
+          showSearchBox={false} // הוספת showSearchBox={false}
         />
       </div>
       <div className={styles.main}>
@@ -117,10 +116,14 @@ const RentalsList = () => {
           {error ? (
             <p>{error}</p>
           ) : (
-            <UniversalTable data={filteredRentals} columns={columns} actionButtons={actionButtons} imageAccessor="car_image_url" />
+            <UniversalTable data={filteredRentals} columns={columns} actionButtons={actionButtons} imageAccessor="car_image_url" expandable={false} />
           )}
         </div>
       </div>
+      <ListFooter
+        title='סה"כ חוזי השכרה:'
+        content={filteredRentals.length}
+      />
     </div>
   );
 };

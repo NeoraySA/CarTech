@@ -73,3 +73,4 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
+

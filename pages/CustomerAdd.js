@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import AddCustomerForm from '../components/AddCustomerForm';
 import ListHeader from '../components/ListHeader';
 import ListFooter from '../components/ListFooter';
@@ -8,6 +9,7 @@ import Notification from '../components/Notification';
 
 function AddCustomerPage() {
   const [formData, setFormData] = useState({
+    id_number: '',
     last_name: '',
     first_name: '',
     company_name: '',
@@ -19,16 +21,14 @@ function AddCustomerPage() {
     cellphone: '',
     fax: '',
     email: '',
-    gender: '',
+    gender_id: '',  // עדכון לשדה gender_id
     category: '',
     referral: '',
-    is_active: false,
-    vat_exempt: false,
-    deposit_exempt: false,
-    notes: ''
+    vat_exempt: false
   });
 
   const [notification, setNotification] = useState({ message: '', type: '' });
+  const router = useRouter();
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -38,32 +38,65 @@ function AddCustomerPage() {
     });
   };
 
+  const validateForm = () => {
+    if (!formData.id_number) {
+      setNotification({ message: 'נא להזין תעודת זהות!', type: 'error' });
+      return false;
+    }
+    if (!formData.last_name) {
+      setNotification({ message: 'נא להזין שם משפחה!', type: 'error' });
+      return false;
+    }
+    if (!formData.first_name) {
+      setNotification({ message: 'נא להזין שם פרטי!', type: 'error' });
+      return false;
+    }
+    if (!formData.city) {
+      setNotification({ message: 'נא לבחור עיר!', type: 'error' });
+      return false;
+    }
+    if (!formData.street) {
+      setNotification({ message: 'נא לבחור רחוב!', type: 'error' });
+      return false;
+    }
+    if (!formData.building_number) {
+      setNotification({ message: 'נא להזין מספר בניין!', type: 'error' });
+      return false;
+    }
+    if (!formData.gender_id) {  // עדכון לשדה gender_id
+      setNotification({ message: 'נא לבחור את מגדר הלקוח!', type: 'error' });
+      return false;
+    }
+    if (!formData.category) {
+      setNotification({ message: 'נא לבחור קטגוריה!', type: 'error' });
+      return false;
+    }
+    if (!formData.referral) {
+      setNotification({ message: 'נא לבחור דרכי הגעה!', type: 'error' });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
     const token = localStorage.getItem('token'); 
-    const company_id = localStorage.getItem('company_id');
-    const branch_id = localStorage.getItem('branch_id');
-    const added_by = localStorage.getItem('user_id');
-
-    const completeFormData = {
-      ...formData,
-      company_id,
-      branch_id,
-      added_by,
-      is_active: formData.is_active ? 1 : 0,
-      vat_exempt: formData.vat_exempt ? 1 : 0,
-      deposit_exempt: formData.deposit_exempt ? 1 : 0
-    };
 
     try {
-      const response = await axios.post(`${apiUrl}/api/customers`, completeFormData, {
+      const response = await axios.post(`${apiUrl}/api/customers`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
       if (response.status === 201) {
         setNotification({ message: 'הלקוח נוסף בהצלחה!', type: 'success' });
+        const newCustomerId = response.data.customerId; // הנחת שה-ID של הלקוח החדש מוחזר מהשרת כ-response.data.customerId
+        router.push(`/CustomerDetails/${newCustomerId}`); // ניווט לדף פרטי הלקוח
       }
     } catch (error) {
       console.error('Failed to add customer:', error);

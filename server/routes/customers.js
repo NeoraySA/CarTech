@@ -125,32 +125,30 @@ router.get('/', authenticateToken, async (req, res) => {
 
 // POST request to add a new customer
 router.post('/', authenticateToken, async (req, res) => {
-  const { companyId, branchId } = req.user; // Use the correct company and branch IDs from user data
-  console.log('companyId:', companyId, 'branchId:', branchId); // Print company and branch ID for verification
+  const { companyId, branchId, userId } = req.user; // Use the correct company, branch, and user IDs from user data
+  console.log('companyId:', companyId, 'branchId:', branchId, 'userId:', userId); // Print company, branch, and user ID for verification
 
   try {
     // Destructuring all fields from the form data
     const {
       last_name, first_name, company_name, street, building_number, city, country,
-      telephone, cellphone, fax, email, gender, category, is_active,
-      vat_exempt, deposit_exempt, added_by, notes, referral, id_number
+      telephone, cellphone, fax, email, gender_id, category, vat_exempt,
+      notes, referral, id_number
     } = req.body;
 
     const query = `
       INSERT INTO customers 
       (last_name, first_name, company_name, street, building_number, city, country,
-      telephone, cellphone, fax, email, gender, category, is_active,
-      vat_exempt, deposit_exempt, added_by, notes, company_id, branch_id,
-      referral, id_number) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      telephone, cellphone, fax, email, gender_id, category, vat_exempt,
+      notes, company_id, branch_id, referral, id_number, added_by) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     // Using an array to pass values ensures they match the placeholders in the query
     const values = [
       last_name, first_name, company_name, street, building_number, city, country,
-      telephone, cellphone, fax, email, gender, category, is_active,
-      vat_exempt, deposit_exempt, added_by, notes, companyId, branchId,
-      referral, id_number
+      telephone, cellphone, fax, email, gender_id, category, vat_exempt,
+      notes, companyId, branchId, referral, id_number, userId
     ];
 
     const [results] = await pool.query(query, values);

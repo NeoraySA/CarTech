@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 
-function FuelLevelSelector({ mode, value, onChange }) {
+function FuelLevelSelector({ value, onChange, placeholder }) {
   const [fuelLevels, setFuelLevels] = useState([]);
   const [loading, setLoading] = useState(false);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -37,32 +37,14 @@ function FuelLevelSelector({ mode, value, onChange }) {
   }, [apiUrl]);
 
   return (
-    <div>
-      {mode === 'pickup' && (
-        <div>
-          <Select
-            value={fuelLevels.find(option => option.value === value)}
-            options={fuelLevels}
-            isLoading={loading}
-            placeholder="בחר רמת דלק באיסוף"
-            noOptionsMessage={() => 'לא נמצאו רמות דלק'}
-            onChange={onChange}
-          />
-        </div>
-      )}
-      {mode === 'return' && (
-        <div>
-          <Select
-            value={fuelLevels.find(option => option.value === value)}
-            options={fuelLevels}
-            isLoading={loading}
-            placeholder="בחר רמת דלק בהחזרה"
-            noOptionsMessage={() => 'לא נמצאו רמות דלק'}
-            onChange={onChange}
-          />
-        </div>
-      )}
-    </div>
+    <Select
+      value={fuelLevels.find(option => option.value === value)}
+      options={fuelLevels}
+      isLoading={loading}
+      placeholder={placeholder || 'בחר רמת דלק'}
+      noOptionsMessage={() => 'לא נמצאו רמות דלק'}
+      onChange={onChange}
+    />
   );
 }
 

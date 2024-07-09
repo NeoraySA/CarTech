@@ -116,7 +116,7 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
 
       // הוספת רשומה נוספת לפירוט התעריפים עבור תוספת נהג חדש או צעיר בימים שאינם שבת או חג
       if (isNewDriver) {
-        const newDriverRateName = 'תוספת נהג חדש';
+        const newDriverRateName = 'נהג חדש';
         const applicableDays = includeNewYoungDriverOnSaturdayHoliday ? days.length : weekdays;
         if (!ratesDetailsMap[newDriverRateName]) {
           ratesDetailsMap[newDriverRateName] = { quantity: 0, total: 0, daily_rate: newDriverPriceIncrease };
@@ -127,7 +127,7 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
       }
 
       if (isYoungDriver) {
-        const youngDriverRateName = 'תוספת נהג צעיר';
+        const youngDriverRateName = 'נהג צעיר';
         const applicableDays = includeNewYoungDriverOnSaturdayHoliday ? days.length : weekdays;
         if (!ratesDetailsMap[youngDriverRateName]) {
           ratesDetailsMap[youngDriverRateName] = { quantity: 0, total: 0, daily_rate: youngDriverPriceIncrease };

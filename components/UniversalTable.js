@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTable, useSortBy, useExpanded } from 'react-table';
 import styles from '../styles/Table.module.css'; // ייבוא קובץ העיצוב
 
-export default function UniversalTable({ data = [], columns = [], tableType, actionButtons = [], imageAccessor }) {
-  const enhancedColumns = React.useMemo(() => {
+export default function UniversalTable({ data = [], columns = [], tableType, actionButtons = [], imageAccessor, expandable = false }) {
+  const enhancedColumns = useMemo(() => {
     if (imageAccessor) {
       return [
         { Header: 'תמונה', accessor: imageAccessor, Cell: ({ value }) => value ? <img src={value} alt="Item" className={styles.universalImage} /> : null },
@@ -19,10 +19,28 @@ export default function UniversalTable({ data = [], columns = [], tableType, act
     headerGroups,
     rows,
     prepareRow,
+    toggleRowExpanded
   } = useTable(
     { columns: enhancedColumns, data },
     useSortBy,
     useExpanded
+  );
+
+  const renderRowSubComponent = (row) => (
+    <div className={styles["expanded-content"]}>
+      <div className={styles["details-content"]}>
+        {/* רינדור תכנים נוספים בהרחבת השורה */}
+        <p><strong>Details:</strong> {JSON.stringify(row.original)}</p>
+      </div>
+      <div className={styles["actions-content"]}>
+        {actionButtons.map((button, index) => (
+          <button key={index} onClick={() => button.onClick(row.original)} className={styles['button']}>
+            {React.createElement(button.icon, { className: styles['button-icon'] })}
+            {button.label}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 
   return (
@@ -48,7 +66,10 @@ export default function UniversalTable({ data = [], columns = [], tableType, act
             prepareRow(row);
             return (
               <React.Fragment key={row.id}>
-                <tr {...row.getRowProps()} className={row.isExpanded ? styles['expanded-row'] : ''}>
+                <tr {...row.getRowProps({
+                  onClick: expandable ? () => toggleRowExpanded(row.id) : null,
+                  className: row.isExpanded ? styles['expanded-row'] : ''
+                })}>
                   {row.cells.map(cell => (
                     <td {...cell.getCellProps()} className={cell.column.id === 'license_number' ? styles['cell-license-number'] : ''}>
                       {cell.render('Cell')}
@@ -65,13 +86,10 @@ export default function UniversalTable({ data = [], columns = [], tableType, act
                     </td>
                   )}
                 </tr>
-                {row.isExpanded ? (
+                {expandable && row.isExpanded ? (
                   <tr>
                     <td colSpan={columns.length + 1} className={styles["expanded-content"]}>
-                      <div className={styles["details-content"]}>
-                        {/* Here you can render expanded content for the row */}
-                        <p><strong>Details:</strong> {JSON.stringify(row.original)}</p>
-                      </div>
+                      {renderRowSubComponent(row)}
                     </td>
                   </tr>
                 ) : null}

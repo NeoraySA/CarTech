@@ -1,65 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from '../styles/AddForm.module.css'; // וודא שהנתיב נכון
 
 import CitySelector from './CitySelector';
 import StreetSelector from './StreetSelector';
 import CustomersCategoriesSelector from './CustomersCategoriesSelector';
+import ReferralSourcesSelector from './ReferralSourcesSelector';
+import GenderSelector from './GenderSelector';
 
-function AddCustomerForm({ onClose }) {
-  const initialFormData = {
-    id_number: '',
-    last_name: '',
-    first_name: '',
-    company_name: '',
-    telephone: '',
-    cellphone: '',
-    fax: '',
-    email: '',
-    city: '',
-    street: '',
-    building_number: '',
-    country: '',
-    gender: '',
-    category: '',
-    referral: '',
-    is_active: false,
-    vat_exempt: false,
-    deposit_exempt: false,
-    notes: ''
-  };
-
-  const [formData, setFormData] = useState(initialFormData);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error("Missing token in local storage");
-      }
-
-      await axios.post(`${apiUrl}/api/customers`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      setNotification({ message: 'לקוח נוסף בהצלחה', type: 'success' });
-      onClose(); // סגירת המודל לאחר הוספת הלקוח בהצלחה
-
-    } catch (error) {
-      setNotification({ message: 'Error adding customer: ' + error.message, type: 'error' });
-    }
-  };
-
+function AddCustomerForm({ formData, handleChange, handleSubmit }) {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -123,33 +71,24 @@ function AddCustomerForm({ onClose }) {
         <div className={styles.section}>
           <div className={styles.formGroup}>
             <label className={styles.label}>מין:</label>
-            <select className={styles.select} name="gender" value={formData.gender} onChange={handleChange}>
-              <option value="">בחר מין</option>
-              <option value="1">זכר</option>
-              <option value="female">נקבה</option>
-              <option value="other">אחר</option>
-            </select>
+            <GenderSelector onChange={(selectedOption) => handleChange({ target: { name: 'gender_id', value: selectedOption ? selectedOption.value : '' }})} />
           </div>
           <div className={styles.formGroup}>
             <label className={styles.label}>קטגוריה:</label>
-            <CustomersCategoriesSelector onChange={(selectedOption) => handleChange({ target: { name: 'category', value: selectedOption.value }})} />
+            <CustomersCategoriesSelector onChange={(selectedOption) => handleChange({ target: { name: 'category', value: selectedOption ? selectedOption.value : '' }})} />
           </div>
-
           <div className={styles.formGroup}>
             <label className={styles.label}>דרכי הגעה:</label>
-            <input className={styles.input} type="text" name="referral" value={formData.referral} onChange={handleChange} />
+            <ReferralSourcesSelector onChange={(selectedOption) => handleChange({ target: { name: 'referral', value: selectedOption ? selectedOption.value : '' }})} />
           </div>
         </div>
 
         <div className={styles.section}>
-         
           <div className={styles.formGroup}>
             <label className={styles.label}>פטור מע"מ:</label>
             <input className={styles.checkbox} type="checkbox" name="vat_exempt" checked={formData.vat_exempt} onChange={handleChange} />
           </div>
         </div>
-
-       
 
         <button className={styles.submitButton} type="submit">הוסף לקוח</button>
       </form>

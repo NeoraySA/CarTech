@@ -53,4 +53,33 @@ router.get('/billingBasis', authenticateToken, async (req, res) => {
   }
 });
 
+
+
+// Fetch referral sources with authentication, filtered by company_id from token
+router.get('/referralSources', authenticateToken, async (req, res) => {
+  const { companyId } = req.user; // Getting companyId from the authenticated user
+
+  try {
+    const query = 'SELECT id, referral FROM referral_sources WHERE company_id = ?';
+    const [results] = await pool.query(query, [companyId]);
+    res.json(results.map(ref => ({ label: ref.referral, value: ref.id })));
+  } catch (err) {
+    console.error("Error retrieving referral sources:", err);
+    res.status(500).json({ error: 'Server error retrieving referral sources' });
+  }
+});
+
+// Fetch genders with authentication
+router.get('/genders', authenticateToken, async (req, res) => {
+  try {
+    const [results] = await pool.query('SELECT gender_id, gender_name FROM genders');
+    res.json(results.map(gender => ({ label: gender.gender_name, value: gender.gender_id })));
+  } catch (err) {
+    console.error("Error retrieving genders:", err);
+    res.status(500).json({ error: 'Server error retrieving genders' });
+  }
+});
+
+
+
 module.exports = router;

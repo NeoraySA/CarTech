@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import Notification from '../components/Notification';
-import { SettingsProvider } from '../context/SettingsContext'; // Import the SettingsProvider
+import { SettingsProvider } from '../context/SettingsContext';
 
 import '../styles/index.css';
 import '../styles/Header.css';
@@ -23,8 +23,8 @@ function MyApp({ Component, pageProps }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const companyId = 1; // Define companyId
-  const branchId = 1; // Define branchId
+  const companyId = 1;
+  const branchId = 1;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -38,7 +38,7 @@ function MyApp({ Component, pageProps }) {
       }
     };
 
-    const handleComplete = (url) => {
+    const handleComplete = () => {
       setLoading(false);
     };
 
@@ -69,7 +69,7 @@ function MyApp({ Component, pageProps }) {
       <div className={`content ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
         <Component {...pageProps} />
       </div>
-
+      {showMenus && <Footer />}
       {loading && <Notification message="טוען..." type="info" />}
     </SettingsProvider>
   );
