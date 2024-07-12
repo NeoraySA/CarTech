@@ -40,6 +40,9 @@
   margin: 0;
   margin-left: auto; /* Push title to the right */
   text-align: right; /* Align text to the right */
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: var(--main-color);
 }
 
 .description {

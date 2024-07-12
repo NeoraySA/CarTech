@@ -4,8 +4,10 @@ import axios from 'axios';
 import Head from 'next/head';
 import CarCategoryDetails from '../../components/CarCategoryDetails';
 import CarSpecialRates from '../../components/CarSpecialRates';
+import CarList from '../../components/CarList'; // ייבוא הקומפוננטה החדשה
 import ListHeader from '../../components/ListHeader';
 import Notification from '../../components/Notification';
+import styles from '../../styles/Page.module.css'; // וודא שהנתיב נכון
 
 function CarCategoryPage() {
   const router = useRouter();
@@ -50,6 +52,7 @@ function CarCategoryPage() {
         onClose={() => setNotification({ message: '', type: '', onConfirm: null })}
         onConfirm={notification.onConfirm}
       />
+      <div>
       {categoryDetails && (
         <>
           <ListHeader
@@ -57,10 +60,22 @@ function CarCategoryPage() {
             subtitle="מילוי פרטי הלקוח"
             showSearchBox={false}
           />
-          <CarCategoryDetails category={categoryDetails} setNotification={setNotification} />
-          <CarSpecialRates categoryId={categoryDetails.category_id} />
+          <div className={styles.mainSection}>
+            <div className={styles.section1}>
+              <CarCategoryDetails category={categoryDetails} setNotification={setNotification} />
+            </div>
+            <div className={styles.section2}>
+              <div className={styles.card}>
+              <CarSpecialRates categoryId={categoryDetails.category_id} />
+              </div>
+              <div className={styles.card}>
+              <CarList categoryId={categoryDetails.category_id} /> {/* הוספת הקומפוננטה החדשה */}
+              </div>
+            </div>
+          </div>
         </>
       )}
+      </div>
     </div>
   );
 }

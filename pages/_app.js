@@ -69,7 +69,7 @@ function MyApp({ Component, pageProps }) {
       <div className={`content ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
         <Component {...pageProps} />
       </div>
-      {showMenus && <Footer />}
+      {showMenus}
       {loading && <Notification message="טוען..." type="info" />}
     </SettingsProvider>
   );

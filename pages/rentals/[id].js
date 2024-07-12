@@ -149,7 +149,7 @@ const RentalDetailsPage = () => {
     { title: 'החזרה', fields: ['end_date', 'fuel_return_level_description', 'km_return', 'estimated_return'] },
     { title: 'עמלות', fields: ['traffic_fee', 'toll_fee'] },
     { title: 'מגבלות ק"מ', fields: ['km_limit_per_unit', 'km_units', 'total_km_limit', 'price_per_km'] },
-    { title: 'מעמ', fields: ['vat_percentage'] }
+    { title: 'מע"מ', fields: ['vat_percentage'] }
   ];
 
   const filteredSummaryGroups = summaryGroups.map(group => {

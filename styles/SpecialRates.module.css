@@ -1,0 +1,57 @@
+/* SpecialRates.module.css */
+.section {
+
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .label {
+    font-weight: bold;
+  }
+  
+  .input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .submitButton {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9em;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  
+  .submitButton:hover {
+    background-color: var(--main-color);
+  }
+  
+  .list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .listItem {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  

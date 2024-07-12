@@ -22,7 +22,18 @@ const labelTranslations = {
   rateType: 'סוג התעריף',
   dailyRate: 'תעריף יומי',
   quantity: 'כמות',
-  vat_percentage: 'אחוז מע"מ'
+  vat_percentage: 'אחוז מע"מ',
+  rate_name: 'שם תעריף',
+  daily_rate: 'תעריף יומי',
+  include_saturday_holiday: 'כולל שבת וחג',
+  include_new_young_driver_on_saturday_holiday: 'תוספת נהג חדש/צעיר בשבתות וחגים',
+  category_name: 'שם קטגוריה',
+  description: 'תיאור',
+  price_per_day: 'תעריף יומי',
+  saturday_holiday_price: 'תעריף שבת / חג',
+  extra_km_price: 'מחיר לק"מ נוסף',
+  new_driver_price_increase: 'תוספת נהג חדש',
+  young_driver_price_increase: 'תוספת נהג צעיר'
 };
 
 export default labelTranslations;

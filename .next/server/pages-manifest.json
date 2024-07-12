@@ -2,10 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/dashboard": "pages/dashboard.js",
-  "/RentalAdd": "pages/RentalAdd.js",
-  "/RentalsList": "pages/RentalsList.js",
-  "/CustomerList": "pages/CustomerList.js",
-  "/Login": "pages/Login.js",
-  "/carsList": "pages/carsList.js"
+  "/carsList": "pages/carsList.js",
+  "/CarCategory/[id]": "pages/CarCategory/[id].js",
+  "/CarCategories": "pages/CarCategories.js"
 }

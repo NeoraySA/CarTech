@@ -2,7 +2,8 @@
   display: flex;
   justify-content: start;
   width: 100%;
-  gap: 20px; /* רווח בין הקונטיינרים */
+  gap: 10px; /* רווח בין הקונטיינרים */
+
 }
 
 .formContainer {
@@ -12,7 +13,7 @@
 .form {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 10px;
   width: 100%;
   
 }

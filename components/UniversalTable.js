@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useTable, useSortBy, useExpanded } from 'react-table';
 import styles from '../styles/Table.module.css'; // ייבוא קובץ העיצוב
 
-export default function UniversalTable({ data = [], columns = [], tableType, actionButtons = [], imageAccessor, expandable = false }) {
+export default function UniversalTable({ data = [], columns = [], tableType, actionButtons = [], imageAccessor, expandable = false, noDataText = 'אין נתונים זמינים' }) {
   const enhancedColumns = useMemo(() => {
     if (imageAccessor) {
       return [
@@ -45,59 +45,63 @@ export default function UniversalTable({ data = [], columns = [], tableType, act
 
   return (
     <div className={styles["table-container"]}>
-      <table {...getTableProps()} className={styles["universal-table"]}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render('Header')}
-                  <span>
-                    {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
-                  </span>
-                </th>
-              ))}
-              {actionButtons.length > 0 && <th className={styles['action-buttons-header']}>פעולות</th>}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-            return (
-              <React.Fragment key={row.id}>
-                <tr {...row.getRowProps({
-                  onClick: expandable ? () => toggleRowExpanded(row.id) : null,
-                  className: row.isExpanded ? styles['expanded-row'] : ''
-                })}>
-                  {row.cells.map(cell => (
-                    <td {...cell.getCellProps()} className={cell.column.id === 'license_number' ? styles['cell-license-number'] : ''}>
-                      {cell.render('Cell')}
-                    </td>
-                  ))}
-                  {actionButtons.length > 0 && (
-                    <td className={styles['action-buttons']}>
-                      {actionButtons.map((button, index) => (
-                        <button key={index} onClick={() => button.onClick(row.original)} className={styles['button']}>
-                          {React.createElement(button.icon, { className: styles['button-icon'] })}
-                          {button.label}
-                        </button>
-                      ))}
-                    </td>
-                  )}
-                </tr>
-                {expandable && row.isExpanded ? (
-                  <tr>
-                    <td colSpan={columns.length + 1} className={styles["expanded-content"]}>
-                      {renderRowSubComponent(row)}
-                    </td>
+      {rows.length === 0 ? (
+        <div className={styles["no-data"]}>{noDataText}</div>
+      ) : (
+        <table {...getTableProps()} className={styles["universal-table"]}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render('Header')}
+                    <span>
+                      {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
+                    </span>
+                  </th>
+                ))}
+                {actionButtons.length > 0 && <th className={styles['action-buttons-header']}>פעולות</th>}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+              return (
+                <React.Fragment key={row.id}>
+                  <tr {...row.getRowProps({
+                    onClick: expandable ? () => toggleRowExpanded(row.id) : null,
+                    className: row.isExpanded ? styles['expanded-row'] : ''
+                  })}>
+                    {row.cells.map((cell, index) => (
+                      <td {...cell.getCellProps()} className={index === 0 ? styles['first-column'] : cell.column.id === 'license_number' ? styles['cell-license-number'] : ''}>
+                        {cell.render('Cell')}
+                      </td>
+                    ))}
+                    {actionButtons.length > 0 && (
+                      <td className={styles['action-buttons']}>
+                        {actionButtons.map((button, index) => (
+                          <button key={index} onClick={() => button.onClick(row.original)} className={styles['button']}>
+                            {React.createElement(button.icon, { className: styles['button-icon'] })}
+                            {button.label}
+                          </button>
+                        ))}
+                      </td>
+                    )}
                   </tr>
-                ) : null}
-              </React.Fragment>
-            );
-          })}
-        </tbody>
-      </table>
+                  {expandable && row.isExpanded ? (
+                    <tr>
+                      <td colSpan={columns.length + 1} className={styles["expanded-content"]}>
+                        {renderRowSubComponent(row)}
+                      </td>
+                    </tr>
+                  ) : null}
+                </React.Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

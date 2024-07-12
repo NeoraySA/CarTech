@@ -33,14 +33,17 @@
 .universal-table td {
   padding: 10px;
   border-bottom: 1px solid #e5e5e5;
+  vertical-align: top;
 }
 
 .universal-table th {
   text-align: right;
+  
 }
 
 .universal-table td {
   text-align: right;
+  white-space: nowrap;
 }
 
 .universal-table tbody tr {
@@ -85,16 +88,21 @@
   padding: 10px;
   border-top: 1px solid #e5e5e5;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
 }
 
 .action-buttons {
-  display: flex;
+ display: flex;
   gap: 10px;
+  flex-direction: row;
+  height: 100%;
+  justify-content: start;
 }
 
 .action-buttons-header {
-  min-width: 100px; /* להבטיח רוחב מינימלי מתאים */
-  text-align: right;
+  
+  text-align: center;
+  
 }
 
 .button {
@@ -110,7 +118,7 @@
   gap: 5px;
   font-family: inherit;
   font-size: 0.9em;
-  padding: 7px;
+  padding: 8px;
 }
 
 .button:hover {
@@ -119,4 +127,16 @@
 
 .button i {
   font-size: 1rem;
+}
+
+.first-column {
+  text-align: right;
+  padding: 10px;
+  vertical-align: top;
+}
+
+.first-column span {
+  display: block;
+  font-size: 0.9em;
+  color: #555;
 }

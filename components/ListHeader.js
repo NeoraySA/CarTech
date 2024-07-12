@@ -1,8 +1,6 @@
 import React from 'react';
 
-
-
-function ListHeader({ title, subtitle, showSearchBox = true, filter, setFilter, clearSearch }) {
+function ListHeader({ title, subtitle, buttons = [] }) {
   return (
     <div className="section-bar-header">
       <div className="section-bar-header-right">
@@ -10,23 +8,17 @@ function ListHeader({ title, subtitle, showSearchBox = true, filter, setFilter, 
         <div className="section-bar-header-right-info">{subtitle || 'רשימת הרכבים במערכת'}</div>
       </div>
 
-      {showSearchBox && (
-        <div className="section-bar-header-left">
-          <div className="search-box">
-            <input className='input-search-box'
-              type="text"
-              title="טקסט חיפוש"
-              placeholder="חיפוש"
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-            />
-            <i className="fa fa-times clear-icon" onClick={clearSearch}></i>
-          </div>
+      <div className="section-bar-header-left">
+        <div className="buttons-container">
+          {buttons.map((button, index) => (
+            <button key={index} className="custom-button" onClick={button.onClick}>
+              {button.label}
+            </button>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }
-
 
 export default ListHeader;

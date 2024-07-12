@@ -7,10 +7,10 @@ const authenticateToken = require('../middleware/authenticateToken');
 router.get('/', authenticateToken, async (req, res) => {
   console.log('User details:', req.user);
   const { companyId, branchId } = req.user;
-  const { is_available, status_id } = req.query; 
+  const { is_available, status_id, category_id } = req.query; 
 
   console.log('companyId:', companyId, 'branchId:', branchId);
-  console.log('is_available:', is_available, 'status_id:', status_id);
+  console.log('is_available:', is_available, 'status_id:', status_id, 'category_id:', category_id);
 
   let query = 'SELECT * FROM cars WHERE company_id = ? AND branch_id = ?';
   const params = [companyId, branchId];
@@ -22,6 +22,10 @@ router.get('/', authenticateToken, async (req, res) => {
   if (status_id) {
     query += ' AND status_id = ?';
     params.push(status_id);
+  }
+  if (category_id) {
+    query += ' AND category = ?';
+    params.push(category_id);
   }
 
   try {
@@ -73,4 +77,3 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
-

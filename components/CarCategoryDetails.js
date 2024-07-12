@@ -1,3 +1,4 @@
+// components/CarCategoryDetails.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -90,18 +91,24 @@ function CarCategoryDetails({ category, setNotification }) {
               />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="km_limit_per_unit">מגבלת ק"מ ליחידה</label>
-              <input
-                type="number"
-                id="km_limit_per_unit"
-                name="km_limit_per_unit"
-                value={categoryDetails.km_limit_per_unit}
+              <label className={styles.label} htmlFor="description">תיאור</label>
+              <textarea
+                id="description"
+                name="description"
+                value={categoryDetails.description}
                 onChange={handleChange}
                 className={styles.input}
               />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="price_per_day">מחיר ליום</label>
+              <label className={styles.label} htmlFor="image">תמונה</label>
+              <input type="file" id="image" onChange={handleImageChange} />
+              {categoryDetails.image_url && <img src={categoryDetails.image_url} alt="Category" className={styles.imagePreview} />}
+            </div>
+          </div>
+          <div className={styles.section}>
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="price_per_day">מחיר יומי</label>
               <input
                 type="number"
                 step="0.01"
@@ -125,6 +132,56 @@ function CarCategoryDetails({ category, setNotification }) {
               />
             </div>
             <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="new_driver_price_increase">תוספת לנהג חדש</label>
+              <input
+                type="number"
+                step="0.01"
+                id="new_driver_price_increase"
+                name="new_driver_price_increase"
+                value={categoryDetails.new_driver_price_increase}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="young_driver_price_increase">תוספת לנהג צעיר</label>
+              <input
+                type="number"
+                step="0.01"
+                id="young_driver_price_increase"
+                name="young_driver_price_increase"
+                value={categoryDetails.young_driver_price_increase}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="include_new_young_driver_on_saturday_holiday">
+                תוספת נהג חדש/צעיר בשבתות וחגים
+              </label>
+              <input
+                type="checkbox"
+                id="include_new_young_driver_on_saturday_holiday"
+                name="include_new_young_driver_on_saturday_holiday"
+                checked={categoryDetails.include_new_young_driver_on_saturday_holiday}
+                onChange={(e) => handleChange({ target: { name: e.target.name, value: e.target.checked } })}
+                className={styles.checkbox}
+              />
+            </div>
+          </div>
+          <div className={styles.section}>
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="km_limit_per_unit">מגבלת ק"מ ליחידה</label>
+              <input
+                type="number"
+                id="km_limit_per_unit"
+                name="km_limit_per_unit"
+                value={categoryDetails.km_limit_per_unit}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.formGroup}>
               <label className={styles.label} htmlFor="extra_km_price">מחיר לק"מ נוסף</label>
               <input
                 type="number"
@@ -135,13 +192,6 @@ function CarCategoryDetails({ category, setNotification }) {
                 onChange={handleChange}
                 className={styles.input}
               />
-            </div>
-          </div>
-          <div className={styles.section}>
-            <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="image">תמונה</label>
-              <input type="file" id="image" onChange={handleImageChange} />
-              {categoryDetails.image_url && <img src={categoryDetails.image_url} alt="Category" className={styles.imagePreview} />}
             </div>
           </div>
           <div className={styles.section}>

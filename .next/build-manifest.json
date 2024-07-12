@@ -12,20 +12,15 @@
   ],
   "rootMainFiles": [],
   "pages": {
-    "/CustomerList": [
+    "/CarCategories": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/CustomerList.js"
+      "static/chunks/pages/CarCategories.js"
     ],
-    "/Login": [
+    "/CarCategory/[id]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/Login.js"
-    ],
-    "/RentalAdd": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/RentalAdd.js"
+      "static/chunks/pages/CarCategory/[id].js"
     ],
     "/_app": [
       "static/chunks/webpack.js",
@@ -41,11 +36,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/carsList.js"
-    ],
-    "/dashboard": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/dashboard.js"
     ]
   },
   "ampFirstPages": []

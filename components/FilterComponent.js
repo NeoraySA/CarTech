@@ -9,6 +9,12 @@ const FilterComponent = ({ filters, onFilterChange }) => {
 
   return (
     <div className={styles.filterContainer}>
+      <div className={styles.titleMain}>
+
+      <span className={styles.title}>פילטר</span>
+      <span className={styles.titleDescription}>ניתן לבחור אפשרויות סינון</span>
+
+      </div>
       {Object.keys(filters).map((key) => (
         <div key={key} className={styles.filterItem}>
           <label htmlFor={key} className={styles.filterLabel}>{filters[key].label}</label>

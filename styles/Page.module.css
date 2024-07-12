@@ -1,0 +1,33 @@
+/* Page.module.css */
+.mainSection {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 100%;
+    gap: 20px; /* רווח בין הקונטיינרים */
+  }
+  
+  .section1 {
+    flex: 4; /* הקטגוריה תופסת יותר מקום */
+  }
+  
+  .section2 {
+    flex: 2; /* התעריפים תופסים פחות מקום */
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;  
+    flex-direction: column;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .mainSection {
+        flex-direction: column;
+    }
+  }
+  
