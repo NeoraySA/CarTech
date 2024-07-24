@@ -1,5 +1,5 @@
 const pool = require('../database');
-const { eachDayOfInterval, isSaturday, subDays, format, isWithinInterval } = require('date-fns');
+const { eachDayOfInterval, isSaturday, subDays, isWithinInterval } = require('date-fns');
 
 async function calculateRentalAvailability(startDate, endDate, companyId, branchId, isNewDriver, isYoungDriver) {
   try {
@@ -7,32 +7,52 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
     const end = new Date(endDate);
 
     const days = eachDayOfInterval({ start, end: subDays(end, 1) });
-    const saturdays = days.filter(day => isSaturday(day)).length;
+
+    // חישוב ימי השבת וימי החול
+    let saturdays = 0;
+    let weekdays = 0;
+
+    days.forEach(day => {
+      if (isSaturday(day)) {
+        saturdays++;
+      } else {
+        weekdays++;
+      }
+    });
+
+    console.log(`Initial calculation - Weekdays: ${weekdays}, Saturdays: ${saturdays}`);
 
     const [holidays] = await pool.query('SELECT date FROM jewish_holidays');
     const holidayDates = holidays.map(holiday => new Date(holiday.date));
-    const holidaysInRange = holidayDates.filter(holidayDate => holidayDate >= start && holidayDate <= end);
+    const holidaysInRange = holidayDates.filter(holidayDate => isWithinInterval(holidayDate, { start, end: subDays(end, 1) }));
+
+    holidaysInRange.forEach(holiday => {
+      console.log(`Holiday: ${holiday}`);
+    });
 
     const saturdaysAndHolidays = saturdays + holidaysInRange.length;
-    const weekdays = days.length - saturdaysAndHolidays;
+    weekdays -= holidaysInRange.length;
 
-    // Get special rates
-    const [specialRates] = await pool.query(`
-      SELECT * FROM special_rates WHERE category_id IN (
-        SELECT category_id FROM car_categories WHERE company_id = ? AND branch_id = ?
-      )
+    // הדפסה לטרמינל של ימי החול וימי השבת לאחר הוספת חגים
+    console.log(`After holidays calculation - Weekdays: ${weekdays}, Saturdays: ${saturdays}`);
+
+    const [categoryRateDetails] = await pool.query(`
+      SELECT *
+      FROM category_rate_details
+      WHERE category_id IN (SELECT category_id FROM car_categories WHERE company_id = ? AND branch_id = ?)
+      AND rate_type_id = 1
     `, [companyId, branchId]);
 
-    // Get rate types
-    const [rateTypes] = await pool.query('SELECT * FROM rate_types');
-    const rateTypeMap = rateTypes.reduce((acc, rateType) => {
-      acc[rateType.id] = rateType.rate_type;
+    const categoryRateMap = categoryRateDetails.reduce((acc, rateDetail) => {
+      acc[rateDetail.category_id] = rateDetail;
       return acc;
     }, {});
 
-    // Get available cars
+    // הדפסה של כל הנתונים מהטבלה category_rate_details
+    console.log('Category Rate Details:', categoryRateDetails);
+
     const [availableCars] = await pool.query(`
-      SELECT c.id, c.license_number, c.make, c.model, c.color, c.year, c.current_km, c.current_fuel_level, c.image_url, cc.category_id, cc.km_limit_per_unit, cc.price_per_day, cc.saturday_holiday_price, cc.extra_km_price, cc.new_driver_price_increase, cc.young_driver_price_increase, cc.include_new_young_driver_on_saturday_holiday
+      SELECT c.id, c.license_number, c.make, c.model, c.color, c.year, c.current_km, c.current_fuel_level, c.image_url, cc.category_id
       FROM cars c
       JOIN car_categories cc ON c.category = cc.category_id
       WHERE c.is_available = 1
@@ -40,7 +60,47 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
       AND c.branch_id = ?
     `, [companyId, branchId]);
 
-    // Get settings
+    const carDetails = availableCars.map(car => {
+      const categoryRates = categoryRateMap[car.category_id];
+
+      if (!categoryRates) {
+        return null; // לדלג על קטגוריות שאין להן תעריפים מוגדרים
+      }
+
+      // הדפסה של כל הנתונים עבור קטגוריה ספציפית
+      console.log(`Category Rates for Car ID ${car.id}:`, categoryRates);
+
+      const kmLimitPerUnit = parseFloat(categoryRates.km_limit_per_unit) || 0;
+      console.log(`Car ID: ${car.id}, Km Limit Per Unit: ${kmLimitPerUnit}`); // הדפסה לבדיקת ערך הק"מ ליחידה
+      const saturdayKmIncluded = categoryRates.saturday_km_included;
+
+      let totalKmLimit = kmLimitPerUnit * (weekdays + (saturdayKmIncluded ? saturdays : 0));
+      let kmUnits = weekdays + (saturdayKmIncluded ? saturdays : 0);
+
+      // הדפסה לטרמינל של חישוב הק"מ
+      console.log(`Car ID: ${car.id}, Total Km Limit: ${totalKmLimit}, Km Units: ${kmUnits}`);
+
+      return {
+        ...car,
+        totalKmLimit: isNaN(totalKmLimit) ? 0 : totalKmLimit,
+        kmLimitPerUnit: isNaN(kmLimitPerUnit) ? 0 : kmLimitPerUnit,
+        kmUnits: isNaN(kmUnits) ? 0 : kmUnits,
+        extraKmPrice: parseFloat(categoryRates.extra_km_price) || 0,
+      };
+    }).filter(car => car !== null);
+
+    const [specialRates] = await pool.query(`
+      SELECT * FROM special_rates WHERE category_id IN (
+        SELECT category_id FROM car_categories WHERE company_id = ? AND branch_id = ?
+      )
+    `, [companyId, branchId]);
+
+    const [rateTypes] = await pool.query('SELECT * FROM rate_types');
+    const rateTypeMap = rateTypes.reduce((acc, rateType) => {
+      acc[rateType.id] = rateType.rate_type;
+      return acc;
+    }, {});
+
     const [settings] = await pool.query('SELECT * FROM settings WHERE company_id = ? AND branch_id = ?', [companyId, branchId]);
     const toll_fee = parseFloat(settings[0].toll_fee) || 0;
     const traffic_fee = parseFloat(settings[0].traffic_fee) || 0;
@@ -55,87 +115,64 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
       driverType = 'נהג צעיר';
     }
 
-    const carDetails = availableCars.map(car => {
-      const kmLimitPerUnit = parseFloat(car.km_limit_per_unit) || 0;
-      const pricePerDay = parseFloat(car.price_per_day) || 0;
-      const saturdayHolidayPrice = parseFloat(car.saturday_holiday_price) || 0;
-      const extraKmPrice = parseFloat(car.extra_km_price) || 0;
-      const newDriverPriceIncrease = parseFloat(car.new_driver_price_increase) || 0;
-      const youngDriverPriceIncrease = parseFloat(car.young_driver_price_increase) || 0;
-      const includeNewYoungDriverOnSaturdayHoliday = car.include_new_young_driver_on_saturday_holiday;
+    const updatedCarDetails = carDetails.map(car => {
+      const categoryRates = categoryRateMap[car.category_id];
 
-      let totalKmLimit = kmLimitPerUnit * weekdays;
+      if (!categoryRates) {
+        return null; // לדלג על קטגוריות שאין להן תעריפים מוגדרים
+      }
+
+      const pricePerDay = parseFloat(categoryRates.price) || 0;
+      const saturdayHolidayPrice = parseFloat(categoryRates.saturday_holiday_price) || 0;
+      const extraKmPrice = parseFloat(categoryRates.extra_km_price) || 0;
+      const newDriverPriceIncrease = parseFloat(categoryRates.new_driver_price_increase) || 0;
+      const youngDriverPriceIncrease = parseFloat(categoryRates.young_driver_price_increase) || 0;
+      const saturdayRegularCharge = categoryRates.saturday_regular_charge;
+
       let totalPrice = 0;
-      let additionalCost = 0;
       let ratesDetailsMap = {};
 
       // חישוב התעריפים
       days.forEach(day => {
+        let rateName = null;
+        let baseRateTotal = 0;
         let isSpecialRateApplied = false;
+
+        // בדיקה אם יש תעריף מיוחד ליום הנוכחי
         specialRates.forEach(rate => {
           if (car.category_id === rate.category_id && isWithinInterval(day, { start: new Date(rate.start_date), end: new Date(rate.end_date) })) {
-            const rateName = rate.rate_name;
-            const baseRateTotal = parseFloat(rate.daily_rate);
-            let useSpecialRate = true;
-
-            // בדיקה אם צריך להחיל תעריף מיוחד ביום שבת/חג
-            if ((isSaturday(day) || holidaysInRange.some(holiday => isWithinInterval(day, { start: holiday, end: holiday }))) && !rate.include_saturday_holiday) {
-              useSpecialRate = false;
+            if (isSaturday(day) && !rate.include_saturday_holiday) {
+              return; // לדלג על תעריף מיוחד זה אם שבת לא כלולה
             }
-
-            if (useSpecialRate) {
-              if (!ratesDetailsMap[rateName]) {
-                ratesDetailsMap[rateName] = { quantity: 0, total: 0, daily_rate: baseRateTotal };
-              }
-              ratesDetailsMap[rateName].quantity += 1;
-              ratesDetailsMap[rateName].total += baseRateTotal;
-              totalPrice += baseRateTotal;
-              isSpecialRateApplied = true;
-            }
+            rateName = rate.rate_name;
+            baseRateTotal = parseFloat(rate.daily_rate) || 0;
+            isSpecialRateApplied = true;
           }
         });
 
+        // אם אין תעריף מיוחד, לבדוק תעריף רגיל
         if (!isSpecialRateApplied) {
-          let rateTypeId = 1;
-          let baseRateTotal = pricePerDay;
-
-          if (isSaturday(day) || holidaysInRange.some(holiday => isWithinInterval(day, { start: holiday, end: holiday }))) {
-            rateTypeId = 7;
-            baseRateTotal = saturdayHolidayPrice;
+          if (isSaturday(day)) {
+            if (saturdayRegularCharge) {
+              rateName = rateTypeMap[1];
+              baseRateTotal = pricePerDay;
+            } else {
+              rateName = 'תעריף שבת';
+              baseRateTotal = saturdayHolidayPrice;
+            }
+          } else {
+            rateName = rateTypeMap[1];
+            baseRateTotal = pricePerDay;
           }
-
-          const rateName = rateTypeMap[rateTypeId];
-          if (!ratesDetailsMap[rateName]) {
-            ratesDetailsMap[rateName] = { quantity: 0, total: 0, daily_rate: baseRateTotal };
-          }
-          ratesDetailsMap[rateName].quantity += 1;
-          ratesDetailsMap[rateName].total += baseRateTotal;
-          totalPrice += baseRateTotal;
         }
+
+        if (!ratesDetailsMap[rateName]) {
+          ratesDetailsMap[rateName] = { quantity: 0, total: 0, daily_rate: baseRateTotal };
+        }
+        ratesDetailsMap[rateName].quantity += 1;
+        ratesDetailsMap[rateName].total += baseRateTotal;
+        totalPrice += baseRateTotal;
       });
-
-      // הוספת רשומה נוספת לפירוט התעריפים עבור תוספת נהג חדש או צעיר בימים שאינם שבת או חג
-      if (isNewDriver) {
-        const newDriverRateName = 'נהג חדש';
-        const applicableDays = includeNewYoungDriverOnSaturdayHoliday ? days.length : weekdays;
-        if (!ratesDetailsMap[newDriverRateName]) {
-          ratesDetailsMap[newDriverRateName] = { quantity: 0, total: 0, daily_rate: newDriverPriceIncrease };
-        }
-        ratesDetailsMap[newDriverRateName].quantity += applicableDays;
-        ratesDetailsMap[newDriverRateName].total += newDriverPriceIncrease * applicableDays;
-        totalPrice += newDriverPriceIncrease * applicableDays; // חישוב בסכום הכולל
-      }
-
-      if (isYoungDriver) {
-        const youngDriverRateName = 'נהג צעיר';
-        const applicableDays = includeNewYoungDriverOnSaturdayHoliday ? days.length : weekdays;
-        if (!ratesDetailsMap[youngDriverRateName]) {
-          ratesDetailsMap[youngDriverRateName] = { quantity: 0, total: 0, daily_rate: youngDriverPriceIncrease };
-        }
-        ratesDetailsMap[youngDriverRateName].quantity += applicableDays;
-        ratesDetailsMap[youngDriverRateName].total += youngDriverPriceIncrease * applicableDays;
-        totalPrice += youngDriverPriceIncrease * applicableDays; // חישוב בסכום הכולל
-      }
 
       const ratesDetails = Object.keys(ratesDetailsMap).map(rateName => ({
         rate_name: rateName,
@@ -145,37 +182,23 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
       }));
 
       return {
-        id: car.id,
-        license_number: car.license_number,
-        make: car.make,
-        model: car.model,
-        color: car.color,
-        year: car.year,
-        current_km: car.current_km,
-        current_fuel_level: car.current_fuel_level,
-        image_url: car.image_url,
-        totalDays: days.length,
-        saturdaysAndHolidays,
-        weekdays,
-        kmLimitPerUnit,
-        totalKmLimit,
+        ...car,
+        pricePerDay,
+        saturdayHolidayPrice,
         extraKmPrice,
-        pricePerDay, // מחיר יומי
-        saturdayHolidayPrice, // מחיר עבור שבת או חג
         newDriverPriceIncrease,
         youngDriverPriceIncrease,
+        saturdayRegularCharge,
         totalPrice,
-        additionalCost, // תוספת מחיר עבור נהג חדש וצעיר
-        kmUnits: weekdays, // מספר יחידות ק"מ
-        ratesDetails, // פרטי התעריפים
-        toll_fee, // עלות עמלה בכבישי אגרה
-        traffic_fee, // עלות עמלה בטיפול בדוחות
-        vat_percentage
+        ratesDetails,
+        toll_fee,
+        traffic_fee,
+        vat_percentage,
       };
-    });
+    }).filter(car => car !== null);
 
     // מיון התוצאות לפי מחיר כולל מהזול ליקר
-    carDetails.sort((a, b) => a.totalPrice - b.totalPrice);
+    updatedCarDetails.sort((a, b) => a.totalPrice - b.totalPrice);
 
     return {
       startDate,
@@ -183,7 +206,7 @@ async function calculateRentalAvailability(startDate, endDate, companyId, branch
       totalDays: days.length,
       saturdays,
       weekdays,
-      cars: carDetails,
+      cars: updatedCarDetails,
       driverType // סוג הנהג שנשלח
     };
   } catch (error) {

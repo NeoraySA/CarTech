@@ -1,7 +1,6 @@
 .tabs-container {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  
   padding: 20px;
   box-sizing: border-box;
   direction: rtl; /* ודא שהאתר מוגדר כ-RTL */
@@ -30,6 +29,7 @@
   font-size: large;
   color: #555;
   border-radius: 8px 8px 0 0;
+  
 }
 
 .react-tabs__tab--selected {
@@ -38,6 +38,14 @@
   border-color: #ddd;
   border-bottom: 2px solid white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  padding: 20px;
+  
+}
+
+
+.panelMain {
+  padding: 20px;
 }
 
 .react-tabs__tab--selected:hover {
@@ -59,7 +67,7 @@
   border-radius: 0 0 8px 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
+  
 .table-buttons {
   display: flex;
   justify-content: flex-end;

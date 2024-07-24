@@ -1,0 +1,37 @@
+/* styles/UniversalDetailView.module.css */
+
+.details-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  .detail-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+  }
+  
+  .detail-item strong {
+    width: 150px;
+    color: #333;
+  }
+  
+  .detail-item span {
+    color: #555;
+  }
+  
+  .nested-details {
+    margin-left: 20px;
+  }
+  
+  .nested-container {
+    margin-left: 20px;
+    border-left: 1px solid #ccc;
+    padding-left: 10px;
+  }
+  

@@ -1,0 +1,62 @@
+.section {
+
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sectionTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.title {
+  color: var(--2-color);
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.description {
+  color: var(--1-color);
+  
+  font-size: 1em;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.divButton {
+  display: flex;
+  margin-top: 10px;
+  width: 100%;
+  justify-content: end;
+}
+
+
+.list {
+  list-style: none;
+  padding: 0;
+}
+
+.listItem {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}

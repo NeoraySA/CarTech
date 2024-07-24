@@ -1,4 +1,14 @@
 /* Page.module.css */
+
+.sectionTitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  width: 100%;
+  gap: 20px; /* רווח בין הקונטיינרים */
+}
+
+
 .mainSection {
     display: flex;
     flex-direction: row;
@@ -8,21 +18,22 @@
   }
   
   .section1 {
-    flex: 4; /* הקטגוריה תופסת יותר מקום */
+    flex: 3; /* הקטגוריה תופסת יותר מקום */
   }
   
   .section2 {
-    flex: 2; /* התעריפים תופסים פחות מקום */
+    flex: 4; /* התעריפים תופסים פחות מקום */
   }
 
   .card {
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px var(--shadow-color);
     padding: 20px;  
     flex-direction: column;
     box-sizing: border-box;
     margin-bottom: 20px;
+    width: 100%;
   }
 
   @media (max-width: 600px) {

@@ -1,59 +1,112 @@
 .filterContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid hsl(0, 0%, 90%);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-.titleMain {
-  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  
-  border: 1px solid var(--main-color);
-padding: 5px;
-box-sizing: border-box;
-border-radius: 8px;
-align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid hsl(0, 0%, 90%);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-  .title {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: var(--main-color);
-  }
+.Header {
+ 
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border: 1px solid var(--main-color);
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  justify-content: space-between;
+  cursor: pointer;
+}
 
-  .titleDescription {
-    font-size: 1.1em;
-    color: var(--secondary-color);
-  }
+.section1 {
+  justify-content: start;
+  display: flex;
+  flex-direction: column;
+}
 
-  .filterItem {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .filterLabel {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .filterInput {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: border-color 0.3s;
-  }
-  
-  .filterInput:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
+.section2 {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--main-color);
+}
+
+.titleDescription {
+  font-size: 1em;
+  font-weight: bold;
+  color: var(--main-color);
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filterItem {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.filterLabel {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-grow: 1;
+}
+
+.filterInput {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+}
+
+.selectWrapper {
+  flex-grow: 1;
+  transition: border-color 0.3s;
+}
+
+.filterInput:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.clearIcon {
+  position: absolute;
+  left: 10px; /* מותאם ל-RTL */
+  cursor: pointer;
+  color: #ccc;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.buttonSection {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.buttonSection button {
+  width: 100%; /* מגדיר את הכפתור שיתפוס את כל רוחב האיזור */
+}

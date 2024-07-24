@@ -5,6 +5,7 @@ import AddCarForm from '../components/AddCarForm';
 import ListHeader from '../components/ListHeader';
 import Notification from '../components/Notification';
 import { useRouter } from 'next/router';
+import withAuth from '../src/hoc/withAuth'; // נתיב לקובץ HOC
 
 function CarAdd() {
   const [carDetails, setCarDetails] = useState({
@@ -134,6 +135,14 @@ function CarAdd() {
     }
   };
 
+  const headerButtons = [
+    {
+      label: 'רשימת רכבים',
+      onClick: () => router.push('/carsList'),
+      permissions: ['cars_list']
+    }
+  ];
+
   return (
     <div>
       <Head>
@@ -143,6 +152,7 @@ function CarAdd() {
         title="הוספת רכב חדש"
         subtitle="מילוי פרטי הרכב"
         showSearchBox={false}  // מונע את הצגת תיבת החיפוש
+        secondaryButtons={headerButtons}
       />
       <Notification
         message={notification.message}
@@ -164,4 +174,4 @@ function CarAdd() {
   );
 }
 
-export default CarAdd;
+export default withAuth(CarAdd, ['add_car']);

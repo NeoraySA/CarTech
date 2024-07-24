@@ -29,6 +29,18 @@ router.get('/carCategories', authenticateToken, async (req, res) => {
   }
 });
 
+// Fetch rate types with authentication
+router.get('/rateTypes', authenticateToken, async (req, res) => {
+  console.log("Fetching rate types");
+  try {
+    const [results] = await pool.query('SELECT id, rate_type FROM rate_types');
+    res.json(results.map(rate => ({ label: rate.rate_type, value: rate.id })));
+  } catch (err) {
+    console.error("Error retrieving rate types:", err);
+    res.status(500).json({ error: 'Server error retrieving rate types' });
+  }
+});
+
 // Fetch fuel levels with authentication
 router.get('/fuel_levels', authenticateToken, async (req, res) => {
   console.log("Fetching fuel levels");

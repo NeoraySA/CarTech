@@ -7,7 +7,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import ListHeader from '../components/ListHeader';
 import FilterComponent from '../components/FilterComponent';
 import ListFooter from '../components/ListFooter';
-import styles from '../styles/RentalsList.module.css';
+import styles from '../styles/PageList.module.css';
 import {
   formatNumber,
   formatCurrency,
@@ -15,6 +15,9 @@ import {
   formatDateOnly,
   formatLicensePlate
 } from '../utils/formatUtils';
+
+import withAuth from '../src/hoc/withAuth'; // נתיב לקובץ HOC
+
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -24,6 +27,7 @@ const RentalsList = () => {
   const [error, setError] = useState(null);
   const router = useRouter();
   const [filterValues, setFilterValues] = useState({
+    car_license_number: { label: 'מס\' רישוי', type: 'text', value: '' },
     customer_full_name: { label: 'שם הלקוח', type: 'text', value: '' },
     status_name: { label: 'סטטוס', type: 'text', value: '' },
     start_date: { label: 'תאריך התחלה', type: 'date', value: '' },
@@ -49,6 +53,17 @@ const RentalsList = () => {
     fetchRentals();
   }, []);
 
+  useEffect(() => {
+    const { car_license_number } = router.query;
+    if (car_license_number) {
+      setFilterValues(prevValues => ({
+        ...prevValues,
+        car_license_number: { ...prevValues.car_license_number, value: car_license_number }
+      }));
+    }
+  }, [router.query]);
+
+  
   const clearSearch = () => setFilter("");
 
   const handleFilterChange = (filters) => {
@@ -84,7 +99,8 @@ const RentalsList = () => {
   const actionButtons = [
     { 
       label: 'הצגה', 
-      icon: FaEdit, 
+      icon: FaEdit,
+      permissions: ['rental_details'], 
       onClick: (row) => {
         if (row && row.rental_id) {
           router.push(`/rentals/${row.rental_id}`);
@@ -93,8 +109,15 @@ const RentalsList = () => {
         }
       }
     },
-    { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete rental', row) }
+    { label: 'מחק', 
+      icon: FaTrash,
+      permissions: ['delete_rental'],
+      onClick: (row) => console.log('Delete rental', row) }
   ];
+
+  const addRental = () => {
+    router.push('/RentalAdd'); // עדכן את הנתיב בהתאם לנתיב שלך לרשימת הרכבים
+  };
 
   return (
     <div className={styles.container}>
@@ -106,18 +129,26 @@ const RentalsList = () => {
           title="רשימת חוזה השכרה"
           subtitle="רשימת חוזה השכרה במערכת"
           showSearchBox={false} // הוספת showSearchBox={false}
+          secondaryButtons={[
+            {
+              label: 'פתיחת חוזה',
+              onClick: addRental,
+              permissions: ['add_rental']
+            }
+          ]}
         />
       </div>
       <div className={styles.main}>
-        <div className={styles["filter-container"]}>
-          <FilterComponent filters={filterValues} onFilterChange={handleFilterChange} />
-        </div>
+        
         <div className={styles["table-container"]}>
           {error ? (
             <p>{error}</p>
           ) : (
             <UniversalTable data={filteredRentals} columns={columns} actionButtons={actionButtons} imageAccessor="car_image_url" expandable={false} />
           )}
+        </div>
+        <div className={styles["filter-container"]}>
+          <FilterComponent filters={filterValues} onFilterChange={handleFilterChange} />
         </div>
       </div>
       <ListFooter
@@ -128,4 +159,5 @@ const RentalsList = () => {
   );
 };
 
-export default RentalsList;
+export default withAuth(RentalsList, ['rentals_list']);
+

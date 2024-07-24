@@ -30,16 +30,17 @@ const CarList = ({ categoryId }) => {
   }, [categoryId]);
 
   const columns = [
-    { Header: 'מספר רישוי', accessor: 'license_number' },
-    { Header: 'דגם', accessor: 'model' },
-    { Header: 'יצרן', accessor: 'make' },
+    { Header: 'מס\' רישוי', accessor: 'license_number' },
+    { Header: 'יצרן ודגם', accessor: 'make_and_model' },
+    { Header: 'צבע', accessor: 'color' },
     { Header: 'שנה', accessor: 'year' }
   ];
 
 
   return (
     <div className={styles.container}>
-      <h3>רשימת רכבים</h3>
+      <h2>רשימת רכבים</h2>
+      <p>רשימת הרכבים המשויכים לקטגוריה זו</p>
       <Notification
         message={notification.message}
         type={notification.type}

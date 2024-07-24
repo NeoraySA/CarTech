@@ -12,7 +12,7 @@ function AddRentalForm({ rentalDetails, onInputChange, onDateChange, onCustomerC
         <h2>פרטי הלקוח:</h2>
         <div className={styles.formGroup}>
           <label className={styles.label}>בחירת לקוח:</label>
-          <CustomerSelector onChange={onCustomerChange} />
+          <CustomerSelector onChange={onCustomerChange} selectedCustomer={rentalDetails.customer_id} />
           <button type="button" className={styles.selectButton} onClick={onAddCustomerClick}>הוסף לקוח חדש</button>
         </div>
         <h2>סוג נהג:</h2>

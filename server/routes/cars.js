@@ -12,7 +12,7 @@ router.get('/', authenticateToken, async (req, res) => {
   console.log('companyId:', companyId, 'branchId:', branchId);
   console.log('is_available:', is_available, 'status_id:', status_id, 'category_id:', category_id);
 
-  let query = 'SELECT * FROM cars WHERE company_id = ? AND branch_id = ?';
+  let query = 'SELECT * FROM cars_details_view WHERE company_id = ? AND branch_id = ?';
   const params = [companyId, branchId];
 
   if (is_available) {

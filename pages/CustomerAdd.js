@@ -6,6 +6,10 @@ import AddCustomerForm from '../components/AddCustomerForm';
 import ListHeader from '../components/ListHeader';
 import ListFooter from '../components/ListFooter';
 import Notification from '../components/Notification';
+import ModalComponent from '../components/ModalComponent'; // ייבוא קומפוננטת המודל
+import FileUploadComponent from '../components/FileUploadComponent'; // ייבוא קומפוננטת העלאת הקובץ
+
+import withAuth from '../src/hoc/withAuth'; // נתיב לקובץ HOC
 
 function AddCustomerPage() {
   const [formData, setFormData] = useState({
@@ -28,6 +32,7 @@ function AddCustomerPage() {
   });
 
   const [notification, setNotification] = useState({ message: '', type: '' });
+  const [isModalOpen, setIsModalOpen] = useState(false); // ניהול מצב המודל
   const router = useRouter();
 
   const handleChange = (event) => {
@@ -104,6 +109,19 @@ function AddCustomerPage() {
     }
   };
 
+  const headerButtons = [
+    {
+      label: 'רשימת לקוחות',
+      onClick: () => router.push('/CustomerList'),
+      permissions: ['customers_list']
+    },
+    {
+      label: 'העלאת קובץ',
+      onClick: () => setIsModalOpen(true),
+      permissions: ['upload_file_ai']
+    }
+  ];
+
   return (
     <div>
       <Head>
@@ -113,12 +131,16 @@ function AddCustomerPage() {
         title="הוספת לקוח חדש"
         subtitle="מילוי פרטי הלקוח"
         showSearchBox={false}
+        secondaryButtons={headerButtons}
       />
       <Notification message={notification.message} type={notification.type} onClose={() => setNotification({ message: '', type: '' })} />
       <AddCustomerForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
       <ListFooter />
+      <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <FileUploadComponent onClose={() => setIsModalOpen(false)} setFormData={setFormData} />
+      </ModalComponent>
     </div>
   );
 }
 
-export default AddCustomerPage;
+export default withAuth(AddCustomerPage, ['add_customer']);

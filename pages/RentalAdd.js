@@ -11,6 +11,8 @@ import Notification from '../components/Notification';
 import AddCustomerForm from '../components/AddCustomerForm';
 import styles from '../styles/AddForm.module.css';
 
+import withAuth from '../src/hoc/withAuth'; // נתיב לקובץ HOC
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 function RentalAdd() {
@@ -30,6 +32,24 @@ function RentalAdd() {
     is_young_driver: false,
   });
   const [notification, setNotification] = useState({ message: '', type: '', onConfirm: null });
+  const [formData, setFormData] = useState({
+    id_number: '',
+    last_name: '',
+    first_name: '',
+    company_name: '',
+    telephone: '',
+    cellphone: '',
+    fax: '',
+    email: '',
+    city: '',
+    street: '',
+    building_number: '',
+    country: '',
+    gender_id: '',
+    category: '',
+    referral: '',
+    vat_exempt: false,
+  });
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -41,7 +61,6 @@ function RentalAdd() {
         const settingsData = response.data;
         setSettings(settingsData);
 
-        // עדכון שעת החזרה ברירת מחדל אם יש הגדרה לכך
         if (settingsData.return_same_time_as_pickup === 'yes') {
           setRentalDetails(prevDetails => ({
             ...prevDetails,
@@ -104,14 +123,23 @@ function RentalAdd() {
         throw new Error("Missing token in local storage");
       }
 
+      const startDateTime = new Date(rentalDetails.pickup_date);
+      startDateTime.setHours(rentalDetails.pickup_time.getHours());
+      startDateTime.setMinutes(rentalDetails.pickup_time.getMinutes());
+
+      const endDateTime = new Date(rentalDetails.return_date);
+      endDateTime.setHours(rentalDetails.return_time.getHours());
+      endDateTime.setMinutes(rentalDetails.return_time.getMinutes());
+
       const response = await axios.post(`${apiUrl}/api/rentals/availability`, {
-        startDate: rentalDetails.pickup_date.toISOString(),
-        endDate: rentalDetails.return_date.toISOString(),
+        startDate: startDateTime.toISOString(),
+        endDate: endDateTime.toISOString(),
         isNewDriver: rentalDetails.is_new_driver,
         isYoungDriver: rentalDetails.is_young_driver,
       }, {
         headers: {
-          Authorization: `Bearer ${token}` }
+          Authorization: `Bearer ${token}`
+        }
       });
 
       setAvailableCars(response.data.cars);
@@ -119,12 +147,28 @@ function RentalAdd() {
         ...prevDetails,
         totalDays: response.data.totalDays,
         saturdays: response.data.saturdays,
-        weekdays: response.data.weekdays
+        weekdays: response.data.weekdays,
+        pickup_date: new Date(response.data.startDate),
+        return_date: new Date(response.data.endDate)
       }));
       setIsCarModalOpen(true);
 
     } catch (error) {
       setNotification({ message: 'Error fetching rental availability: ' + error.message, type: 'error' });
+    }
+  };
+
+  const handleDateChange = (name, date) => {
+    setRentalDetails(prevDetails => ({
+      ...prevDetails,
+      [name]: date
+    }));
+    if (name === 'pickup_date' && settings.return_same_time_as_pickup === 'yes') {
+      setRentalDetails(prevDetails => ({
+        ...prevDetails,
+        return_date: date,
+        return_time: prevDetails.pickup_time
+      }));
     }
   };
 
@@ -149,13 +193,6 @@ function RentalAdd() {
     setRentalDetails(prevDetails => ({
       ...prevDetails,
       [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleDateChange = (name, date) => {
-    setRentalDetails(prevDetails => ({
-      ...prevDetails,
-      [name]: date
     }));
   };
 
@@ -217,6 +254,35 @@ function RentalAdd() {
     });
   };
 
+  const handleCustomerSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw new Error("Missing token in local storage");
+      }
+
+      const response = await axios.post(`${apiUrl}/api/customers`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setNotification({ message: 'לקוח נוסף בהצלחה', type: 'success' });
+      setIsCustomerModalOpen(false);
+
+      // Update rental details with new customer
+      handleCustomerChange({ value: response.data.customer_id });
+    } catch (error) {
+      setNotification({ message: 'Error adding customer: ' + error.message, type: 'error' });
+    }
+  };
+
+  const rentalsList = () => {
+    router.push('/RentalsList');
+  };
+
   if (loading) {
     return <div>טוען נתונים...</div>;
   }
@@ -230,6 +296,19 @@ function RentalAdd() {
         title="פתיחת חוזה"
         subtitle="נא לבחור את הלקוח, התאריכים והרכב הרצויים"
         showSearchBox={false}
+        buttons={[
+          {
+            label: 'הקמת חוזה',
+            onClick: handleSubmit
+          }
+        ]}
+        secondaryButtons={[
+          {
+            label: 'רשימת חוזים',
+            onClick: rentalsList,
+            permissions: ['rentals_list']
+          }
+        ]}
       />
       <div className={styles.container}>
         <div className={styles.formContainer}>
@@ -263,7 +342,11 @@ function RentalAdd() {
       </ModalComponent>
 
       <ModalComponent isOpen={isCustomerModalOpen} onClose={() => setIsCustomerModalOpen(false)} title="הוספת לקוח חדש">
-        <AddCustomerForm onClose={() => setIsCustomerModalOpen(false)} /> 
+        <AddCustomerForm 
+          formData={formData}
+          handleChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
+          handleSubmit={handleCustomerSubmit}
+        />
       </ModalComponent>
 
       <Notification
@@ -276,4 +359,4 @@ function RentalAdd() {
   );
 }
 
-export default RentalAdd;
+export default withAuth(RentalAdd, ['add_rental']);

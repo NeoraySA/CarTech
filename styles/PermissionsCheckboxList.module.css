@@ -1,0 +1,15 @@
+.permissionsList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  }
+  
+  .permissionItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .permissionItem label {
+    margin-left: 10px;
+  }
+  

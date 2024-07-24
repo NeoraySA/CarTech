@@ -1,53 +1,63 @@
+// routes/colors.js
 const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 const authenticateToken = require('../middleware/authenticateToken');
 
-router.get('/', authenticateToken, (req, res) => {
-  pool.query('SELECT * FROM colors', (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Internal server error' });
-      return;
+// קבלת צבעי החברה
+router.get('/companyColors', authenticateToken, async (req, res) => {
+  const { companyId } = req.user;
+
+  console.log(`Received request for company colors with companyId: ${companyId}`);
+
+  try {
+    const query = 'SELECT * FROM company_colors WHERE company_id = ?';
+    const [results] = await pool.query(query, [companyId]);
+    
+    if (results.length > 0) {
+      const colors = {
+        'color_1': results[0].color_1,
+        'color_2': results[0].color_2,
+        'color_3': results[0].color_3,
+        'color_4': results[0].color_4,
+        'color_5': results[0].color_5,
+        'black_color': results[0].black_color,
+        'white_color': results[0].white_color,
+      };
+      console.log(`Found colors for companyId ${companyId}:`, colors);
+      res.json(colors);
+    } else {
+      console.log(`No colors found for companyId ${companyId}`);
+      res.status(404).json({ message: 'Company colors not found' });
     }
-    res.json(results);
-  });
-});
-
-router.post('/', authenticateToken, (req, res) => {
-  const { colorName, hexCode } = req.body;
-  const query = `INSERT INTO colors (color_name, hex_code) VALUES (?, ?)`;
-
-  pool.query(query, [colorName, hexCode], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to add the color to the database' });
-      return;
-    }
-    res.status(201).json({ message: 'Color added successfully', colorId: results.insertId });
-  });
-});
-
-router.put('/:id', authenticateToken, (req, res) => {
-  const { id } = req.params;
-  const { hex_code } = req.body;
-
-  if (!hex_code) {
-    return res.status(400).json({ error: 'Hex code is required' });
+  } catch (err) {
+    console.error('Error retrieving company colors:', err);
+    res.status(500).json({ error: 'Server error retrieving company colors' });
   }
+});
 
-  const query = 'UPDATE colors SET hex_code = ? WHERE color_id = ?';
-  pool.query(query, [hex_code, id], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to update the color in the database' });
-      return;
+// עדכון צבעי החברה
+router.put('/companyColors', authenticateToken, async (req, res) => {
+  const { companyId } = req.user;
+  const colors = req.body;
+
+  console.log(`Updating company colors for companyId ${companyId} with colors:`, colors);
+
+  try {
+    const query = 'UPDATE company_colors SET ? WHERE company_id = ?';
+    const [results] = await pool.query(query, [colors, companyId]);
+
+    if (results.affectedRows > 0) {
+      console.log(`Updated colors for companyId ${companyId}`);
+      res.json({ message: 'Colors updated successfully' });
+    } else {
+      console.log(`No colors updated for companyId ${companyId}`);
+      res.status(404).json({ message: 'Company colors not found' });
     }
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ error: 'Color not found' });
-    }
-    res.json({ message: 'Color updated successfully' });
-  });
+  } catch (err) {
+    console.error('Error updating company colors:', err);
+    res.status(500).json({ error: 'Server error updating company colors' });
+  }
 });
 
 module.exports = router;

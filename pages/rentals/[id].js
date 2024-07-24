@@ -15,6 +15,9 @@ import DriverRentalSelector from '../../components/DriverRentalSelector';
 import styles from '../../styles/DetailsPage.module.css';
 import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 
+import withAuth from '../../src/hoc/withAuth'; // נתיב לקובץ HOC
+
+
 const RentalDetailsPage = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -295,6 +298,10 @@ const RentalDetailsPage = () => {
     }
   ];
 
+  const rentalsList = () => {
+    router.push('/RentalsList'); // עדכן את הנתיב בהתאם לנתיב שלך לרשימת הרכבים
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!id) return <div>טוען...</div>;
@@ -314,6 +321,13 @@ const RentalDetailsPage = () => {
         title="חוזה השכרה"
         subtitle="צפיה בחוזה ההשכרה"
         showSearchBox={false}
+        secondaryButtons={[
+          {
+            label: 'רשימת חוזים',
+            onClick: rentalsList,
+            permissions: ['rentals_list']
+          }
+        ]}
       />
       <div className={styles.container}>
         {rentalDetails && (
@@ -351,4 +365,4 @@ const RentalDetailsPage = () => {
   );
 };
 
-export default RentalDetailsPage;
+export default withAuth(RentalDetailsPage, ['rental_details']);

@@ -16,13 +16,14 @@
   top: 60px; /* מתחיל מהקצה העליון של הדף */
   right: 0;
   height: 100vh; /* מלא את גובה המסך */
-  background-color: var(--sidebar-color);
+  background-color: var(--1-color);
   color: var(--sidebar-text-color);
-  padding: 10px 20px; /* רווחים מעודכנים */
+  padding: 20px; /* רווחים מעודכנים */
   transition: all 0.3s; /* אנימציה חלקה יותר */
   overflow-y: auto; /* מאפשר גלילה במקרה של תוכן רב */
   z-index: 999; /* וודא שהתפריט יעלה מעל לכל */
   align-items: end;
+  box-sizing: border-box;
 }
 
 .sidebar.open {
@@ -34,6 +35,7 @@
   align-items: center;
   text-align: center;
   color: var(--sidebar-text-color);
+  box-sizing: border-box;
 }
 
 .sidebar-header h2 {
@@ -46,6 +48,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 50px;
 }
 
 .user-image {
@@ -76,6 +79,7 @@
   font-size: large;
   margin-bottom: 5px;
   padding: 10px 0;
+  cursor: pointer;
 }
 
 .sidebar-sublinks {
@@ -84,11 +88,10 @@
   align-items: flex-start; /* התחלת סידור הפריטים מהצד השמאלי */
   text-decoration: none;
   
-  padding: 10px 0; /* רווח עליון ותחתון לקישורים */
+  padding: 10px; /* רווח עליון ותחתון לקישורים */
   transition: background-color 0.3s; /* החלקת המעבר של צבע הרקע */
   padding-left: var(--sidebar-sublink-padding-left); /* הזחה של תת-קטגוריות */
 
-  margin-bottom: 10px; /* רווח קטן יותר בין פריטים */
 
 }
 

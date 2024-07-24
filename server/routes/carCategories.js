@@ -9,7 +9,7 @@ router.get('/', authenticateToken, async (req, res) => {
   console.log('Fetching car categories for companyId:', companyId);
 
   try {
-    const query = 'SELECT category_id as id, category_name, description, km_limit_per_unit, price_per_day, saturday_holiday_price, extra_km_price FROM car_categories WHERE company_id = ?';
+    const query = 'SELECT category_id as id, category_name, description, km_limit_per_unit, price_per_day, saturday_holiday_price, extra_km_price, car_count FROM car_categories_view WHERE company_id = ?';
     const [results] = await pool.query(query, [companyId]);
     console.log('Car categories fetched:', results);
     res.json(results);
@@ -80,7 +80,6 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Server error adding category', details: err.message });
   }
 });
-
 
 // מחיקת קטגוריה לפי ID
 router.delete('/:id', authenticateToken, async (req, res) => {
@@ -248,6 +247,116 @@ router.delete('/car-special-rates/:id', authenticateToken, async (req, res) => {
   } catch (err) {
     console.error("Error deleting special rate:", err);
     res.status(500).json({ error: 'Server error deleting special rate', details: err.message });
+  }
+});
+
+// שליפת תעריפי קטגוריה לפי קטגוריה ID
+router.get('/category-rate-details/:categoryId', authenticateToken, async (req, res) => {
+  const { categoryId } = req.params;
+  console.log('Fetching category rates for category ID:', categoryId);
+
+  try {
+    const query = 'SELECT * FROM category_rate_details_view WHERE category_id = ?';
+    const [results] = await pool.query(query, [categoryId]);
+    console.log('Category rates fetched for category ID:', categoryId, results);
+    res.json(results);
+  } catch (err) {
+    console.error("Error retrieving category rates:", err);
+    res.status(500).json({ error: 'Server error retrieving category rates', details: err.message });
+  }
+});
+
+// הוספת תעריף קטגוריה חדש
+router.post('/category-rate-details/:categoryId', authenticateToken, async (req, res) => {
+  const { categoryId } = req.params;
+  let {
+    rate_type_id, price, saturday_holiday_price,
+    new_driver_price_increase, young_driver_price_increase,
+    km_limit_per_unit, extra_km_price, saturday_regular_charge, saturday_km_included
+  } = req.body;
+  console.log('Adding category rate for category ID:', categoryId, 'with data:', req.body);
+
+  try {
+    const query = `
+      INSERT INTO category_rate_details (
+        category_id, rate_type_id, price, saturday_holiday_price, 
+        new_driver_price_increase, young_driver_price_increase, km_limit_per_unit, 
+        extra_km_price, saturday_regular_charge, saturday_km_included
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const params = [
+      categoryId, rate_type_id, price, saturday_holiday_price,
+      new_driver_price_increase, young_driver_price_increase,
+      km_limit_per_unit, extra_km_price, saturday_regular_charge, saturday_km_included
+    ];
+    const [results] = await pool.query(query, params);
+
+    console.log('Category rate added successfully for category ID:', categoryId);
+    res.status(201).json({ message: 'Category rate added successfully', rateId: results.insertId });
+  } catch (err) {
+    console.error("Error adding category rate:", err);
+    res.status(500).json({ error: 'Server error adding category rate', details: err.message });
+  }
+});
+
+// עדכון תעריף קטגוריה
+router.put('/category-rate-details/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  let {
+    rate_type_id, price, saturday_holiday_price,
+    new_driver_price_increase, young_driver_price_increase,
+    km_limit_per_unit, extra_km_price, saturday_regular_charge, saturday_km_included
+  } = req.body;
+  console.log('Updating category rate for ID:', id, 'with data:', req.body);
+
+  try {
+    const query = `
+      UPDATE category_rate_details SET 
+        rate_type_id = ?, price = ?, saturday_holiday_price = ?, 
+        new_driver_price_increase = ?, young_driver_price_increase = ?, 
+        km_limit_per_unit = ?, extra_km_price = ?, 
+        saturday_regular_charge = ?, saturday_km_included = ?
+      WHERE id = ?
+    `;
+    const params = [
+      rate_type_id, price, saturday_holiday_price,
+      new_driver_price_increase, young_driver_price_increase,
+      km_limit_per_unit, extra_km_price, saturday_regular_charge, saturday_km_included, id
+    ];
+    const [results] = await pool.query(query, params);
+
+    if (results.affectedRows === 0) {
+      console.log('Category rate not found for ID:', id);
+      return res.status(404).json({ error: 'Category rate not found' });
+    }
+
+    console.log('Category rate updated successfully for ID:', id);
+    res.json({ message: 'Category rate updated successfully' });
+  } catch (err) {
+    console.error("Error updating category rate:", err);
+    res.status(500).json({ error: 'Server error updating category rate', details: err.message });
+  }
+});
+
+// מחיקת תעריף קטגוריה לפי ID
+router.delete('/category-rate-details/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  console.log('Deleting category rate with ID:', id);
+
+  try {
+    const query = 'DELETE FROM category_rate_details WHERE id = ?';
+    const [results] = await pool.query(query, [id]);
+
+    if (results.affectedRows === 0) {
+      console.log('Category rate not found for ID:', id);
+      return res.status(404).json({ error: 'Category rate not found' });
+    }
+
+    console.log('Category rate deleted successfully for ID:', id);
+    res.json({ message: 'Category rate deleted successfully' });
+  } catch (err) {
+    console.error("Error deleting category rate:", err);
+    res.status(500).json({ error: 'Server error deleting category rate', details: err.message });
   }
 });
 

@@ -3,15 +3,16 @@ import Head from 'next/head';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import UniversalTable from '../components/UniversalTable';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaEye } from 'react-icons/fa';
 import ListHeader from '../components/ListHeader';
 import FilterComponent from '../components/FilterComponent';
 import ListFooter from '../components/ListFooter';
 import Notification from '../components/Notification';
 import ModalComponent from '../components/ModalComponent';
 import EditDetailsForm from '../components/EditDetailsForm';
-import styles from '../styles/RentalsList.module.css';
+import styles from '../styles/PageList.module.css';
 import { formatNumber, formatCurrency } from '../utils/formatUtils';
+import withAuth from '../src/hoc/withAuth'; // נתיב לקובץ HOC
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -22,11 +23,9 @@ const CarCategories = () => {
   const [newCategory, setNewCategory] = useState({});
   const [filterValues, setFilterValues] = useState({
     category_name: { label: 'שם קטגוריה', type: 'text', value: '' },
-    description: { label: 'תיאור', type: 'text', value: '' },
-    km_limit_per_unit: { label: 'מגבלת ק"מ ליחידה', type: 'number', value: '' },
-    extra_km_price: { label: 'מחיר לק"מ נוסף', type: 'number', value: '' },
     price_per_day: { label: 'תעריף יומי', type: 'number', value: '' },
-    saturday_holiday_price: { label: 'תעריף שבת וחג', type: 'number', value: '' }
+    km_limit_per_unit: { label: 'מגבלת ק"מ ליחידה', type: 'number', value: '' },
+    extra_km_price: { label: 'מחיר לק"מ נוסף', type: 'number', value: '' }
   });
   const router = useRouter();
 
@@ -109,7 +108,7 @@ const CarCategories = () => {
       await axios.post(`${apiUrl}/api/carCategories`, updatedFormData, { headers });
       setNotification({ message: 'קטגוריה נוספה בהצלחה', type: 'success', onConfirm: null });
       setIsModalOpen(false);
-      fetchCategories(); // Refresh data after successful addition
+      fetchCategories(); // רענן את הנתונים לאחר הוספה מוצלחת
     } catch (error) {
       console.error('Error saving category:', error);
       setNotification({ message: 'שגיאה בהוספת הקטגוריה', type: 'error', onConfirm: null });
@@ -120,31 +119,33 @@ const CarCategories = () => {
 
   const columns = [
     { Header: 'שם קטגוריה', accessor: 'category_name' },
-    { Header: 'תיאור', accessor: 'description' },
-    { Header: 'מגבלת ק"מ ליחידה', accessor: 'km_limit_per_unit', Cell: ({ value }) => formatNumber(value) },
-    { Header: 'מחיר לק"מ נוסף', accessor: 'extra_km_price', Cell: ({ value }) => formatCurrency(value) },
     { Header: 'תעריף יומי', accessor: 'price_per_day', Cell: ({ value }) => formatCurrency(value) },
-    { Header: 'תעריף שבת וחג', accessor: 'saturday_holiday_price', Cell: ({ value }) => formatCurrency(value) }
+    { Header: 'הגבלת ק"מ ליחידה', accessor: 'km_limit_per_unit', Cell: ({ value }) => formatNumber(value) },
+    { Header: 'מחיר לק"מ נוסף', accessor: 'extra_km_price', Cell: ({ value }) => formatCurrency(value) },
+    { Header: 'מס\' רכבים', accessor: 'car_count', Cell: ({ value }) => formatNumber(value) }
   ];
 
   const actionButtons = [
     {
-      label: 'ערוך',
-      icon: FaEdit,
-      onClick: handleEdit
+      label: 'צפיה',
+      icon: FaEye,
+      onClick: handleEdit,
+      permissions: ['car_category_details']
     },
     {
-      label: 'מחק',
+      label: 'מחיקה',
       icon: FaTrash,
-      onClick: handleDelete
+      onClick: handleDelete,
+      permissions: ['car_category_delete']
     }
   ];
 
   const headerButtons = [
     {
-      label: 'הוסף קטגוריה חדשה',
+      label: 'הוספת קטגוריה חדשה',
       onClick: () => setIsModalOpen(true),
-      icon: FaPlus
+      icon: FaPlus,
+      permissions: ['add_car_category'] // הוספת שדה permissions
     }
   ];
 
@@ -158,15 +159,15 @@ const CarCategories = () => {
           title="קטגוריות רכבים"
           subtitle="רשימת קטגוריות רכבים"
           showSearchBox={false}
-          buttons={headerButtons}
+          secondaryButtons={headerButtons}
         />
       </div>
       <div className={styles.main}>
+      <div className={styles["table-container"]}>
+          <UniversalTable data={filteredCategories} columns={columns} actionButtons={actionButtons} expandable={false} />
+        </div>
         <div className={styles["filter-container"]}>
           <FilterComponent filters={filterValues} onFilterChange={handleFilterChange} />
-        </div>
-        <div className={styles["table-container"]}>
-          <UniversalTable data={filteredCategories} columns={columns} actionButtons={actionButtons} expandable={false} />
         </div>
       </div>
       <ListFooter
@@ -197,4 +198,4 @@ const CarCategories = () => {
   );
 };
 
-export default CarCategories;
+export default withAuth(CarCategories, ['car_categories']);

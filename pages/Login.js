@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
-import Notification from '../components/Notification'; // ייבוא הקומפוננטה של ההודעות
-import styles from '../styles/LoginForm.module.css'; // ייבוא עיצוב ה-CSS
+import Notification from '../components/Notification';
+import styles from '../styles/LoginForm.module.css';
+import SettingsContext from '../context/SettingsContext'; // ייבוא SettingsContext
 
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [notification, setNotification] = useState({ message: '', type: '' });
   const router = useRouter();
+  const { updatePermissions } = useContext(SettingsContext); // שימוש בקונטקסט של ההגדרות
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setNotification({ message: '', type: '' });
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'; // שימוש במשתנה סביבה
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
     try {
       const response = await fetch(`${apiUrl}/api/users/login`, {
@@ -26,19 +28,20 @@ function LoginForm() {
 
       const data = await response.json();
 
-      console.log("Response Data:", data); // הדפסת נתוני התגובה לבדיקה
+      console.log("Response Data:", data);
 
       if (response.ok) {
-        localStorage.setItem('token', data.token); // שמירת הטוקן ב-localStorage
-        localStorage.setItem('user', JSON.stringify(data.user)); // שמירת פרטי המשתמש ב-localStorage
-        console.log("Saved to localStorage:", data.user); // הדפסת הנתונים שנשמרו ב-localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        console.log("Saved to localStorage:", data.user);
+        updatePermissions(); // קריאה לעדכון ההרשאות לאחר התחברות מוצלחת
         setNotification({ message: 'התחברת בהצלחה!', type: 'success' });
-        router.push('/dashboard'); // הפניה לדף הדאשבורד או לדף הבית לאחר התחברות
+        router.push('/dashboard');
       } else {
         setNotification({ message: data.error || 'Failed to login', type: 'error' });
       }
     } catch (error) {
-      console.error("Login Error:", error); // הדפסת שגיאות לקונסול
+      console.error("Login Error:", error);
       setNotification({ message: 'Network error', type: 'error' });
     }
   };

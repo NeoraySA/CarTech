@@ -1,8 +1,16 @@
 import React, { useMemo } from 'react';
 import { useTable, useSortBy, useExpanded } from 'react-table';
-import styles from '../styles/Table.module.css'; // ייבוא קובץ העיצוב
+import HighlightedCell from './HighlightedCell';
+import { useSettings } from '../context/SettingsContext'; // ייבוא useSettings
+import styles from '../styles/Table.module.css';
 
 export default function UniversalTable({ data = [], columns = [], tableType, actionButtons = [], imageAccessor, expandable = false, noDataText = 'אין נתונים זמינים' }) {
+  const { permissions } = useSettings(); // שימוש ב-useSettings כדי לקבל הרשאות
+
+  const hasPermission = (requiredPermissions) => {
+    return requiredPermissions.some(permission => permissions.includes(permission));
+  };
+
   const enhancedColumns = useMemo(() => {
     if (imageAccessor) {
       return [
@@ -29,16 +37,20 @@ export default function UniversalTable({ data = [], columns = [], tableType, act
   const renderRowSubComponent = (row) => (
     <div className={styles["expanded-content"]}>
       <div className={styles["details-content"]}>
-        {/* רינדור תכנים נוספים בהרחבת השורה */}
         <p><strong>Details:</strong> {JSON.stringify(row.original)}</p>
       </div>
       <div className={styles["actions-content"]}>
-        {actionButtons.map((button, index) => (
-          <button key={index} onClick={() => button.onClick(row.original)} className={styles['button']}>
-            {React.createElement(button.icon, { className: styles['button-icon'] })}
-            {button.label}
-          </button>
-        ))}
+        {actionButtons.map((button, index) => {
+          if (button.permissions && !hasPermission(button.permissions)) {
+            return null;
+          }
+          return (
+            <button key={index} onClick={() => button.onClick(row.original)} className={styles['button']}>
+              {React.createElement(button.icon, { className: styles['button-icon'] })}
+              {button.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -60,7 +72,7 @@ export default function UniversalTable({ data = [], columns = [], tableType, act
                     </span>
                   </th>
                 ))}
-                {actionButtons.length > 0 && <th className={styles['action-buttons-header']}>פעולות</th>}
+                {actionButtons.length > 0 && <th className={styles['action-buttons-header']}></th>}
               </tr>
             ))}
           </thead>
@@ -74,18 +86,33 @@ export default function UniversalTable({ data = [], columns = [], tableType, act
                     className: row.isExpanded ? styles['expanded-row'] : ''
                   })}>
                     {row.cells.map((cell, index) => (
-                      <td {...cell.getCellProps()} className={index === 0 ? styles['first-column'] : cell.column.id === 'license_number' ? styles['cell-license-number'] : ''}>
-                        {cell.render('Cell')}
+                      <td
+                        {...cell.getCellProps()}
+                        className={`
+                          ${index === 0 ? styles['first-column'] : ''} 
+                          ${cell.column.id === 'license_number' ? styles['cell-license-number'] : ''}
+                        `}
+                      >
+                        {cell.column.isHighlighted ? (
+                          <HighlightedCell>{cell.value}</HighlightedCell>
+                        ) : (
+                          cell.render('Cell')
+                        )}
                       </td>
                     ))}
                     {actionButtons.length > 0 && (
                       <td className={styles['action-buttons']}>
-                        {actionButtons.map((button, index) => (
-                          <button key={index} onClick={() => button.onClick(row.original)} className={styles['button']}>
-                            {React.createElement(button.icon, { className: styles['button-icon'] })}
-                            {button.label}
-                          </button>
-                        ))}
+                        {actionButtons.map((button, index) => {
+                          if (button.permissions && !hasPermission(button.permissions)) {
+                            return null;
+                          }
+                          return (
+                            <button key={index} onClick={() => button.onClick(row.original)} className="Button3">
+                              {React.createElement(button.icon, { className: styles['button-icon'] })}
+                              {button.label}
+                            </button>
+                          );
+                        })}
                       </td>
                     )}
                   </tr>

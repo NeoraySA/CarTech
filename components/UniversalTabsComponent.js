@@ -16,7 +16,8 @@ const UniversalTabsComponent = ({ tabsConfig, renderButtons, ModalComponent, mod
           ))}
         </TabList>
         {tabsConfig.map((tab, index) => (
-          <TabPanel key={index}>
+          
+          <TabPanel  key={index}>
             <div>
               {renderButtons && renderButtons(tab.tableType)}
               {tab.Component && <tab.Component {...tab.props} />}

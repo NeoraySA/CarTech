@@ -114,45 +114,10 @@
 }
 
 .modalOverlay {
-  animation: overlayFadeIn 0.3s;
+  animation: overlayFadeIn 0.5s;
 }
 
 .modalContent {
   animation: modalFadeIn 0.3s;
 }
 
-/* Advanced Styling */
-.inputField {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: row; /* Align labels to the right and fields to the left */
-  align-items: center; /* Center items vertically */
-}
-
-.inputField label {
-  margin-left: 10px;
-  font-weight: bold;
-  width: 120px; /* Set a fixed width for labels */
-  text-align: right; /* Align text to the right */
-}
-
-.inputField input[type="checkbox"] {
-  width: auto;
-  margin-top: 5px; /* Align checkbox with text fields */
-}
-
-.inputField input, .inputField textarea, .inputField select, .inputField .react-select__control {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  flex: 1; /* Take available space */
-  box-sizing: border-box;
-}
-
-.inputField .react-select__control {
-  width: 100%; /* Make sure the select box takes full width */
-}
-
-.inputField textarea {
-  resize: vertical; /* Allow vertical resize */
-}

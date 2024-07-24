@@ -7,7 +7,9 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import ListHeader from '../components/ListHeader';
 import FilterComponent from '../components/FilterComponent';
 import ListFooter from '../components/ListFooter';
-import styles from '../styles/RentalsList.module.css';
+import styles from '../styles/PageList.module.css';
+
+import withAuth from '../src/hoc/withAuth'; // נתיב לקובץ HOC
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -83,6 +85,17 @@ const CustomersList = () => {
     { label: 'מחק', icon: FaTrash, onClick: (row) => console.log('Delete customer', row) }
   ];
 
+
+  const headerButtons = [
+    {
+      label: 'הוספת לקוח חדש',
+      onClick: () => router.push('/CustomerAdd'),
+      
+      permissions: ['add_customer']
+    }
+  ];
+
+
   return (
     <div className={styles.container}>
       <Head>
@@ -93,18 +106,20 @@ const CustomersList = () => {
           title="רשימת לקוחות"
           subtitle="רשימת הלקוחות במערכת"
           showSearchBox={false} // הוספת showSearchBox={false}
+          secondaryButtons={headerButtons}
         />
       </div>
       <div className={styles.main}>
-        <div className={styles["filter-container"]}>
-          <FilterComponent filters={filterValues} onFilterChange={handleFilterChange} />
-        </div>
+        
         <div className={styles["table-container"]}>
           {error ? (
             <p>{error}</p>
           ) : (
             <UniversalTable data={filteredCustomers} columns={columns} actionButtons={actionButtons} expandable={false} />
           )}
+        </div>
+        <div className={styles["filter-container"]}>
+          <FilterComponent filters={filterValues} onFilterChange={handleFilterChange} />
         </div>
       </div>
       <ListFooter
@@ -115,4 +130,5 @@ const CustomersList = () => {
   );
 };
 
-export default CustomersList;
+export default withAuth(CustomersList, ['customers_list']);
+

@@ -1,3 +1,13 @@
+
+
+.no-data {
+  font-weight: bold;
+  font-size: 1.5em;
+  text-align: center;
+  color: var(--1-color);
+  padding: 20px;
+}
+
 .table-container {
   font-family: inherit;
   width: 100%;
@@ -7,7 +17,7 @@
 .universal-table {
   width: 100%;
   border-collapse: collapse;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadow-color);
   border: 1px solid #e5e5e5;
   border-radius: 4px;
 }
@@ -26,19 +36,19 @@
 .universal-table thead tr {
   background-color: transparent;
   text-align: left;
-  color: var(--main-color);
+  color: var(--1-color);
 }
 
 .universal-table th,
 .universal-table td {
   padding: 10px;
   border-bottom: 1px solid #e5e5e5;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .universal-table th {
   text-align: right;
-  
+  background-color: var(--4-color);
 }
 
 .universal-table td {
@@ -49,11 +59,12 @@
 .universal-table tbody tr {
   background-color: white;
   transition: box-shadow 0.15s ease-in-out;
+
 }
 
 .universal-table tbody tr.expanded-row,
 .universal-table tbody tr.expanded-row + tr {
-  box-shadow: inset -3px 0 0 #007bff;
+  box-shadow: inset -3px 0 0 var(--shadow-color);
 }
 
 .expanded-content {
@@ -88,7 +99,6 @@
   padding: 10px;
   border-top: 1px solid #e5e5e5;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
 }
 
 .action-buttons {
@@ -96,34 +106,13 @@
   gap: 10px;
   flex-direction: row;
   height: 100%;
-  justify-content: start;
+  justify-content: end;
 }
 
 .action-buttons-header {
-  
-  text-align: center;
-  
+  text-align: end;
 }
 
-.button {
-  margin: 0;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--main-color);
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-family: inherit;
-  font-size: 0.9em;
-  padding: 8px;
-}
-
-.button:hover {
-  background-color: var(--secondary-color);
-}
 
 .button i {
   font-size: 1rem;
@@ -132,11 +121,51 @@
 .first-column {
   text-align: right;
   padding: 10px;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .first-column span {
   display: block;
   font-size: 0.9em;
   color: #555;
+}
+
+.category {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 12px;
+  font-weight: bold;
+  background-color: #0bdefa;
+  border: 1px solid #00acc1;
+  color: #006064;
+  border-bottom: 1px solid #e5e5e5; /* הוספת קו תחתון */
+}
+
+@media (max-width: 600px) {
+  .universal-table td {
+    text-align: right;
+
+  }
+
+  .universal-table th,
+.universal-table td {
+  padding: 5px;
+  border-bottom: 1px solid #e5e5e5;
+  vertical-align: middle;
+  white-space: inherit;
+}
+
+.universal-table th {
+  white-space: nowrap;
+}
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+  }
 }

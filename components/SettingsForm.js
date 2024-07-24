@@ -1,12 +1,13 @@
 // components/SettingsForm.js
 import React from 'react';
-import styles from '../styles/SettingsForm.module.css';
+import styles from '../styles/AddForm.module.css';
 
 function SettingsForm({ settings, handleInputChange, handleSave, category }) {
   return (
     <div className={styles.container}>
-      <h2>{category === 'rental' ? 'הגדרות השכרת רכב' : 'הגדרות כלליות'}</h2>
+      
       <form className={styles.form}>
+        <div className={styles.section}>
         {category === 'rental' && (
           <>
             <div className={styles.formGroup}>
@@ -51,6 +52,7 @@ function SettingsForm({ settings, handleInputChange, handleSave, category }) {
             </div>
           </>
         )}
+        </div>
         {category === 'general' && (
           <div className={styles.formGroup}>
             <label className={styles.label}>אחוז מע"מ</label>
@@ -63,9 +65,80 @@ function SettingsForm({ settings, handleInputChange, handleSave, category }) {
             />
           </div>
         )}
-        <button type="button" onClick={handleSave} className={styles.saveButton}>
-          שמור הגדרות
-        </button>
+        {category === 'colors' && (
+          <>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>צבע 1</label>
+              <input
+                className={`${styles.input} ${styles.colorInput}`}
+                type="color"
+                name="color_1"
+                value={settings.color_1}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>צבע 2</label>
+              <input
+                className={`${styles.input} ${styles.colorInput}`}
+                type="color"
+                name="color_2"
+                value={settings.color_2}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>צבע 3</label>
+              <input
+                className={`${styles.input} ${styles.colorInput}`}
+                type="color"
+                name="color_3"
+                value={settings.color_3}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>צבע 4</label>
+              <input
+                className={`${styles.input} ${styles.colorInput}`}
+                type="color"
+                name="color_4"
+                value={settings.color_4}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>צבע 5</label>
+              <input
+                className={`${styles.input} ${styles.colorInput}`}
+                type="color"
+                name="color_5"
+                value={settings.color_5}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>צבע שחור</label>
+              <input
+                className={`${styles.input} ${styles.colorInput}`}
+                type="color"
+                name="black_color"
+                value={settings.black_color}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>צבע לבן</label>
+              <input
+                className={`${styles.input} ${styles.colorInput}`}
+                type="color"
+                name="white_color"
+                value={settings.white_color}
+                onChange={handleInputChange}
+              />
+            </div>
+          </>
+        )}
       </form>
     </div>
   );

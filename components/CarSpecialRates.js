@@ -133,6 +133,7 @@ const CarSpecialRates = ({ categoryId }) => {
   return (
     <div className={styles.section}>
       <h2>תעריפים מיוחדים</h2>
+      <p>רשימת התעריפים המיוחדים לקטגוריה זו. ניתן להוסיף תעריפים חדשים</p>
       <Notification
         message={notification.message}
         type={notification.type}
@@ -148,7 +149,9 @@ const CarSpecialRates = ({ categoryId }) => {
         />
       </ModalComponent>
       <UniversalTable data={specialRates} columns={columns} actionButtons={actionButtons} expandable={false} />
-      <button onClick={() => setIsModalOpen(true)} className={styles.submitButton}>הוסף תעריף חדש</button>
+      <div className={styles.divButton}>
+      <button onClick={() => setIsModalOpen(true)} className="Button2">הוסף תעריף חדש</button>
+      </div>
     </div>
   );
 };

@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaCheckCircle, FaExclamationCircle, FaInfoCircle, FaSpinner } from 'react-icons/fa';
 import styles from '../styles/Notification.module.css';
 
 const Notification = ({ message, type, onClose, onConfirm }) => {
   if (!message) return null;
+
+  useEffect(() => {
+    if (type === 'success') {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [type, onClose]);
 
   let icon;
   switch (type) {

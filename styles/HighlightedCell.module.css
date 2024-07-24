@@ -1,0 +1,19 @@
+/* styles/HighlightedCell.module.css */
+.highlighted {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 7px;
+    background-color: var(--secondary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+
+  }
+
+  .highlighted:hover {
+    background-color: var(--main-color);
+  }
+  

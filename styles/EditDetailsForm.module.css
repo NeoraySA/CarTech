@@ -2,18 +2,26 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 300px;
+  width: 100%;
 }
 
 .inputFieldsContainer {
-  flex: 1; /* Take all available space except for the buttons */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* עיצוב עבור מכשירים ניידים */
+@media (max-width: 768px) {
+  .inputFieldsContainer {
+    grid-template-columns: 1fr;
+  }
 }
 
 .inputField {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  
 }
 
 .checkboxField {
@@ -28,7 +36,7 @@
 
 .inputField label, .checkboxField label {
   font-weight: bold;
-  color: var(--secondary-color);
+  color: var(--1-color);
 }
 
 .inputField input {
@@ -37,7 +45,6 @@
   border-radius: 4px;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 20px;
   font-family: inherit;
   font-size: 1em;
 }

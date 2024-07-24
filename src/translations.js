@@ -33,7 +33,52 @@ const labelTranslations = {
   saturday_holiday_price: 'תעריף שבת / חג',
   extra_km_price: 'מחיר לק"מ נוסף',
   new_driver_price_increase: 'תוספת נהג חדש',
-  young_driver_price_increase: 'תוספת נהג צעיר'
+  young_driver_price_increase: 'תוספת נהג צעיר',
+  price: 'מחיר',
+  rate_type_id: 'סוג תעריף',
+  saturday_km_included: 'ק"מ בשבת וחג',
+  saturday_regular_charge: 'חיוב רגיל בשבת וחג',
+
+  uniqueid: 'מזהה ייחודי',
+  start: 'התחלה',
+  end: 'סיום',
+  duration: 'משך השיחה',
+  callerid_external: 'מספר מתקשר חיצוני',
+  callername: 'שם מתקשר',
+  dnumber_name: 'שם עונה',
+  recording: 'הקלטה',
+  server: 'שרת',
+  invoice: 'חשבונית',
+  sname: 'שם מתקשר',
+  snumber_display: 'מזהה מתקשר',
+  snumber: 'מס\' מתקשר',
+  customer: 'לקוח',
+  note: 'הערות',
+  callid: 'מזהה שיחה',
+
+  currency: 'מטבע',
+  channel: 'ערוץ',
+  media: 'מדיה',
+
+
+
+  status: 'סטטוס',
+  status_values: {
+    'answer': 'נענה',
+    'noanswer': 'לא נענה',
+    'cancel': 'בוטל',
+    'congestion': 'לא זמין',
+    'busy': 'תפוס',
+    'voicemail': 'דואר קולי',
+    // הוסף עוד תרגומים לפי הצורך
+  },
+  stype_values: {
+    'queue': 'תור',
+    'ivr': 'נתב שיחות',
+    'external': 'חיצוני',
+    'url': 'קישור',
+    'queue_exit': 'יציאה מתור'
+  }
 };
 
 export default labelTranslations;

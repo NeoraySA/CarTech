@@ -1,76 +1,67 @@
-// pagesConfig.js
-
 import { faCar, faUsers, faHandshake, faBook, faCog, faTools } from '@fortawesome/free-solid-svg-icons';
 
 export const categoriesConfig = [
   {
     name: "רכבים",
     icon: faCar,
+    permissions: ["view_cars"], // שינוי הרשאה ל- "add_car"
     items: [
-      { name: "הוספת רכב", path: "/CarAdd" },
-      { name: "רשימת רכבים", path: "/carsList" },
-      { name: "קטגוריות רכבים", path: "/CarCategories" },
-      { name: "זמינות רכבים", path: "/CarAvailability" },
-      { name: "מעקב טיפולים", path: "/addVehicle" },
-      { name: "מעקב טסטים", path: "/addVehicle" },
-      // הוסף כאן כל תת-קטגוריות נוספות שתרצה
+      { name: "הוספת רכב", path: "/CarAdd", permissions: ["add_car"] },
+      { name: "רשימת רכבים", path: "/carsList", permissions: ["cars_list"] },
+      { name: "קטגוריות רכבים", path: "/CarCategories", permissions: ["car_categories"] },
+      { name: "זמינות רכבים", path: "/CarAvailability", permissions: ["view_car_availability"] },
+      { name: "מעקב טיפולים", path: "/addVehicle", permissions: ["manage_maintenance"] },
+      { name: "מעקב טסטים", path: "/addVehicle", permissions: ["manage_tests"] },
     ],
   },
   {
     name: "לקוחות",
     icon: faUsers,
+    permissions: ["view_customers"],
     items: [
-      { name: "הוספת לקוח", path: "/CustomerAdd" },
-      { name: "רשימת לקוחות", path: "/CustomerList" },
-      
-      // הוסף כאן כל תת-קטגוריות נוספות שתרצה
+      { name: "הוספת לקוח", path: "/CustomerAdd", permissions: ["add_customer"] },
+      { name: "רשימת לקוחות", path: "/CustomerList", permissions: ["customers_list"] },
     ],
   },
   {
     name: "השכרת רכב",
     icon: faHandshake,
+    permissions: ["menu_rentals"],
     items: [
-      { name: "ניהול הזמנות", path: "/manageRentals" },
-      { name: "פתיחת חוזה", path: "/RentalAdd" },
-      { name: "רשימת חוזים", path: "/RentalsList" },
-      // הוסף כאן כל תת-קטגוריות נוספות שתרצה
+      { name: "ניהול הזמנות", path: "/manageRentals", permissions: ["manage_orders"] },
+      { name: "פתיחת חוזה", path: "/RentalAdd", permissions: ["add_rental"] },
+      { name: "רשימת חוזים", path: "/RentalsList", permissions: ["rentals_list"] },
     ],
   },
   {
     name: "הנהלת חשבונות",
     icon: faBook,
+    permissions: ["menu_accounting"],
     items: [
-      { name: "דוחות כספיים", path: "/financialReports" },
-      { name: "תשלומים וחיובים", path: "/payments" },
-      // הוסף כאן כל תת-קטגוריות נוספות שתרצה
+      { name: "דוחות כספיים", path: "/financialReports", permissions: ["view_financial_reports"] },
+      { name: "תשלומים וחיובים", path: "/payments", permissions: ["manage_payments"] },
     ],
   },
   {
     name: "הגדרות",
     icon: faCog,
+    permissions: ["menu_settings"],
     items: [
-      { name: "הגדרות חברה", path: "/Settings" },
-      { name: "הגדרות סניף", path: "/settings/general" },
-      { name: "כללי", path: "/settings/general" },
-      { name: "אבטחה", path: "/settings/security" },
-      // הוסף כאן כל תת-קטגוריות נוספות שתרצה
+      { name: "הגדרות כלליות", path: "/Settings/General", permissions: ["settings_general"] },
+      { name: "הרשאות", path: "/Settings/Permissions", permissions: ["settings_permissions"] }
     ],
   },
   {
     name: "כלים",
     icon: faTools,
+    permissions: ["menu_tools"],
     items: [
-      { name: "יצירת קישור קצר", path: "/LinkShortener" },
-      { name: "מידע ממשרד התחבורה", path: "/LinkShortener" },
-      { name: "אתר חושן קאר", path: "https://www.hoshencar.co.il/" },
-      
-      // הוסף כאן כל תת-קטגוריות נוספות שתרצה
+      { name: "יצירת קישור קצר", path: "/LinkShortener", permissions: ["create_short_link"] },
+      { name: "מידע ממשרד התחבורה", path: "/LinkShortener", permissions: ["access_dmv_info"] },
+      { name: "אתר חושן קאר", path: "https://www.hoshencar.co.il/", permissions: ["access_external_sites"] },
     ],
   },
-  // הוסף כאן כל קטגוריות נוספות שתרצה
 ];
-
-
 
 
 export const pages = [
@@ -82,6 +73,4 @@ export const pages = [
     { name: 'הוספת רכב', path: '/addCar', icon: '➕', description: 'הוספת רכב חדש' },
     { name: 'רשימת רכבים', path: '/carsList', icon: '🚗', description: 'רשימת רכבים' },
     { name: 'הגדרות משתמש', path: '/userSettings', icon: '🚗', description: 'הגדרות משתמש' },
-    // הוסף כאן עוד דפים לפי הצורך
-  ];
-  
+];

@@ -1,9 +1,7 @@
 .container {
-  margin: 20px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #eebbbb;
 }
 
 .form {
@@ -24,6 +22,25 @@
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 3px;
+}
+
+.colorInput {
+  padding: 0;
+  border: none;
+  height: 40px;
+  width: 100%;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.colorInput::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.colorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
 }
 
 .saveButton {

@@ -37,3 +37,11 @@ export const formatLicensePlate = (number) => {
   }
   return numberString; // אם המספר לא מתאים לתבניות
 };
+
+export const formatPhoneNumber = (number) => {
+  const numberString = number.toString();
+  if (numberString.length === 10) {
+    return numberString.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+  }
+  return numberString; // אם המספר לא מתאים לתבניות
+};
