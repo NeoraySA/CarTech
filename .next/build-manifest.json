@@ -12,10 +12,10 @@
   ],
   "rootMainFiles": [],
   "pages": {
-    "/Call/CallList": [
+    "/RentalAdd": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/Call/CallList.js"
+      "static/chunks/pages/RentalAdd.js"
     ],
     "/RentalsList": [
       "static/chunks/webpack.js",
@@ -26,11 +26,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/Settings/Branch.js"
-    ],
-    "/Settings/Menu": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/Settings/Menu.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",
